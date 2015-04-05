@@ -1,0 +1,1 @@
+Packages.java.System.out.println("Ahoj");
