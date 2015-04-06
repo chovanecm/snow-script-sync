@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  *
  * @author Martin
  */
-public class SnowSycriptSynchronizer {
+public class SnowScriptSynchronizer {
 
     static ExecutorService pool = Executors.newFixedThreadPool(4);
 
@@ -84,7 +84,7 @@ public class SnowSycriptSynchronizer {
 
                 }
             } catch (IOException ex) {
-                Logger.getLogger(SnowSycriptSynchronizer.class
+                Logger.getLogger(SnowScriptSynchronizer.class
                         .getName()).log(Level.SEVERE, null, ex);
             }
         });

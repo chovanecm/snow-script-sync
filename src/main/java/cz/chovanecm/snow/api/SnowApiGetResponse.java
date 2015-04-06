@@ -14,7 +14,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
  *
  * @author Martin
  */
-public class SnowApiGetResponse implements AutoCloseable{
+public class SnowApiGetResponse implements AutoCloseable {
 
     private CloseableHttpResponse response;
 
@@ -27,21 +27,28 @@ public class SnowApiGetResponse implements AutoCloseable{
     }
 
     /**
-     * Returns URL pointing to next bunch of records. If there are no more records, returns null;
-     * @return 
+     * Returns URL pointing to next bunch of records. If there are no more
+     * records, returns null;
+     *
+     * @return
      */
     public String getNextRecordsUrl() {
-        String links = response.getFirstHeader("Link").getValue();
+        String links;
+        try {
+            links = response.getFirstHeader("Link").getValue();
+        } catch (NullPointerException ex) {
+            return null;
+        }
         //https://demo018.service-now.com/api/now/v1/table/sys_script?sysparm_limit=1&sysparm_offset=0>;rel="first",<https://demo018.service-now.com/api/now/v1/table/sys_script?sysparm_limit=1&sysparm_offset=-1>;rel="prev",<https://demo018.service-now.com/api/now/v1/table/sys_script?sysparm_limit=1&sysparm_offset=1>;rel="next",<https://demo018.service-now.com/api/now/v1/table/sys_script?sysparm_limit=1&sysparm_offset=1353>;rel="last"
         Pattern pattern = Pattern.compile("<([^>]+)>;rel=\"next\"");
         Matcher matcher = pattern.matcher(links);
         if (matcher.find()) {
-          return matcher.group(1);
+            return matcher.group(1);
         } else {
             return null;
         }
     }
-    
+
     public JsonObject getBody() throws IOException {
         JsonObject object;
         try (InputStream is = response.getEntity().getContent()) {

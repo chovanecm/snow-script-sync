@@ -5,7 +5,7 @@
  */
 package cz.chovanecm.snow.cli;
 
-import cz.chovanecm.snow.SnowSycriptSynchronizer;
+import cz.chovanecm.snow.SnowScriptSynchronizer;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -54,7 +54,7 @@ public class CommandLineInterface {
                         }
                     }
                 }
-                SnowSycriptSynchronizer.run("https://" + line.getOptionValue("i"), line.getOptionValue("u"), line.getOptionValue("p"), proxy, proxyPort, line.getOptionValue("d"));
+                SnowScriptSynchronizer.run("https://" + line.getOptionValue("i"), line.getOptionValue("u"), line.getOptionValue("p"), proxy, proxyPort, line.getOptionValue("d"));
             }
         } catch (ParseException ex) {
             new HelpFormatter().printHelp("_", options);

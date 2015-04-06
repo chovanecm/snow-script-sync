@@ -53,13 +53,19 @@ public class SnowClient {
         };
     }
 
+    public <T extends SnowRecord> T getRecordBySysId(SnowTable sourceTable, String sysId, Class<T> type) throws IOException {
+        SnowApiGetResponse response = new SnowApiGetResponse(client.get(getTableApiUrl(sourceTable) + "?sysparm_query=sys_id=" + sysId));
+        ResultIterator<T> iterator = new ResultIterator(sourceTable, response);
+        return iterator.next();
+    }
+
     public class ResultIterator<T extends SnowRecord> implements Iterator<T> {
 
         private SnowApiGetResponse response;
         private String nextUrl;
         private Iterator<JsonElement> iterator;
         private SnowTable table;
-   
+
         public ResultIterator(SnowTable table, SnowApiGetResponse response) throws IOException {
             this.response = response;
             this.table = table;
@@ -92,7 +98,7 @@ public class SnowClient {
             JsonElement element = iterator.next();
             JsonObject object = element.asObject();
             try {
-                return (T)table.getJsonManipulator().readFromJson(object);
+                return (T) table.getJsonManipulator().readFromJson(object);
             } catch (ParseException ex) {
                 Logger.getLogger(SnowClient.class.getName()).log(Level.SEVERE, null, ex);
                 return null;
