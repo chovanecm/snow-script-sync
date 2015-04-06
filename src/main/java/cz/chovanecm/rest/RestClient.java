@@ -24,6 +24,7 @@ public class RestClient {
         HttpClientBuilder builder = HttpClientBuilder.create();
         if (proxyHost != null && proxyPort != null) {
             builder.setProxy(new HttpHost(proxyHost, proxyPort));
+            System.out.println("Using proxy: " + new HttpHost(proxyHost, proxyPort));
         }
         if (basicAuthPassword != null && basicAuthUserName != null) {
             BasicCredentialsProvider credProvider = new BasicCredentialsProvider();

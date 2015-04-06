@@ -10,7 +10,7 @@ public class BusinessRuleSnowScript extends SnowScript {
 
     private String businessRuleOnTable = "";
     private String when = "";
-
+    
     public BusinessRuleSnowScript(String sysId, String scriptName, String script, SnowTable table) {
         super(sysId, scriptName, script, table);
     }

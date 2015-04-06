@@ -30,6 +30,7 @@ public class SnowScriptJsonManipulator extends JsonManipulator{
         super.setMyFields(json, record); 
         record.setScript(json.getString(getTable().getScriptField()));
         record.setScriptName(json.getString(getTable().getNameField()));
+        record.setActive("true".equals(json.getString("active")));
         return record;
     }
     

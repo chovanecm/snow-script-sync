@@ -25,12 +25,18 @@ public class SnowSycriptSynchronizer {
 
     static ExecutorService pool = Executors.newFixedThreadPool(4);
 
-    public static void main(String[] args) throws IOException {
-        SnowClient client = new SnowClient("https://demo019.service-now.com/", "admin", "admin", null, null);
+    public static void run(String instance, String user, String password, String proxy, Integer proxyPort, String destination) throws IOException {
 
-        Path path = Files.createDirectories(Paths.get("/tmp/snow/sys_script_include"));
+        SnowClient client = new SnowClient(instance, user, password, proxy, proxyPort);
+        Path root = Paths.get(destination);
+
+        Path path = Files.createDirectories(root.resolve("sys_script_include/_inactive_")).getParent();
+        //@path contains sys_script_include
         for (final SnowScript script : client.readAll(new ScriptSnowTable("sys_script_include", "script", "name"), 100, SnowScript.class)) {
             Path file = path.resolve(script.getScriptName().replaceAll("[^\\. 0-9\\(\\),_a-zA-Z]", "_") + "_" + script.getSysId() + ".js");
+            if (!script.isActive()) {
+                file = file.getParent().resolve("_inactive_").resolve(file.getFileName());
+            }
             writeScript(file, script);
         }
 
@@ -38,27 +44,34 @@ public class SnowSycriptSynchronizer {
         DbObjectRegistry registry = new DbObjectRegistry(client.readAll(new DbObjectTable(), 100, DbObject.class));
 
         //business rules
-        path = Files.createDirectories(Paths.get("/tmp/snow/sys_script"));
+        path = Files.createDirectories(root.resolve("sys_script"));
 
         for (final BusinessRuleSnowScript script : client.readAll(new BusinessRuleTable(), 100, BusinessRuleSnowScript.class)) {
-            Path file = path.resolve(script.getBusinessRuleOnTable().isEmpty() ? "." : script.getBusinessRuleOnTable()).resolve(script.getScriptName().replaceAll("[^\\. 0-9\\(\\),_a-zA-Z]", "_") + "_" + script.getSysId() + ".js");
+            Path filePath = path.resolve(getPath(registry.getObjectByName(script.getBusinessRuleOnTable())));
+            Path file = filePath.resolve(script.getScriptName().replaceAll("[^\\. 0-9\\(\\),_a-zA-Z]", "_") + "_" + script.getSysId() + ".js");
             Files.createDirectories(file.getParent());
-            writeScript(file, script);
-        }
-
-        for (DbObject object : registry.getAllObjects()) {
-             Files.createDirectories(path.resolve(object.getName()));     
-        }
-        for (DbObject object : registry.getAllObjects()) {
-            Path folder = path.resolve(object.getName());
-            for (DbObject child : object.getChilds()) {
-                Files.createSymbolicLink(folder.resolve(child.getName()), path.resolve(child.getName()));
+            if (!script.isActive()) {
+                file = file.getParent().resolve("_inactive_").resolve(file.getFileName());
+                Files.createDirectories(file.getParent());
             }
+            writeScript(file, script);
         }
 
         System.out.println("DONE! - Finishing IO");
         pool.shutdown();
         System.out.println("FINISHED.");
+    }
+
+    public static Path getPath(DbObject object) {
+        if (object == null) {
+            return Paths.get(".");
+        }
+        Path path = Paths.get(object.getName());
+        while (object.getSuperClass() != null) {
+            object = object.getSuperClass();
+            path = Paths.get(object.getName()).resolve(path);
+        }
+        return path;
     }
 
     public static void writeScript(Path file, final SnowScript snowScript) {

@@ -1,6 +1,5 @@
 package cz.chovanecm.snow.records;
 
-import cz.chovanecm.snow.records.SnowRecord;
 import cz.chovanecm.snow.tables.SnowTable;
 
 /**
@@ -11,6 +10,7 @@ public class SnowScript extends SnowRecord {
 
     private String scriptName;
     private String script = "";
+    private boolean active = true;
     public SnowScript(String sysId, String scriptName, String script, SnowTable table) {
         super(table, sysId);
         this.scriptName = scriptName;
@@ -35,6 +35,14 @@ public class SnowScript extends SnowRecord {
 
     public void setScript(String script) {
         this.script = script;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     
