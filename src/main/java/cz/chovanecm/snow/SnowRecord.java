@@ -7,13 +7,21 @@ import java.util.Date;
  * @author martin
  */
 public abstract class SnowRecord {
-    private SnowTable table;
+    private final SnowTable table;
     private String sysId;
     private Date updatedOn;
     private Date createdOn;
 
     public SnowRecord(SnowTable table, String sysId) {
         this.table = table;
+        this.sysId = sysId;
+    }
+
+    public SnowRecord(SnowTable table) {
+        this.table = table;
+    }
+    
+    public void setSysId(String sysId) {
         this.sysId = sysId;
     }
 

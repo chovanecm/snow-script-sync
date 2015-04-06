@@ -14,6 +14,10 @@ public class SnowScript extends SnowRecord {
         this.script = script;
     }
 
+    public SnowScript(SnowTable table) {
+        super(table);
+    }
+
     public String getScriptName() {
         return scriptName;
     }
