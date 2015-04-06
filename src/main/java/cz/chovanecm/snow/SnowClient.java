@@ -7,8 +7,6 @@ import cz.chovanecm.rest.RestClient;
 import cz.chovanecm.snow.api.SnowApiGetResponse;
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,11 +35,11 @@ public class SnowClient {
         return getInstanceUrl() + API_URL;
     }
 
-    public String getTableApiUrl(SnowScriptTable table) {
+    public String getTableApiUrl(SnowTable table) {
         return getApiUrl() + table.getTableName();
     }
 
-    public Iterable<SnowScript> readAll(SnowScriptTable sourceTable, int readsPerRequest) throws IOException {
+    public <T extends SnowRecord> Iterable<T> readAll(SnowTable sourceTable, int readsPerRequest, Class<T> type) throws IOException {
         SnowApiGetResponse response = new SnowApiGetResponse(client.get(getTableApiUrl(sourceTable) + "?sysparm_limit=" + readsPerRequest));
         return () -> {
             try {
@@ -53,14 +51,14 @@ public class SnowClient {
         };
     }
 
-    public class ResultIterator implements Iterator<SnowScript> {
+    public class ResultIterator<T extends SnowRecord> implements Iterator<T> {
 
         private SnowApiGetResponse response;
         private String nextUrl;
         private Iterator<JsonElement> iterator;
-        private SnowScriptTable table;
-        private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
-        public ResultIterator(SnowScriptTable table, SnowApiGetResponse response) throws IOException {
+        private SnowTable table;
+   
+        public ResultIterator(SnowTable table, SnowApiGetResponse response) throws IOException {
             this.response = response;
             this.table = table;
             nextUrl = response.getNextRecordsUrl();
@@ -74,7 +72,7 @@ public class SnowClient {
         }
 
         @Override
-        public SnowScript next() {
+        public T next() {
             if (!hasNext()) {
                 return null;
             }
@@ -82,7 +80,6 @@ public class SnowClient {
                 try {
                     System.out.println("Downloading: " + nextUrl);
                     response = new SnowApiGetResponse(client.get(nextUrl));
-                    System.out.println("Downloaded.");
                     nextUrl = response.getNextRecordsUrl();
                     JsonArray results = response.getBody().getArray("result");
                     iterator = results.iterator();
@@ -92,15 +89,12 @@ public class SnowClient {
             }
             JsonElement element = iterator.next();
             JsonObject object = element.asObject();
-            SnowScript snowScript = new SnowScript(object.getString("sys_id"), object.getString(table.getNameField()), object.getString(table.getScriptField()), table);
             try {
-                
-                snowScript.setUpdated(dateFormat.parse(object.getString("sys_updated_on") + " GMT"));
+                return (T)table.getJsonManipulator().readFromJson(object);
             } catch (ParseException ex) {
-                snowScript.setUpdated(new Date());
                 Logger.getLogger(SnowClient.class.getName()).log(Level.SEVERE, null, ex);
+                return null;
             }
-            return snowScript;
         }
 
     }

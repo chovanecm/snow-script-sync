@@ -2,7 +2,6 @@ package cz.chovanecm.rest;
 
 import java.io.IOException;
 import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -58,10 +57,7 @@ public class RestClient {
         HttpGet request = new HttpGet(url);
         if (getAcceptHeader() != null) {
             request.addHeader("Accept", getAcceptHeader());
-        }
-        System.out.println("Executing req");
-       
-        
+        }    
         return client.execute(request);
     }
 
