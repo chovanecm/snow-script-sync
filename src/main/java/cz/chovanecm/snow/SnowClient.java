@@ -1,5 +1,7 @@
 package cz.chovanecm.snow;
 
+import cz.chovanecm.snow.records.SnowRecord;
+import cz.chovanecm.snow.tables.SnowTable;
 import com.github.jsonj.JsonArray;
 import com.github.jsonj.JsonElement;
 import com.github.jsonj.JsonObject;

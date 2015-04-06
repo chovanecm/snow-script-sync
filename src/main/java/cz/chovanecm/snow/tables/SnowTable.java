@@ -1,4 +1,4 @@
-package cz.chovanecm.snow;
+package cz.chovanecm.snow.tables;
 
 import cz.chovanecm.snow.json.JsonManipulator;
 

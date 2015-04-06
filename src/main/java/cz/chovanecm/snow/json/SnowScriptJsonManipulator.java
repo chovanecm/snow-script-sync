@@ -1,9 +1,9 @@
 package cz.chovanecm.snow.json;
 
 import com.github.jsonj.JsonObject;
-import cz.chovanecm.snow.ScriptSnowTable;
-import cz.chovanecm.snow.SnowRecord;
-import cz.chovanecm.snow.SnowScript;
+import cz.chovanecm.snow.tables.ScriptSnowTable;
+import cz.chovanecm.snow.records.SnowRecord;
+import cz.chovanecm.snow.records.SnowScript;
 import java.text.ParseException;
 
 /**

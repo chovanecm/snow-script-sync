@@ -1,4 +1,7 @@
-package cz.chovanecm.snow;
+package cz.chovanecm.snow.records;
+
+import cz.chovanecm.snow.records.SnowRecord;
+import cz.chovanecm.snow.tables.SnowTable;
 
 /**
  *

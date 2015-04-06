@@ -1,5 +1,6 @@
-package cz.chovanecm.snow;
+package cz.chovanecm.snow.records;
 
+import cz.chovanecm.snow.tables.SnowTable;
 import java.util.Date;
 
 /**

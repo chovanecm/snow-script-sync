@@ -1,7 +1,7 @@
 package cz.chovanecm.snow.json;
 
 import com.github.jsonj.JsonObject;
-import cz.chovanecm.snow.SnowRecord;
+import cz.chovanecm.snow.records.SnowRecord;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
