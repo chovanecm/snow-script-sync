@@ -7,11 +7,14 @@ import com.github.jsonj.JsonElement;
 import com.github.jsonj.JsonObject;
 import cz.chovanecm.rest.RestClient;
 import cz.chovanecm.snow.api.SnowApiGetResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.http.client.methods.CloseableHttpResponse;
 
 /**
  *
@@ -54,7 +57,8 @@ public class SnowClient {
     }
 
     public <T extends SnowRecord> T getRecordBySysId(SnowTable sourceTable, String sysId, Class<T> type) throws IOException {
-        SnowApiGetResponse response = new SnowApiGetResponse(client.get(getTableApiUrl(sourceTable) + "?sysparm_query=sys_id=" + sysId));
+        CloseableHttpResponse httpResponse = client.get(getTableApiUrl(sourceTable) + "?sysparm_query=sys_id=" + sysId);
+        SnowApiGetResponse response = new SnowApiGetResponse(httpResponse);
         ResultIterator<T> iterator = new ResultIterator(sourceTable, response);
         return iterator.next();
     }
