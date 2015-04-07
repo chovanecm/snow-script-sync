@@ -55,8 +55,8 @@ public class SnowApiGetResponse implements AutoCloseable {
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
             StringBuilder builder = new StringBuilder();
             while (reader.ready()) {
-                String line = reader.readLine().replaceAll("\\\\\\\\n", "\\\\\\\\\\\\\\\\n");
-                //@line contains \n in String correctly escaped.
+                String line = reader.readLine().replaceAll("\\\\\\\\", "\\\\\\\\\\\\\\\\");
+                //@line correctly escaped backslash
                 builder.append(line);
             }
             object = new JsonParser().parse(builder.toString()).asObject();
