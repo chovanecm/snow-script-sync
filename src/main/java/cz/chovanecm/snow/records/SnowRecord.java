@@ -1,6 +1,8 @@
 package cz.chovanecm.snow.records;
 
+import cz.chovanecm.snow.RecordAccessor;
 import cz.chovanecm.snow.tables.SnowTable;
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -49,5 +51,7 @@ public abstract class SnowRecord {
     public void setCreatedOn(Date createdOn) {
         this.createdOn = createdOn;
     }
+    
+    public abstract void save(RecordAccessor destination) throws IOException;
     
 }

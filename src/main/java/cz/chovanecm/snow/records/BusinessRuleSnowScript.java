@@ -1,14 +1,16 @@
 package cz.chovanecm.snow.records;
 
+import cz.chovanecm.snow.RecordAccessor;
 import cz.chovanecm.snow.tables.SnowTable;
+import java.io.IOException;
 
 /**
  *
  * @author martin
  */
-public class BusinessRuleSnowScript extends SnowScript {
+public class BusinessRuleSnowScript extends SnowScript implements TableBasedObject {
 
-    private String businessRuleOnTable = "";
+    private String tableName = "";
     private String when = "";
     
     public BusinessRuleSnowScript(String sysId, String scriptName, String script, SnowTable table) {
@@ -19,12 +21,13 @@ public class BusinessRuleSnowScript extends SnowScript {
         super(table);
     }
 
-    public String getBusinessRuleOnTable() {
-        return businessRuleOnTable;
+    @Override
+    public String getTableName() {
+        return tableName;
     }
 
-    public void setBusinessRuleOnTable(String businessRuleOnTable) {
-        this.businessRuleOnTable = businessRuleOnTable;
+    public void setTableName(String businessRuleOnTable) {
+        this.tableName = businessRuleOnTable;
     }
 
     public String getWhen() {
@@ -33,6 +36,11 @@ public class BusinessRuleSnowScript extends SnowScript {
 
     public void setWhen(String when) {
         this.when = when;
+    }
+
+    @Override
+    public void save(RecordAccessor destination) throws IOException {
+        destination.saveBusinessRule(this);
     }
 
 }

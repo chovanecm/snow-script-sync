@@ -5,6 +5,7 @@
  */
 package cz.chovanecm.snow;
 
+import cz.chovanecm.snow.api.SnowClient;
 import cz.chovanecm.snow.records.SnowScript;
 import cz.chovanecm.snow.tables.ScriptSnowTable;
 import java.io.IOException;

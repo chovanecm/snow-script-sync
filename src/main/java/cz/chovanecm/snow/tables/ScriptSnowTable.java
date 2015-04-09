@@ -1,7 +1,5 @@
 package cz.chovanecm.snow.tables;
 
-import com.github.jsonj.JsonElement;
-import com.github.jsonj.JsonObject;
 import cz.chovanecm.snow.json.JsonManipulator;
 import cz.chovanecm.snow.json.SnowScriptJsonManipulator;
 

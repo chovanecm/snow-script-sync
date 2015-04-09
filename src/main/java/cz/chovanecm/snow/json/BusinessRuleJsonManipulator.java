@@ -28,7 +28,7 @@ public class BusinessRuleJsonManipulator extends SnowScriptJsonManipulator {
     
     protected BusinessRuleSnowScript setMyFields(JsonObject json, BusinessRuleSnowScript script) throws ParseException {
         super.setMyFields(json, script);
-        script.setBusinessRuleOnTable(json.getString("collection"));
+        script.setTableName(json.getString("collection"));
         script.setWhen(json.getString("when"));
         return script;
     }

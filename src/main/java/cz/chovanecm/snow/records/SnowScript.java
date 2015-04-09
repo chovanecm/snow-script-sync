@@ -1,12 +1,14 @@
 package cz.chovanecm.snow.records;
 
+import cz.chovanecm.snow.RecordAccessor;
 import cz.chovanecm.snow.tables.SnowTable;
+import java.io.IOException;
 
 /**
  *
  * @author Martin
  */
-public class SnowScript extends SnowRecord {
+public class SnowScript extends SnowRecord implements DeactivableSnowRecord {
 
     private String scriptName;
     private String script = "";
@@ -37,12 +39,18 @@ public class SnowScript extends SnowRecord {
         this.script = script;
     }
 
+    @Override
     public boolean isActive() {
         return active;
     }
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    @Override
+    public void save(RecordAccessor destination) throws IOException {
+        destination.saveSnowScript(this);
     }
 
     

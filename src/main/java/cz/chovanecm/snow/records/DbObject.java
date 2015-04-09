@@ -1,8 +1,8 @@
 package cz.chovanecm.snow.records;
 
 
+import cz.chovanecm.snow.RecordAccessor;
 import cz.chovanecm.snow.tables.DbObjectTable;
-import cz.chovanecm.snow.tables.SnowTable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -56,6 +56,11 @@ public class DbObject extends SnowRecord {
 
     public Set<DbObject> getChilds() {
         return childs;
+    }
+
+    @Override
+    public void save(RecordAccessor destination) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }
