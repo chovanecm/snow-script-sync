@@ -6,6 +6,7 @@ import cz.chovanecm.snow.records.BusinessRuleSnowScript;
 import cz.chovanecm.snow.records.DbObject;
 import cz.chovanecm.snow.records.SnowScript;
 import cz.chovanecm.snow.tables.BusinessRuleTable;
+import cz.chovanecm.snow.tables.ClientScriptTable;
 import cz.chovanecm.snow.tables.DbObjectRegistry;
 import cz.chovanecm.snow.tables.DbObjectTable;
 import cz.chovanecm.snow.tables.ScriptSnowTable;
@@ -35,7 +36,7 @@ public class SnowScriptSynchronizer {
         DbObjectRegistry registry = new DbObjectRegistry(client.readAll(new DbObjectTable(), 100, DbObject.class));
 
         FileRecordAccessor fileAccessor = new FileRecordAccessor(registry, root);
-        List<ScriptSnowTable> tables = Arrays.asList(new ScriptSnowTable("sys_script_include", "script", "name"), new BusinessRuleTable());
+        List<ScriptSnowTable> tables = Arrays.asList(new ScriptSnowTable("sys_script_include", "script", "name"), new BusinessRuleTable(), new ClientScriptTable());
      
         for (ScriptSnowTable table : tables) {
             //@path contains sys_script_include

@@ -1,6 +1,7 @@
 package cz.chovanecm.snow;
 
 import cz.chovanecm.snow.records.BusinessRuleSnowScript;
+import cz.chovanecm.snow.records.ClientScript;
 import cz.chovanecm.snow.records.DbObject;
 import cz.chovanecm.snow.records.SnowScript;
 import java.io.IOException;
@@ -16,4 +17,6 @@ public interface RecordAccessor {
     public void saveSnowScript(SnowScript script) throws IOException;
 
     public void saveBusinessRule(BusinessRuleSnowScript businessRule) throws IOException;
+    
+    public void saveClientScript(ClientScript clientScript) throws IOException;
 }

@@ -2,6 +2,7 @@ package cz.chovanecm.snow.files;
 
 import cz.chovanecm.snow.RecordAccessor;
 import cz.chovanecm.snow.records.BusinessRuleSnowScript;
+import cz.chovanecm.snow.records.ClientScript;
 import cz.chovanecm.snow.records.DbObject;
 import cz.chovanecm.snow.records.SnowScript;
 import cz.chovanecm.snow.tables.DbObjectRegistry;
@@ -60,6 +61,15 @@ public class FileRecordAccessor implements RecordAccessor {
         writeFile(file, script.getScript().getBytes(), script.getUpdatedOn());
     }
 
+    @Override
+    public void saveClientScript(ClientScript script) throws IOException {
+        Path file = root.resolve(script.getTable().getTableName())
+                .resolve(getDirBuilder().getPathForTableBasedObject(script))
+                .resolve(getDirBuilder().getPathForDeactivableSnowRecord(script));
+        file = file.resolve(getSafeFileName(script.getScriptName() + "_" + script.getSysId() + ".js"));
+        writeFile(file, script.getScript().getBytes(), script.getUpdatedOn());
+    }
+
     private String getSafeFileName(String filename) {
         return filename.replaceAll("[^\\. 0-9\\(\\),_a-zA-Z]", "_");
     }
@@ -79,4 +89,5 @@ public class FileRecordAccessor implements RecordAccessor {
         Files.write(file, bytes);
         Files.setLastModifiedTime(file, FileTime.fromMillis(lastModified.getTime()));
     }
+
 }
