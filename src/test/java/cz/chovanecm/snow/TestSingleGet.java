@@ -27,9 +27,9 @@ public class TestSingleGet {
     //
     @Test
     public void testSingleGet() throws IOException {
-        SnowClient client = new SnowClient("https://demo019.service-now.com", "admin", "admin", null, null);
+       /* SnowClient client = new SnowClient("https://demo019.service-now.com", "admin", "admin", null, null);
         SnowScript script = client.getRecordBySysId(new ScriptSnowTable("sys_script_include", "script", "name"), "3cdeec09a997b940234722fdcbb24210", SnowScript.class);
         System.out.println(script.getScript());
-        Files.write(Paths.get("D:/test.js"), script.getScript().getBytes());
+        Files.write(Paths.get("D:/test.js"), script.getScript().getBytes());*/
     }
 }

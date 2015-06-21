@@ -21,11 +21,19 @@ public class FileRecordAccessor implements RecordAccessor {
     private final DbObjectRegistry objectRegistry;
     private final DirectoryTreeBuilder dirBuilder;
     private final Path root;
-
+    private String instanceURL = "";
     public FileRecordAccessor(DbObjectRegistry objectRegistry, Path root) {
         this.objectRegistry = objectRegistry;
         this.dirBuilder = new DirectoryTreeBuilder(objectRegistry);
         this.root = root;
+    }
+
+    public String getInstanceURL() {
+        return instanceURL;
+    }
+
+    public void setInstanceURL(String instanceURL) {
+        this.instanceURL = instanceURL;
     }
 
     public DbObjectRegistry getObjectRegistry() {
@@ -49,7 +57,7 @@ public class FileRecordAccessor implements RecordAccessor {
     public void saveSnowScript(SnowScript script) throws IOException {
         Path file = root.resolve(script.getTable().getTableName()).resolve(getDirBuilder().getPathForDeactivableSnowRecord(script));
         file = file.resolve(getSafeFileName(script.getScriptName() + "_" + script.getSysId() + ".js"));
-        writeFile(file, script.getScript().getBytes(), script.getUpdatedOn());
+        writeFile(file, (getUrlHeader(script) + script.getScript()).getBytes(), script.getUpdatedOn());
     }
 
     @Override
@@ -58,7 +66,7 @@ public class FileRecordAccessor implements RecordAccessor {
                 .resolve(getDirBuilder().getPathForTableBasedObject(script))
                 .resolve(getDirBuilder().getPathForDeactivableSnowRecord(script));
         file = file.resolve(getSafeFileName(script.getScriptName() + "_" + script.getSysId() + ".js"));
-        writeFile(file, script.getScript().getBytes(), script.getUpdatedOn());
+        writeFile(file, (getUrlHeader(script) + script.getScript()).getBytes(), script.getUpdatedOn());
     }
 
     @Override
@@ -67,13 +75,17 @@ public class FileRecordAccessor implements RecordAccessor {
                 .resolve(getDirBuilder().getPathForTableBasedObject(script))
                 .resolve(getDirBuilder().getPathForDeactivableSnowRecord(script));
         file = file.resolve(getSafeFileName(script.getScriptName() + "_" + script.getSysId() + ".js"));
-        writeFile(file, script.getScript().getBytes(), script.getUpdatedOn());
+        writeFile(file, (getUrlHeader(script) + script.getScript()).getBytes(), script.getUpdatedOn());
     }
 
     private String getSafeFileName(String filename) {
         return filename.replaceAll("[^\\. 0-9\\(\\),_a-zA-Z]", "_");
     }
-
+    private String getUrlHeader(SnowScript script) {
+        return "/**" + System.lineSeparator() + "@snowURL " + getInstanceURL()
+                + "/" + script.getTable().getTableName() + ".do?sys_id=" + script.getSysId()
+                + System.lineSeparator() + " */" + System.lineSeparator();
+    }
     /**
      *
      * @param file

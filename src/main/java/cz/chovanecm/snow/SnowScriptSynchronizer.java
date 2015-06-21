@@ -36,6 +36,7 @@ public class SnowScriptSynchronizer {
         DbObjectRegistry registry = new DbObjectRegistry(client.readAll(new DbObjectTable(), 100, DbObject.class));
 
         FileRecordAccessor fileAccessor = new FileRecordAccessor(registry, root);
+        fileAccessor.setInstanceURL(instance);
         List<ScriptSnowTable> tables = Arrays.asList(new ScriptSnowTable("sys_script_include", "script", "name"), new BusinessRuleTable(), new ClientScriptTable());
      
         for (ScriptSnowTable table : tables) {
