@@ -7,7 +7,9 @@ each file contains an URL pointing to the script editor, so you can simply click
 
 ## Usage:
 	java -jar snow-scripts-sync-3.0-SNAPSHOT-jar-with-dependencies.jar -d c:\dev_instance -i demo019.service-now.com -u user_name -p password
+
 will download scripts from demo019 to c:\dev_instance directory. You can also specify proxy using the "-x" argument like that:
+
 	java -jar snow-scripts-sync-3.0-SNAPSHOT-jar-with-dependencies.jar -d c:\dev_instance -i demo019.service-now.com -u user_name -p password -x 10.0.0.1:3128
 
 	
