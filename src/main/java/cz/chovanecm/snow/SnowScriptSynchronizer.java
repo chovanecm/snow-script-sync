@@ -37,7 +37,7 @@ public class SnowScriptSynchronizer {
 
         FileRecordAccessor fileAccessor = new FileRecordAccessor(registry, root);
         fileAccessor.setInstanceURL(instance);
-        List<ScriptSnowTable> tables = Arrays.asList(new ScriptSnowTable("sys_script_include", "script", "name"), new BusinessRuleTable(), new ClientScriptTable());
+        List<ScriptSnowTable> tables = Arrays.asList(new ScriptSnowTable("sys_script_include", "script", "name"), new ScriptSnowTable("sysevent_in_email_action", "script", "name"), new BusinessRuleTable(), new ClientScriptTable());
      
         for (ScriptSnowTable table : tables) {
             //@path contains sys_script_include

@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>cz.chovanecm</groupId>
     <artifactId>snow-scripts-sync</artifactId>
-    <version>3.0-SNAPSHOT</version>
+    <version>0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>

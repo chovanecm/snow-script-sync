@@ -4,6 +4,9 @@ import cz.chovanecm.snow.RecordAccessor;
 import cz.chovanecm.snow.tables.SnowTable;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -14,7 +17,7 @@ public abstract class SnowRecord {
     private String sysId;
     private Date updatedOn;
     private Date createdOn;
-
+    private final Map<String, String> attributes = new HashMap<>();
     public SnowRecord(SnowTable table, String sysId) {
         this.table = table;
         this.sysId = sysId;
@@ -50,6 +53,16 @@ public abstract class SnowRecord {
 
     public void setCreatedOn(Date createdOn) {
         this.createdOn = createdOn;
+    }
+    public Set<String> getAttributes() {
+        return this.attributes.keySet();
+    }
+    public String getAttributeValue(String attribute) {
+        return this.attributes.get(attribute);
+    }
+
+    public String setAttributeValue(String attribute, String value) {
+        return attributes.put(attribute, value);
     }
     
     public abstract void save(RecordAccessor destination) throws IOException;

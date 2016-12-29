@@ -57,7 +57,7 @@ public class FileRecordAccessor implements RecordAccessor {
     public void saveSnowScript(SnowScript script) throws IOException {
         Path file = root.resolve(script.getTable().getTableName()).resolve(getDirBuilder().getPathForDeactivableSnowRecord(script));
         file = file.resolve(getSafeFileName(script.getScriptName() + "_" + script.getSysId() + ".js"));
-        writeFile(file, (getUrlHeader(script) + script.getScript()).getBytes(), script.getUpdatedOn());
+        writeFile(file, (buildScriptHeader(script) + script.getScript()).getBytes(), script.getUpdatedOn());
     }
 
     @Override
@@ -66,7 +66,7 @@ public class FileRecordAccessor implements RecordAccessor {
                 .resolve(getDirBuilder().getPathForTableBasedObject(script))
                 .resolve(getDirBuilder().getPathForDeactivableSnowRecord(script));
         file = file.resolve(getSafeFileName(script.getScriptName() + "_" + script.getSysId() + ".js"));
-        writeFile(file, (getUrlHeader(script) + script.getScript()).getBytes(), script.getUpdatedOn());
+        writeFile(file, (buildScriptHeader(script) + script.getScript()).getBytes(), script.getUpdatedOn());
     }
 
     @Override
@@ -75,16 +75,31 @@ public class FileRecordAccessor implements RecordAccessor {
                 .resolve(getDirBuilder().getPathForTableBasedObject(script))
                 .resolve(getDirBuilder().getPathForDeactivableSnowRecord(script));
         file = file.resolve(getSafeFileName(script.getScriptName() + "_" + script.getSysId() + ".js"));
-        writeFile(file, (getUrlHeader(script) + script.getScript()).getBytes(), script.getUpdatedOn());
+        writeFile(file, (buildScriptHeader(script) + script.getScript()).getBytes(), script.getUpdatedOn());
     }
 
     private String getSafeFileName(String filename) {
         return filename.replaceAll("[^\\. 0-9\\(\\),_a-zA-Z]", "_");
     }
-    private String getUrlHeader(SnowScript script) {
-        return "/**" + System.lineSeparator() + "@snowURL " + getInstanceURL()
-                + "/" + script.getTable().getTableName() + ".do?sys_id=" + script.getSysId()
-                + System.lineSeparator() + " */" + System.lineSeparator();
+    
+    /**
+     * Create a script header that will be appended to the beginning of the file.
+     * It will contain all attributes and the URL of the script.
+     * @param script
+     * @return 
+     */
+    private String buildScriptHeader(SnowScript script) {
+        StringBuilder builder = new StringBuilder();
+         builder.append("/** [sss:snow_sync_header]").append(System.lineSeparator()).append("@snowURL ").append(getInstanceURL())
+                .append("/").append(script.getTable().getTableName()).append(".do?sys_id=").append(script.getSysId())
+                .append(System.lineSeparator());
+         
+         script.getAttributes().forEach((attribute) -> {
+             builder.append("@").append(attribute).append(" ").append(script.getAttributeValue(attribute).replace("*/", "* /"));
+             builder.append(System.lineSeparator());
+         });
+         builder.append("*/").append(System.lineSeparator());
+         return builder.toString();
     }
     /**
      *
