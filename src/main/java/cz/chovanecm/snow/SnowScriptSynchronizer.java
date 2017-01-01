@@ -34,22 +34,32 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Main class
+ */
 public class SnowScriptSynchronizer {
 
+    // We will download and process scripts in parallel
     static ExecutorService pool = Executors.newFixedThreadPool(4);
 
     public static void run(String instance, String user, String password, String proxy, Integer proxyPort, String destination) throws IOException {
 
+        // This allow us to access the ServiceNow instance
         SnowClient client = new SnowClient(instance, user, password, proxy, proxyPort);
+
+        // Where the scripts download to
         Path root = Paths.get(destination);
+        // TODO: what exactly is this used for?
         DbObjectRegistry registry = new DbObjectRegistry(client.readAll(new DbObjectTable(), 100, DbObject.class));
 
+        // TODO: what exactly is this used for?
         FileRecordAccessor fileAccessor = new FileRecordAccessor(registry, root);
         fileAccessor.setInstanceURL(instance);
+        // List of the tables we will download scripts from.
         List<ScriptSnowTable> tables = Arrays.asList(new ScriptSnowTable("sys_script_include", "script", "name"), new ScriptSnowTable("sysevent_in_email_action", "script", "name"), new BusinessRuleTable(), new ClientScriptTable());
 
         for (ScriptSnowTable table : tables) {
-            //@path contains sys_script_include
+            // now for each table, iterate through all the records and save them using fileAcessor.
             for (final SnowScript script : client.readAll(table, 100, SnowScript.class)) {
                 pool.execute(() -> {
                     try {
