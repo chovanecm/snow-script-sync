@@ -1,5 +1,5 @@
 /*
- * Snow Script Synchroniser is a tool helping developers to write scripts for ServiceNow
+ * Snow Script Synchronizer is a tool helping developers to write scripts for ServiceNow
  *     Copyright (C) 2015-2017  Martin Chovanec <chovamar@fit.cvut.cz>
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -21,16 +21,17 @@ package cz.chovanecm.snow.records;
 
 import cz.chovanecm.snow.RecordAccessor;
 import cz.chovanecm.snow.tables.DbObjectTable;
+
 import java.util.HashSet;
 import java.util.Set;
 
 public class DbObject extends SnowRecord {
 
+    private final Set<DbObject> childs = new HashSet<>();
     private String name = "";
     private String superClassId = "";
     private DbObject superClass;
-    private final Set<DbObject> childs = new HashSet<>();
-    
+
     public DbObject(String sysId) {
         super(new DbObjectTable(), sysId);
     }
@@ -38,7 +39,7 @@ public class DbObject extends SnowRecord {
     public DbObject() {
         super(new DbObjectTable());
     }
-    
+
     public String getName() {
         return name;
     }
@@ -59,13 +60,13 @@ public class DbObject extends SnowRecord {
         return superClass;
     }
 
+    public void setSuperClass(DbObject superClass) {
+        this.superClass = superClass;
+    }
+
     public void addChildObject(DbObject child) {
         childs.add(child);
         child.setSuperClass(this);
-    }
-
-    public void setSuperClass(DbObject superClass) {
-        this.superClass = superClass;
     }
 
     public Set<DbObject> getChilds() {
@@ -76,5 +77,5 @@ public class DbObject extends SnowRecord {
     public void save(RecordAccessor destination) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }

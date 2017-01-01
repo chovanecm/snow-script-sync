@@ -1,5 +1,5 @@
 /*
- * Snow Script Synchroniser is a tool helping developers to write scripts for ServiceNow
+ * Snow Script Synchronizer is a tool helping developers to write scripts for ServiceNow
  *     Copyright (C) 2015-2017  Martin Chovanec <chovamar@fit.cvut.cz>
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@ package cz.chovanecm.snow.tables;
 import cz.chovanecm.snow.json.DbObjectJsonManipulator;
 import cz.chovanecm.snow.json.JsonManipulator;
 
-public class DbObjectTable extends SnowTable{
+public class DbObjectTable extends SnowTable {
 
     public DbObjectTable() {
         super("sys_db_object");
@@ -31,5 +31,5 @@ public class DbObjectTable extends SnowTable{
     public JsonManipulator getJsonManipulator() {
         return new DbObjectJsonManipulator();
     }
-    
+
 }

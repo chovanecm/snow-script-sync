@@ -1,5 +1,5 @@
 /*
- * Snow Script Synchroniser is a tool helping developers to write scripts for ServiceNow
+ * Snow Script Synchronizer is a tool helping developers to write scripts for ServiceNow
  *     Copyright (C) 2015-2017  Martin Chovanec <chovamar@fit.cvut.cz>
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -20,16 +20,11 @@ package cz.chovanecm.snow;
 
 import cz.chovanecm.snow.api.SnowClient;
 import cz.chovanecm.snow.files.FileRecordAccessor;
-import cz.chovanecm.snow.records.BusinessRuleSnowScript;
 import cz.chovanecm.snow.records.DbObject;
 import cz.chovanecm.snow.records.SnowScript;
-import cz.chovanecm.snow.tables.BusinessRuleTable;
-import cz.chovanecm.snow.tables.ClientScriptTable;
-import cz.chovanecm.snow.tables.DbObjectRegistry;
-import cz.chovanecm.snow.tables.DbObjectTable;
-import cz.chovanecm.snow.tables.ScriptSnowTable;
+import cz.chovanecm.snow.tables.*;
+
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -52,7 +47,7 @@ public class SnowScriptSynchronizer {
         FileRecordAccessor fileAccessor = new FileRecordAccessor(registry, root);
         fileAccessor.setInstanceURL(instance);
         List<ScriptSnowTable> tables = Arrays.asList(new ScriptSnowTable("sys_script_include", "script", "name"), new ScriptSnowTable("sysevent_in_email_action", "script", "name"), new BusinessRuleTable(), new ClientScriptTable());
-     
+
         for (ScriptSnowTable table : tables) {
             //@path contains sys_script_include
             for (final SnowScript script : client.readAll(table, 100, SnowScript.class)) {

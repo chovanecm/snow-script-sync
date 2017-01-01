@@ -1,6 +1,6 @@
 # Snow-scripts-sync
 
-Snow Script Synchroniser is a tool helping developers to write code for the [ServiceNow](http://www.servicenow.com) platform.
+Snow Script Synchronizer is a tool helping developers to write code for the [ServiceNow](http://www.servicenow.com) platform.
 
 Current version: 0.2
 

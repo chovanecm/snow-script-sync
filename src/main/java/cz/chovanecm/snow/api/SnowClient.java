@@ -1,5 +1,5 @@
 /*
- * Snow Script Synchroniser is a tool helping developers to write scripts for ServiceNow
+ * Snow Script Synchronizer is a tool helping developers to write scripts for ServiceNow
  *     Copyright (C) 2015-2017  Martin Chovanec <chovamar@fit.cvut.cz>
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -18,24 +18,25 @@
 
 package cz.chovanecm.snow.api;
 
-import cz.chovanecm.snow.records.SnowRecord;
-import cz.chovanecm.snow.tables.SnowTable;
 import com.github.jsonj.JsonArray;
 import com.github.jsonj.JsonElement;
 import com.github.jsonj.JsonObject;
 import cz.chovanecm.rest.RestClient;
+import cz.chovanecm.snow.records.SnowRecord;
+import cz.chovanecm.snow.tables.SnowTable;
+import org.apache.http.client.methods.CloseableHttpResponse;
+
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.http.client.methods.CloseableHttpResponse;
 
 public class SnowClient {
 
+    private final static String API_URL = "/api/now/v1/table/";
     private final RestClient client;
     private final String instanceUrl;
-    private final static String API_URL = "/api/now/v1/table/";
 
     public SnowClient(String instanceUrl, String basicAuthUserName, String basicAuthPassword, String proxyHost, Integer proxyPort) {
         client = new RestClient(proxyHost, proxyPort, basicAuthUserName, basicAuthPassword);

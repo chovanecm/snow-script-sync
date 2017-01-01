@@ -1,5 +1,5 @@
 /*
- * Snow Script Synchroniser is a tool helping developers to write scripts for ServiceNow
+ * Snow Script Synchronizer is a tool helping developers to write scripts for ServiceNow
  *     Copyright (C) 2015-2017  Martin Chovanec <chovamar@fit.cvut.cz>
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@ import cz.chovanecm.snow.records.ClientScript;
 import cz.chovanecm.snow.records.DbObject;
 import cz.chovanecm.snow.records.SnowScript;
 import cz.chovanecm.snow.tables.DbObjectRegistry;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -36,6 +37,7 @@ public class FileRecordAccessor implements RecordAccessor {
     private final DirectoryTreeBuilder dirBuilder;
     private final Path root;
     private String instanceURL = "";
+
     public FileRecordAccessor(DbObjectRegistry objectRegistry, Path root) {
         this.objectRegistry = objectRegistry;
         this.dirBuilder = new DirectoryTreeBuilder(objectRegistry);
@@ -95,28 +97,29 @@ public class FileRecordAccessor implements RecordAccessor {
     private String getSafeFileName(String filename) {
         return filename.replaceAll("[^\\. 0-9\\(\\),_a-zA-Z]", "_");
     }
-    
+
     /**
      * Create a script header that will be appended to the beginning of the file.
      * It will contain all attributes and the URL of the script.
+     *
      * @param script
-     * @return 
+     * @return
      */
     private String buildScriptHeader(SnowScript script) {
         StringBuilder builder = new StringBuilder();
-         builder.append("/** [sss:snow_sync_header]").append(System.lineSeparator()).append("@snowURL ").append(getInstanceURL())
+        builder.append("/** [sss:snow_sync_header]").append(System.lineSeparator()).append("@snowURL ").append(getInstanceURL())
                 .append("/").append(script.getTable().getTableName()).append(".do?sys_id=").append(script.getSysId())
                 .append(System.lineSeparator());
-         
-         script.getAttributes().forEach((attribute) -> {
-             builder.append("@").append(attribute).append(" ").append(script.getAttributeValue(attribute).replace("*/", "* /"));
-             builder.append(System.lineSeparator());
-         });
-         builder.append("*/").append(System.lineSeparator());
-         return builder.toString();
+
+        script.getAttributes().forEach((attribute) -> {
+            builder.append("@").append(attribute).append(" ").append(script.getAttributeValue(attribute).replace("*/", "* /"));
+            builder.append(System.lineSeparator());
+        });
+        builder.append("*/").append(System.lineSeparator());
+        return builder.toString();
     }
+
     /**
-     *
      * @param file
      * @param bytes
      * @param lastModified Default NOW

@@ -1,5 +1,5 @@
 /*
- * Snow Script Synchroniser is a tool helping developers to write scripts for ServiceNow
+ * Snow Script Synchronizer is a tool helping developers to write scripts for ServiceNow
  *     Copyright (C) 2015-2017  Martin Chovanec <chovamar@fit.cvut.cz>
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -24,14 +24,11 @@
 package cz.chovanecm.snow.cli;
 
 import cz.chovanecm.snow.SnowScriptSynchronizer;
+import org.apache.commons.cli.*;
+
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.PosixParser;
 
 public class CommandLineInterface {
 
@@ -54,14 +51,14 @@ public class CommandLineInterface {
                 String proxy = null;
                 Integer proxyPort = null;
                 if (line.hasOption("x")) {
-                    String [] proxyString = line.getOptionValue("x").split(":");
+                    String[] proxyString = line.getOptionValue("x").split(":");
                     if (proxyString.length != 2) {
                         System.out.println("Proxy format is host:port.");
                         return;
                     } else {
                         try {
-                        proxyPort = Integer.parseInt(proxyString[1]);
-                        proxy = proxyString[0];
+                            proxyPort = Integer.parseInt(proxyString[1]);
+                            proxy = proxyString[0];
                         } catch (NumberFormatException ex) {
                             System.out.println("Port number must be a number.");
                             return;

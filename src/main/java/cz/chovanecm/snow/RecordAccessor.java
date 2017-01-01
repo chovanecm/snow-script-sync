@@ -1,5 +1,5 @@
 /*
- * Snow Script Synchroniser is a tool helping developers to write scripts for ServiceNow
+ * Snow Script Synchronizer is a tool helping developers to write scripts for ServiceNow
  *     Copyright (C) 2015-2017  Martin Chovanec <chovamar@fit.cvut.cz>
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -22,6 +22,7 @@ import cz.chovanecm.snow.records.BusinessRuleSnowScript;
 import cz.chovanecm.snow.records.ClientScript;
 import cz.chovanecm.snow.records.DbObject;
 import cz.chovanecm.snow.records.SnowScript;
+
 import java.io.IOException;
 
 public interface RecordAccessor {
@@ -31,6 +32,6 @@ public interface RecordAccessor {
     public void saveSnowScript(SnowScript script) throws IOException;
 
     public void saveBusinessRule(BusinessRuleSnowScript businessRule) throws IOException;
-    
+
     public void saveClientScript(ClientScript clientScript) throws IOException;
 }

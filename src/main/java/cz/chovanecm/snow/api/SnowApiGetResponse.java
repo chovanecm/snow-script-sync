@@ -1,5 +1,5 @@
 /*
- * Snow Script Synchroniser is a tool helping developers to write scripts for ServiceNow
+ * Snow Script Synchronizer is a tool helping developers to write scripts for ServiceNow
  *     Copyright (C) 2015-2017  Martin Chovanec <chovamar@fit.cvut.cz>
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -20,13 +20,14 @@ package cz.chovanecm.snow.api;
 
 import com.github.jsonj.JsonObject;
 import com.github.jsonj.tools.JsonParser;
+import org.apache.http.client.methods.CloseableHttpResponse;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.http.client.methods.CloseableHttpResponse;
 
 public class SnowApiGetResponse implements AutoCloseable {
 

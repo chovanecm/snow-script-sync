@@ -1,5 +1,5 @@
 /*
- * Snow Script Synchroniser is a tool helping developers to write scripts for ServiceNow
+ * Snow Script Synchronizer is a tool helping developers to write scripts for ServiceNow
  *     Copyright (C) 2015-2017  Martin Chovanec <chovamar@fit.cvut.cz>
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -22,6 +22,7 @@ import cz.chovanecm.snow.records.DbObject;
 import cz.chovanecm.snow.records.DeactivableSnowRecord;
 import cz.chovanecm.snow.records.TableBasedObject;
 import cz.chovanecm.snow.tables.DbObjectRegistry;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -35,11 +36,12 @@ public class DirectoryTreeBuilder {
     public DbObjectRegistry getObjectRegistry() {
         return objectRegistry;
     }
-    
+
     /**
      * Returns path based on table according to table extensions, e.g. cmdb_ci/cmdb_ci_hardware/cmdb_ci_computer
+     *
      * @param tableBasedObject
-     * @return 
+     * @return
      */
     public Path getPathForTableBasedObject(TableBasedObject tableBasedObject) {
         DbObject object = getObjectRegistry().getObjectByName(tableBasedObject.getTableName());
@@ -53,7 +55,7 @@ public class DirectoryTreeBuilder {
         }
         return path;
     }
-    
+
     public Path getPathForDeactivableSnowRecord(DeactivableSnowRecord record) {
         return (record.isActive() ? Paths.get(".") : Paths.get("_inactive_"));
     }

@@ -1,5 +1,5 @@
 /*
- * Snow Script Synchroniser is a tool helping developers to write scripts for ServiceNow
+ * Snow Script Synchronizer is a tool helping developers to write scripts for ServiceNow
  *     Copyright (C) 2015-2017  Martin Chovanec <chovamar@fit.cvut.cz>
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -20,13 +20,14 @@ package cz.chovanecm.snow.records;
 
 import cz.chovanecm.snow.RecordAccessor;
 import cz.chovanecm.snow.tables.SnowTable;
+
 import java.io.IOException;
 
-public class ClientScript extends SnowScript implements TableBasedObject{
+public class ClientScript extends SnowScript implements TableBasedObject {
 
     private String tableName;
 
-    
+
     public ClientScript(String sysId, String scriptName, String script, SnowTable table) {
         super(sysId, scriptName, script, table);
     }
@@ -48,5 +49,5 @@ public class ClientScript extends SnowScript implements TableBasedObject{
     public void save(RecordAccessor destination) throws IOException {
         destination.saveClientScript(this);
     }
-    
+
 }

@@ -1,5 +1,5 @@
 /*
- * Snow Script Synchroniser is a tool helping developers to write scripts for ServiceNow
+ * Snow Script Synchronizer is a tool helping developers to write scripts for ServiceNow
  *     Copyright (C) 2015-2017  Martin Chovanec <chovamar@fit.cvut.cz>
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -19,6 +19,7 @@
 package cz.chovanecm.snow.tables;
 
 import cz.chovanecm.snow.records.DbObject;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +28,7 @@ public class DbObjectRegistry {
 
     private Map<String, DbObject> sysIdToObject = new HashMap<>();
     private Map<String, DbObject> nameToObject = new HashMap<>();
+
     public DbObjectRegistry(Iterable<DbObject> dbObjects) {
         for (DbObject table : dbObjects) {
             sysIdToObject.put(table.getSysId(), table);
@@ -43,12 +45,15 @@ public class DbObjectRegistry {
                     }
                 });
     }
+
     public DbObject getObjectBySysId(String sysId) {
         return sysIdToObject.get(sysId);
     }
+
     public DbObject getObjectByName(String name) {
         return nameToObject.get(name);
     }
+
     public Collection<DbObject> getAllObjects() {
         return sysIdToObject.values();
     }

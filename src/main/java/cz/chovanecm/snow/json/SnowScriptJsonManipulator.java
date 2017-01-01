@@ -1,5 +1,5 @@
 /*
- * Snow Script Synchroniser is a tool helping developers to write scripts for ServiceNow
+ * Snow Script Synchronizer is a tool helping developers to write scripts for ServiceNow
  *     Copyright (C) 2015-2017  Martin Chovanec <chovamar@fit.cvut.cz>
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -19,14 +19,12 @@
 package cz.chovanecm.snow.json;
 
 import com.github.jsonj.JsonObject;
-import cz.chovanecm.snow.tables.ScriptSnowTable;
 import cz.chovanecm.snow.records.SnowRecord;
 import cz.chovanecm.snow.records.SnowScript;
+import cz.chovanecm.snow.tables.ScriptSnowTable;
+
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.Set;
-import java.util.function.Consumer;
-import org.apache.commons.lang.ArrayUtils;
 
 public class SnowScriptJsonManipulator extends JsonManipulator {
 
