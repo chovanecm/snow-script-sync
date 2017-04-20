@@ -13,12 +13,12 @@ Some IDEs (such as [NetBeans](http://www.netbeans.org) or [JetBrains](http://www
 by clicking on it while holdign the Ctrl key.
 
 ## Installation
-Currently, the only option to obtain the software is to download it from the repository and packaging it using maven.
+The software can be either downloaded and packaged using maven or downloaded directly as a jar file from https://github.com/chovanecm/snow-script-sync/releases.
 
     mvn package
     cd target
 
-The coommand assumes you have a working JDK 1.8 or newer.
+The command assumes you have a working JDK 1.8 or newer.
 ## Usage
 When in the target directory, run
 
