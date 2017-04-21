@@ -13,7 +13,11 @@ Some IDEs (such as [NetBeans](http://www.netbeans.org) or [JetBrains](http://www
 by clicking on it while holdign the Ctrl key.
 
 ## Installation
-The software can be either downloaded and packaged using maven or downloaded directly as a jar file from https://github.com/chovanecm/snow-script-sync/releases.
+Download the latest version from
+https://github.com/chovanecm/snow-script-sync/releases
+
+### Building from source
+You can also build the software from source code:
 
     mvn package
     cd target
@@ -46,6 +50,7 @@ These are some ideas to be worked on:
 * The software currently downloads both sourcecode and other attributes of the record and stores them into a single file
  (attributes as a comment block).
   - It would be nice to have the attributes separated while providing a quick access to them, especially to the URL of the record
+* Write more tests
 * Uploading the changes back to ServiceNow
     - detecting (and possibly resolving) conflicts
 * GUI
@@ -54,9 +59,12 @@ These are some ideas to be worked on:
   
 
 ## License
-Snow Script Synchroniser is licensed under the [GNU Lesser General Public License](https://www.gnu.org/licenses/gpl-3.0.txt).
+Snow Script Synchronizer is licensed under the [GNU Lesser General Public License](https://www.gnu.org/licenses/gpl-3.0.txt).
 
 For details, see LICENSE.txt.
+
+*The GNU Lesser General Public License applies to all previous releases, even on those originally released with the MIT
+or other license.*
 
 ### Credits
 The software takes advantage of using the following libraries:
