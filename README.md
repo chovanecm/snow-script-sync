@@ -2,13 +2,13 @@
 
 Snow Script Synchronizer is a tool helping developers to write code for the [ServiceNow](http://www.servicenow.com) platform.
 
-Current version: 0.2 (alpha)
+Current version: 0.2 (alpha) [not actively developed]
 
 This tool downloads all the scripts from a ServiceNow instance to a local directory, allowing using IDE of own choice
 to take advantage of code autocompletion, code navigation and documentation etc.
 
 As uploading modified files back to ServiceNow has not been implemented yet,
-each file contains an URL pointing to the script editor on the ServiceNow instance.
+each file contains a URL pointing to the script editor on the ServiceNow instance.
 Some IDEs (such as [NetBeans](http://www.netbeans.org) or [JetBrains](http://www.jetbrain.com)) support opening URLs
 by clicking on it while holdign the Ctrl key.
 
@@ -36,8 +36,8 @@ This will download scripts from demo019 to the c:\dev_instance directory. You ca
 
 As long as the software only reads scripts from ServiceNow, it won't modify the instance under normal circumstances.
 
-However the author holds no liability for possible damages of the ServiceNow database, especially, but not limited to,
-problems caused by network failure, bugs in the software itself or in other software systems it relies on.
+However, the author holds no liability for possible damages of the ServiceNow database, especially, but not limited to,
+problems caused by network failure, bugs in the software itself or in other software systems that it relies on.
 
 Particularly, they were known issues with escaping characters of downloaded scripts. The problem seems to be solved,
 but users are encouraged to always check the code they are copy-pasting or uploading back to ServiceNow.
