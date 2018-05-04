@@ -33,6 +33,7 @@ import java.time.ZonedDateTime;
 
 public class FileRecordAccessor implements RecordAccessor {
 
+    public static final String CHARSET_NAME = "UTF-8";
     private final DbObjectRegistry objectRegistry;
     private final DirectoryTreeBuilder dirBuilder;
     private final Path root;
@@ -73,7 +74,7 @@ public class FileRecordAccessor implements RecordAccessor {
     public void saveSnowScript(SnowScript script) throws IOException {
         Path file = getRoot().resolve(script.getTable().getTableName()).resolve(getDirBuilder().getPathForDeactivableSnowRecord(script));
         file = file.resolve(getSafeFileName(script.getScriptName() + "_" + script.getSysId() + ".js"));
-        writeFile(file, script.getScript().getBytes("UTF-8"), script.getUpdatedOn());
+        writeFile(file, script.getScript().getBytes(CHARSET_NAME), script.getUpdatedOn());
     }
 
     @Override
@@ -82,7 +83,7 @@ public class FileRecordAccessor implements RecordAccessor {
                 .resolve(getDirBuilder().getPathForTableBasedObject(script))
                 .resolve(getDirBuilder().getPathForDeactivableSnowRecord(script));
         file = file.resolve(getSafeFileName(script.getScriptName() + "_" + script.getSysId() + ".js"));
-        writeFile(file, script.getScript().getBytes("UTF-8"), script.getUpdatedOn());
+        writeFile(file, script.getScript().getBytes(CHARSET_NAME), script.getUpdatedOn());
     }
 
     @Override
@@ -91,7 +92,7 @@ public class FileRecordAccessor implements RecordAccessor {
                 .resolve(getDirBuilder().getPathForTableBasedObject(script))
                 .resolve(getDirBuilder().getPathForDeactivableSnowRecord(script));
         file = file.resolve(getSafeFileName(script.getScriptName() + "_" + script.getSysId() + ".js"));
-        writeFile(file, script.getScript().getBytes("UTF-8"), script.getUpdatedOn());
+        writeFile(file, script.getScript().getBytes(CHARSET_NAME), script.getUpdatedOn());
     }
 
     private String getSafeFileName(String filename) {
