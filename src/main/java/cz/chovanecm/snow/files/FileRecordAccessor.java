@@ -73,7 +73,7 @@ public class FileRecordAccessor implements RecordAccessor {
     public void saveSnowScript(SnowScript script) throws IOException {
         Path file = root.resolve(script.getTable().getTableName()).resolve(getDirBuilder().getPathForDeactivableSnowRecord(script));
         file = file.resolve(getSafeFileName(script.getScriptName() + "_" + script.getSysId() + ".js"));
-        writeFile(file, (buildScriptHeader(script) + script.getScript()).getBytes(), script.getUpdatedOn());
+        writeFile(file, script.getScript().getBytes(), script.getUpdatedOn());
     }
 
     @Override
@@ -82,7 +82,7 @@ public class FileRecordAccessor implements RecordAccessor {
                 .resolve(getDirBuilder().getPathForTableBasedObject(script))
                 .resolve(getDirBuilder().getPathForDeactivableSnowRecord(script));
         file = file.resolve(getSafeFileName(script.getScriptName() + "_" + script.getSysId() + ".js"));
-        writeFile(file, (buildScriptHeader(script) + script.getScript()).getBytes(), script.getUpdatedOn());
+        writeFile(file, script.getScript().getBytes(), script.getUpdatedOn());
     }
 
     @Override
@@ -91,7 +91,7 @@ public class FileRecordAccessor implements RecordAccessor {
                 .resolve(getDirBuilder().getPathForTableBasedObject(script))
                 .resolve(getDirBuilder().getPathForDeactivableSnowRecord(script));
         file = file.resolve(getSafeFileName(script.getScriptName() + "_" + script.getSysId() + ".js"));
-        writeFile(file, (buildScriptHeader(script) + script.getScript()).getBytes(), script.getUpdatedOn());
+        writeFile(file, script.getScript().getBytes(), script.getUpdatedOn());
     }
 
     private String getSafeFileName(String filename) {
