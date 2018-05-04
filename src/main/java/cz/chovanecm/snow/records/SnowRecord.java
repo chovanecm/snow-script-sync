@@ -22,7 +22,7 @@ import cz.chovanecm.snow.RecordAccessor;
 import cz.chovanecm.snow.tables.SnowTable;
 
 import java.io.IOException;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -31,8 +31,8 @@ public abstract class SnowRecord {
     private final SnowTable table;
     private final Map<String, String> attributes = new HashMap<>();
     private String sysId;
-    private Date updatedOn;
-    private Date createdOn;
+    private ZonedDateTime updatedOn;
+    private ZonedDateTime createdOn;
 
     public SnowRecord(SnowTable table, String sysId) {
         this.table = table;
@@ -55,19 +55,19 @@ public abstract class SnowRecord {
         this.sysId = sysId;
     }
 
-    public Date getUpdatedOn() {
+    public ZonedDateTime getUpdatedOn() {
         return updatedOn;
     }
 
-    public void setUpdatedOn(Date updatedOn) {
+    public void setUpdatedOn(ZonedDateTime updatedOn) {
         this.updatedOn = updatedOn;
     }
 
-    public Date getCreatedOn() {
+    public ZonedDateTime getCreatedOn() {
         return createdOn;
     }
 
-    public void setCreatedOn(Date createdOn) {
+    public void setCreatedOn(ZonedDateTime createdOn) {
         this.createdOn = createdOn;
     }
 

@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 public class FileRecordAccessor implements RecordAccessor {
 
@@ -71,14 +71,14 @@ public class FileRecordAccessor implements RecordAccessor {
 
     @Override
     public void saveSnowScript(SnowScript script) throws IOException {
-        Path file = root.resolve(script.getTable().getTableName()).resolve(getDirBuilder().getPathForDeactivableSnowRecord(script));
+        Path file = getRoot().resolve(script.getTable().getTableName()).resolve(getDirBuilder().getPathForDeactivableSnowRecord(script));
         file = file.resolve(getSafeFileName(script.getScriptName() + "_" + script.getSysId() + ".js"));
         writeFile(file, script.getScript().getBytes(), script.getUpdatedOn());
     }
 
     @Override
     public void saveBusinessRule(BusinessRuleSnowScript script) throws IOException {
-        Path file = root.resolve(script.getTable().getTableName())
+        Path file = getRoot().resolve(script.getTable().getTableName())
                 .resolve(getDirBuilder().getPathForTableBasedObject(script))
                 .resolve(getDirBuilder().getPathForDeactivableSnowRecord(script));
         file = file.resolve(getSafeFileName(script.getScriptName() + "_" + script.getSysId() + ".js"));
@@ -87,7 +87,7 @@ public class FileRecordAccessor implements RecordAccessor {
 
     @Override
     public void saveClientScript(ClientScript script) throws IOException {
-        Path file = root.resolve(script.getTable().getTableName())
+        Path file = getRoot().resolve(script.getTable().getTableName())
                 .resolve(getDirBuilder().getPathForTableBasedObject(script))
                 .resolve(getDirBuilder().getPathForDeactivableSnowRecord(script));
         file = file.resolve(getSafeFileName(script.getScriptName() + "_" + script.getSysId() + ".js"));
@@ -125,13 +125,13 @@ public class FileRecordAccessor implements RecordAccessor {
      * @param lastModified Default NOW
      * @throws IOException
      */
-    private void writeFile(Path file, byte[] bytes, Date lastModified) throws IOException {
+    private void writeFile(Path file, byte[] bytes, ZonedDateTime lastModified) throws IOException {
         if (lastModified == null) {
-            lastModified = new Date();
+            lastModified = ZonedDateTime.now();
         }
         Files.createDirectories(file.getParent());
         Files.write(file, bytes);
-        Files.setLastModifiedTime(file, FileTime.fromMillis(lastModified.getTime()));
+        Files.setLastModifiedTime(file, FileTime.from(lastModified.toInstant()));
     }
 
 }
