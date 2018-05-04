@@ -73,7 +73,7 @@ public class FileRecordAccessor implements RecordAccessor {
     public void saveSnowScript(SnowScript script) throws IOException {
         Path file = getRoot().resolve(script.getTable().getTableName()).resolve(getDirBuilder().getPathForDeactivableSnowRecord(script));
         file = file.resolve(getSafeFileName(script.getScriptName() + "_" + script.getSysId() + ".js"));
-        writeFile(file, script.getScript().getBytes(), script.getUpdatedOn());
+        writeFile(file, script.getScript().getBytes("UTF-8"), script.getUpdatedOn());
     }
 
     @Override
@@ -82,7 +82,7 @@ public class FileRecordAccessor implements RecordAccessor {
                 .resolve(getDirBuilder().getPathForTableBasedObject(script))
                 .resolve(getDirBuilder().getPathForDeactivableSnowRecord(script));
         file = file.resolve(getSafeFileName(script.getScriptName() + "_" + script.getSysId() + ".js"));
-        writeFile(file, script.getScript().getBytes(), script.getUpdatedOn());
+        writeFile(file, script.getScript().getBytes("UTF-8"), script.getUpdatedOn());
     }
 
     @Override
@@ -91,7 +91,7 @@ public class FileRecordAccessor implements RecordAccessor {
                 .resolve(getDirBuilder().getPathForTableBasedObject(script))
                 .resolve(getDirBuilder().getPathForDeactivableSnowRecord(script));
         file = file.resolve(getSafeFileName(script.getScriptName() + "_" + script.getSysId() + ".js"));
-        writeFile(file, script.getScript().getBytes(), script.getUpdatedOn());
+        writeFile(file, script.getScript().getBytes("UTF-8"), script.getUpdatedOn());
     }
 
     private String getSafeFileName(String filename) {
@@ -129,9 +129,16 @@ public class FileRecordAccessor implements RecordAccessor {
         if (lastModified == null) {
             lastModified = ZonedDateTime.now();
         }
-        Files.createDirectories(file.getParent());
+        createParentDirectories(file);
         Files.write(file, bytes);
         Files.setLastModifiedTime(file, FileTime.from(lastModified.toInstant()));
+    }
+
+    private void createParentDirectories(Path file) throws IOException {
+        Path parent = file.getParent();
+        if (parent != null) {
+            Files.createDirectories(parent);
+        }
     }
 
 }

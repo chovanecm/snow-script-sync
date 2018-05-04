@@ -66,13 +66,18 @@ public class SnowApiGetResponse implements AutoCloseable {
 
     public JsonObject getBody() throws IOException {
         JsonObject object;
-        try (InputStream is = response.getEntity().getContent()) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        try (InputStream is = response.getEntity().getContent();
+             BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"))) {
             StringBuilder builder = new StringBuilder();
             while (reader.ready()) {
-                String line = reader.readLine().replaceAll("\\\\\\\\", "\\\\\\\\\\\\\\\\");
-                //@line correctly escaped backslash
-                builder.append(line);
+                String inputLine = reader.readLine();
+                if (inputLine == null) {
+                    break;
+                } else {
+                    String line = inputLine.replaceAll("\\\\\\\\", "\\\\\\\\\\\\\\\\");
+                    //@line correctly escaped backslash
+                    builder.append(line);
+                }
             }
             object = new JsonParser().parse(builder.toString()).asObject();
         }
