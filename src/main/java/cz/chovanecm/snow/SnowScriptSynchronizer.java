@@ -65,7 +65,7 @@ public class SnowScriptSynchronizer {
                     try {
                         script.save(fileAccessor);
                     } catch (IOException ex) {
-                        Logger.getLogger(SnowScriptSynchronizer.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(SnowScriptSynchronizer.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
                     }
                 });
             }

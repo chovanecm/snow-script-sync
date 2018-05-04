@@ -52,7 +52,7 @@ public class SnowScript extends SnowRecord implements DeactivableSnowRecord {
     }
 
     public void setScript(String script) {
-        this.script = script;
+        this.script = script != null ? script : "";
     }
 
     @Override
