@@ -20,6 +20,7 @@ package cz.chovanecm.snow.records;
 
 import cz.chovanecm.snow.RecordAccessor;
 import cz.chovanecm.snow.tables.SnowTable;
+import lombok.Data;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
@@ -27,6 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+@Data
 public abstract class SnowRecord {
     private final SnowTable table;
     private final Map<String, String> attributes = new HashMap<>();
@@ -34,41 +36,13 @@ public abstract class SnowRecord {
     private ZonedDateTime updatedOn;
     private ZonedDateTime createdOn;
 
-    public SnowRecord(SnowTable table, String sysId) {
-        this.table = table;
-        this.sysId = sysId;
-    }
-
     public SnowRecord(SnowTable table) {
         this.table = table;
     }
 
-    public SnowTable getTable() {
-        return table;
-    }
-
-    public String getSysId() {
-        return sysId;
-    }
-
-    public void setSysId(String sysId) {
+    public SnowRecord(SnowTable table, String sysId) {
+        this.table = table;
         this.sysId = sysId;
-    }
-
-    public ZonedDateTime getUpdatedOn() {
-        return updatedOn;
-    }
-
-    public void setUpdatedOn(ZonedDateTime updatedOn) {
-        this.updatedOn = updatedOn;
-    }
-
-    public ZonedDateTime getCreatedOn() {
-        return createdOn;
-    }
-
-    public void setCreatedOn(ZonedDateTime createdOn) {
-        this.createdOn = createdOn;
     }
 
     public Set<String> getAttributes() {

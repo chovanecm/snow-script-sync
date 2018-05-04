@@ -21,15 +21,23 @@ package cz.chovanecm.snow.records;
 
 import cz.chovanecm.snow.RecordAccessor;
 import cz.chovanecm.snow.tables.DbObjectTable;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class DbObject extends SnowRecord {
 
-    private final Set<DbObject> childs = new HashSet<>();
+    private final Set<DbObject> children = new HashSet<>();
+    @Getter
+    @Setter
     private String name = "";
+    @Getter
+    @Setter
     private String superClassId = "";
+    @Getter
+    @Setter
     private DbObject superClass;
 
     public DbObject(String sysId) {
@@ -40,37 +48,13 @@ public class DbObject extends SnowRecord {
         super(new DbObjectTable());
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSuperClassId() {
-        return superClassId;
-    }
-
-    public void setSuperClassId(String superClassId) {
-        this.superClassId = superClassId;
-    }
-
-    public DbObject getSuperClass() {
-        return superClass;
-    }
-
-    public void setSuperClass(DbObject superClass) {
-        this.superClass = superClass;
-    }
-
     public void addChildObject(DbObject child) {
-        childs.add(child);
+        children.add(child);
         child.setSuperClass(this);
     }
 
-    public Set<DbObject> getChilds() {
-        return childs;
+    public Set<DbObject> getChildren() {
+        return children;
     }
 
     @Override
