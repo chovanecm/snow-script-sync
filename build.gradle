@@ -27,6 +27,7 @@ dependencies {
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.4'
     compile group: 'com.github.jsonj', name: 'jsonj', version: '0.8'
     compile group: 'commons-cli', name: 'commons-cli', version: '1.2'
+    compile "io.reactivex.rxjava2:rxjava:2.1.13"
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.16.20'
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.16.20'
 

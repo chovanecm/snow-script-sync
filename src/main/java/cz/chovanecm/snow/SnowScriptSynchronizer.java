@@ -23,16 +23,14 @@ import cz.chovanecm.snow.files.FileRecordAccessor;
 import cz.chovanecm.snow.records.DbObject;
 import cz.chovanecm.snow.records.SnowScript;
 import cz.chovanecm.snow.tables.*;
+import io.reactivex.Flowable;
+import io.reactivex.schedulers.Schedulers;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Main class
@@ -40,7 +38,7 @@ import java.util.logging.Logger;
 public class SnowScriptSynchronizer {
 
     // We will download and process scripts in parallel
-    static ExecutorService pool = Executors.newFixedThreadPool(4);
+    //static ExecutorService pool = Executors.newFixedThreadPool(4);
 
     public static void run(SnowConnectorConfiguration connectorConfiguration, String destination) throws IOException {
 
@@ -49,28 +47,30 @@ public class SnowScriptSynchronizer {
 
         // Where the scripts download to
         Path root = Paths.get(destination);
-        // TODO: what exactly is this used for?
+        // Get a registry of all tables to create its folder structure later.
         DbObjectRegistry registry = new DbObjectRegistry(client.readAll(new DbObjectTable(), 100, DbObject.class));
 
         // TODO: what exactly is this used for?
         FileRecordAccessor fileAccessor = new FileRecordAccessor(registry, root);
         // List of the tables we will download scripts from.
         List<ScriptSnowTable> tables = Arrays.asList(new ScriptSnowTable("sys_script_include", "script", "name"), new ScriptSnowTable("sysevent_in_email_action", "script", "name"), new BusinessRuleTable(), new ClientScriptTable());
-
-        for (ScriptSnowTable table : tables) {
-            // now for each table, iterate through all the records and save them using fileAcessor.
-            for (final SnowScript script : client.readAll(table, 100, SnowScript.class)) {
-                pool.execute(() -> {
-                    try {
-                        script.save(fileAccessor);
-                    } catch (IOException ex) {
-                        Logger.getLogger(SnowScriptSynchronizer.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-                    }
-                });
-            }
-        }
-        System.out.println("DONE! - Finishing IO");
-        pool.shutdown();
+        Flowable.fromIterable(tables)
+                .flatMap(tableItem ->
+                        Flowable.just(tableItem)
+                                .subscribeOn(Schedulers.io())
+                                .flatMap(tableToProcess -> Flowable.fromIterable(client.readAll(tableToProcess, 100, SnowScript.class)))
+                )
+                .flatMap(script ->
+                        Flowable.just(script)
+                                .subscribeOn(Schedulers.io())
+                                .map(s -> {
+                                    s.save(fileAccessor);
+                                    return s;
+                                })
+                ).blockingSubscribe(script -> {
+                    //System.out.println(LocalTime.now().toString() + " Saved " + script.getScriptName());
+                }
+        );
         System.out.println("FINISHED.");
     }
 
