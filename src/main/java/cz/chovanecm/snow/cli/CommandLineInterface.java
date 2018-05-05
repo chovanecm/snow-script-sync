@@ -44,7 +44,7 @@ public class CommandLineInterface {
         try {
             line = new PosixParser().parse(options, args);
             if (!line.hasOption("d") || !line.hasOption("u") || !line.hasOption("p")) {
-                System.out.println("Destionation, instance, user and password are mandatory.");
+                System.out.println("Destination, instance, user and password are mandatory.");
                 new HelpFormatter().printHelp("_", options);
                 return;
             } else {

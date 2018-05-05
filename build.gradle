@@ -1,0 +1,32 @@
+plugins {
+    // Apply the java plugin to add support for Java
+    id 'java'
+
+    // Apply the application plugin to add support for building an application
+    id 'application'
+}
+
+group 'cz.chovanecm.snow'
+version '0.2-SNAPSHOT'
+
+mainClassName = "cz.chovanecm.snow.cli.CommandLineInterface"
+
+description = """"""
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+
+repositories {
+    jcenter()
+}
+dependencies {
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version:'4.4'
+    compile group: 'com.github.jsonj', name: 'jsonj', version:'0.8'
+    compile group: 'commons-cli', name: 'commons-cli', version:'1.2'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version:'1.16.20'
+    compileOnly group: 'org.projectlombok', name: 'lombok', version:'1.16.20'
+}
