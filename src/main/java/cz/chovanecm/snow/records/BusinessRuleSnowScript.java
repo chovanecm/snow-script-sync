@@ -21,10 +21,14 @@ package cz.chovanecm.snow.records;
 import cz.chovanecm.snow.RecordAccessor;
 import cz.chovanecm.snow.tables.SnowTable;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.io.IOException;
 
 @Data
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class BusinessRuleSnowScript extends SnowScript implements TableBasedObject {
 
     private String tableName = "";

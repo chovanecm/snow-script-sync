@@ -42,10 +42,10 @@ public class SnowScriptSynchronizer {
     // We will download and process scripts in parallel
     static ExecutorService pool = Executors.newFixedThreadPool(4);
 
-    public static void run(String instance, String user, String password, String proxy, Integer proxyPort, String destination) throws IOException {
+    public static void run(SnowConnectorConfiguration connectorConfiguration, String destination) throws IOException {
 
         // This allow us to access the ServiceNow instance
-        SnowClient client = new SnowClient(instance, user, password, proxy, proxyPort);
+        SnowClient client = new SnowClient(connectorConfiguration);
 
         // Where the scripts download to
         Path root = Paths.get(destination);
@@ -54,7 +54,6 @@ public class SnowScriptSynchronizer {
 
         // TODO: what exactly is this used for?
         FileRecordAccessor fileAccessor = new FileRecordAccessor(registry, root);
-        fileAccessor.setInstanceURL(instance);
         // List of the tables we will download scripts from.
         List<ScriptSnowTable> tables = Arrays.asList(new ScriptSnowTable("sys_script_include", "script", "name"), new ScriptSnowTable("sysevent_in_email_action", "script", "name"), new BusinessRuleTable(), new ClientScriptTable());
 

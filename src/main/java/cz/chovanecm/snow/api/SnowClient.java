@@ -22,6 +22,7 @@ import com.github.jsonj.JsonArray;
 import com.github.jsonj.JsonElement;
 import com.github.jsonj.JsonObject;
 import cz.chovanecm.rest.RestClient;
+import cz.chovanecm.snow.SnowConnectorConfiguration;
 import cz.chovanecm.snow.records.SnowRecord;
 import cz.chovanecm.snow.tables.SnowTable;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -44,6 +45,14 @@ public class SnowClient {
         this.instanceUrl = instanceUrl;
     }
 
+    public SnowClient(SnowConnectorConfiguration connectorConfiguration) {
+        this("https://" + connectorConfiguration.getServiceNowDomainName(),
+                connectorConfiguration.getUsername(),
+                connectorConfiguration.getPassword(),
+                connectorConfiguration.isProxySet() ? connectorConfiguration.getProxyServerAddress() : null,
+                connectorConfiguration.isProxySet() ? connectorConfiguration.getProxyServerPort() : null);
+    }
+
     public String getInstanceUrl() {
         return instanceUrl;
     }
@@ -60,7 +69,7 @@ public class SnowClient {
         SnowApiGetResponse response = new SnowApiGetResponse(client.get(getTableApiUrl(sourceTable) + "?sysparm_limit=" + readsPerRequest));
         return () -> {
             try {
-                return new ResultIterator(sourceTable, response);
+                return new ResultIterator<T>(sourceTable, response);
             } catch (IOException ex) {
                 Logger.getLogger(SnowClient.class.getName()).log(Level.SEVERE, null, ex);
                 return null;
@@ -71,7 +80,7 @@ public class SnowClient {
     public <T extends SnowRecord> T getRecordBySysId(SnowTable sourceTable, String sysId, Class<T> type) throws IOException {
         CloseableHttpResponse httpResponse = client.get(getTableApiUrl(sourceTable) + "?sysparm_query=sys_id=" + sysId);
         SnowApiGetResponse response = new SnowApiGetResponse(httpResponse);
-        ResultIterator<T> iterator = new ResultIterator(sourceTable, response);
+        ResultIterator<T> iterator = new ResultIterator<T>(sourceTable, response);
         return iterator.next();
     }
 
