@@ -7,11 +7,11 @@ plugins {
 }
 
 group 'cz.chovanecm.snow'
-version '0.2-SNAPSHOT'
+version '0.2.1-SNAPSHOT'
 
 mainClassName = "cz.chovanecm.snow.cli.CommandLineInterface"
 
-description = """"""
+description = "Utility to access ServiceNow scripts and download them."
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8

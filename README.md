@@ -2,15 +2,10 @@
 
 Snow Script Synchronizer is a tool helping developers to write code for the [ServiceNow](http://www.servicenow.com) platform.
 
-Current version: 0.2 (alpha) [not actively developed]
+Current version: 0.2.1 (alpha)
 
-This tool downloads all the scripts from a ServiceNow instance to a local directory, allowing using IDE of own choice
+This tool downloads scripts from a ServiceNow instance to a local directory, allowing using IDE of own choice
 to take advantage of code autocompletion, code navigation and documentation etc.
-
-As uploading modified files back to ServiceNow has not been implemented yet,
-each file contains a URL pointing to the script editor on the ServiceNow instance.
-Some IDEs (such as [NetBeans](http://www.netbeans.org) or [JetBrains](http://www.jetbrain.com)) support opening URLs
-by clicking on it while holdign the Ctrl key.
 
 ## Installation
 Download the latest version from
@@ -19,18 +14,18 @@ https://github.com/chovanecm/snow-script-sync/releases
 ### Building from source
 You can also build the software from source code:
 
-    mvn package
-    cd target
+    gradlew distZip
 
-The command assumes you have a working JDK 1.8 or newer.
+The command assumes you have a working JDK 1.8 or newer and creates a zip files with all dependencies under build/distributions.
 ## Usage
-When in the target directory, run
 
-	java -jar snow-scripts-sync-0.2-SNAPSHOT-jar-with-dependencies.jar -d c:\dev_instance -i demo019.service-now.com -u user_name -p password
+Unpack the distribution file and run in the bin directory    
+
+	snow-scripts-sync -d c:\dev_instance -i demo019.service-now.com -u user_name -p password
 
 This will download scripts from demo019 to the c:\dev_instance directory. You can also specify a proxy using the "-x" argument:
 
-	java -jar snow-scripts-sync-0.2-SNAPSHOT-jar-with-dependencies.jar -d c:\dev_instance -i demo019.service-now.com -u user_name -p password -x 10.0.0.1:3128
+	snow-scripts-sync -d c:\dev_instance -i demo019.service-now.com -u user_name -p password -x 10.0.0.1:3128
 
 ## No Liability
 
