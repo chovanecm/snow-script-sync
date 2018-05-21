@@ -26,7 +26,6 @@ import cz.chovanecm.snow.tables.*;
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -37,10 +36,8 @@ import java.util.List;
  */
 public class SnowScriptSynchronizer {
 
-    // We will download and process scripts in parallel
-    //static ExecutorService pool = Executors.newFixedThreadPool(4);
 
-    public static void run(SnowConnectorConfiguration connectorConfiguration, String destination) throws IOException {
+    public static void run(SnowConnectorConfiguration connectorConfiguration, String destination) {
 
         // This allow us to access the ServiceNow instance
         SnowClient client = new SnowClient(connectorConfiguration);
@@ -53,7 +50,11 @@ public class SnowScriptSynchronizer {
         // TODO: what exactly is this used for?
         FileRecordAccessor fileAccessor = new FileRecordAccessor(registry, root);
         // List of the tables we will download scripts from.
-        List<ScriptSnowTable> tables = Arrays.asList(new ScriptSnowTable("sys_script_include", "script", "name"), new ScriptSnowTable("sysevent_in_email_action", "script", "name"), new BusinessRuleTable(), new ClientScriptTable());
+        List<ScriptSnowTable> tables = Arrays.asList(new ScriptSnowTable("sys_script_include", "script", "name"),
+                new ScriptSnowTable("sysevent_in_email_action", "script", "name"),
+                new ScriptSnowTable("sys_script_fix", "script", "name"),
+                new BusinessRuleTable(),
+                new ClientScriptTable());
         Flowable.fromIterable(tables)
                 .flatMap(tableItem ->
                         Flowable.just(tableItem)

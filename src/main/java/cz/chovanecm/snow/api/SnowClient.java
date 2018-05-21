@@ -29,6 +29,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -65,14 +66,14 @@ public class SnowClient {
         return getApiUrl() + table.getTableName();
     }
 
-    public <T extends SnowRecord> Iterable<T> readAll(SnowTable sourceTable, int readsPerRequest, Class<T> type) throws IOException {
-        SnowApiGetResponse response = new SnowApiGetResponse(client.get(getTableApiUrl(sourceTable) + "?sysparm_limit=" + readsPerRequest));
+    public <T extends SnowRecord> Iterable<T> readAll(SnowTable sourceTable, int readsPerRequest, Class<T> type) {
         return () -> {
             try {
+                SnowApiGetResponse response = new SnowApiGetResponse(client.get(getTableApiUrl(sourceTable) + "?sysparm_limit=" + readsPerRequest));
                 return new ResultIterator<T>(sourceTable, response);
             } catch (IOException ex) {
                 Logger.getLogger(SnowClient.class.getName()).log(Level.SEVERE, null, ex);
-                return null;
+                return Collections.emptyIterator();
             }
         };
     }
