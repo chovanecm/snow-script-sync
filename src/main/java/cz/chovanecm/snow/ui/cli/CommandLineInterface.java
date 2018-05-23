@@ -26,14 +26,12 @@ package cz.chovanecm.snow.ui.cli;
 import cz.chovanecm.snow.SnowConnectorConfiguration;
 import cz.chovanecm.snow.SnowScriptSynchronizer;
 import cz.chovanecm.snow.ui.UserInterfaceException;
-import lombok.Getter;
 import org.apache.commons.cli.*;
 
-import java.io.IOException;
 import java.util.Arrays;
 
 public class CommandLineInterface {
-    private static final String[] MANDATORY_CLI_OPTIONS = {"d", "u", "p", "i"};
+    private static final String[] MANDATORY_CLI_OPTIONS = {"d", "u", "i"};
     private CommandLine line;
     private static Options options = new Options();
     static {
@@ -49,9 +47,6 @@ public class CommandLineInterface {
         } catch (UserInterfaceException e) {
             System.err.println(e.getMessage());
             CommandLineInterface.printHelp();
-        } catch (IOException e) {
-            System.err.println("Error");
-            e.printStackTrace();
         }
     }
 
@@ -62,11 +57,11 @@ public class CommandLineInterface {
             throw new UserInterfaceException(String.format("Error when parsing arguments %s. Cause: %s", args, e.getMessage()));
         }
         if (!mandatoryFieldsPresent()) {
-            throw new UserInterfaceException("Destination, instance, user and password are mandatory.");
+            throw new UserInterfaceException("Destination, instance, and user are mandatory.");
         }
     }
 
-    public String getDestinationFolder() throws UserInterfaceException {
+    public String getDestinationFolder() {
         return getLine().getOptionValue("d");
     }
 
@@ -75,9 +70,13 @@ public class CommandLineInterface {
         return buildProxyConfiguration(SnowConnectorConfiguration.builder())
                 .serviceNowDomainName(getLine().getOptionValue("i"))
                 .username(getLine().getOptionValue("u"))
-                .password(getLine().getOptionValue("p"))
+                .password(getPassword())
                 .build();
 
+    }
+
+    public String getPassword() {
+        return String.copyValueOf(System.console().readPassword("Password:"));
     }
 
     private CommandLine getLine() {
@@ -111,7 +110,6 @@ public class CommandLineInterface {
     private static void setupCommandLineOptions() {
         options.addOption("x", "proxy", true, "Use proxy, e.g. 10.0.0.1:3128");
         options.addOption("u", "user", true, "Use this user to connect to ServiceNow");
-        options.addOption("p", "password", true, "Password to ServiceNow");
         options.addOption("d", "dest", true, "Where to download scripts");
         options.addOption("i", "instance", true, "Instance, e.g. demo019.service-now.com");
     }
