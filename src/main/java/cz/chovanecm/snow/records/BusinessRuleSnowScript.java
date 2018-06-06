@@ -31,7 +31,6 @@ import java.io.IOException;
 @EqualsAndHashCode(callSuper = true)
 public class BusinessRuleSnowScript extends SnowScript implements TableBasedObject {
 
-    private String tableName = "";
     private String when = "";
 
     public BusinessRuleSnowScript(SnowTable table) {
@@ -40,7 +39,7 @@ public class BusinessRuleSnowScript extends SnowScript implements TableBasedObje
 
     @Override
     public String getTableName() {
-        return tableName;
+        return getTable().getTableName();
     }
 
     @Override

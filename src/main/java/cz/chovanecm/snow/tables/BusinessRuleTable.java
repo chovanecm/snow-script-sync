@@ -19,7 +19,6 @@
 package cz.chovanecm.snow.tables;
 
 import cz.chovanecm.snow.json.BusinessRuleJsonManipulator;
-import cz.chovanecm.snow.json.JsonManipulator;
 
 public class BusinessRuleTable extends ScriptSnowTable {
 
@@ -28,7 +27,7 @@ public class BusinessRuleTable extends ScriptSnowTable {
     }
 
     @Override
-    public JsonManipulator getJsonManipulator() {
+    public BusinessRuleJsonManipulator getJsonManipulator() {
         return new BusinessRuleJsonManipulator(this);
     }
 
