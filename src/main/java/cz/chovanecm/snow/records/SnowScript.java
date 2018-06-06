@@ -20,11 +20,13 @@ package cz.chovanecm.snow.records;
 
 import cz.chovanecm.snow.RecordAccessor;
 import cz.chovanecm.snow.tables.SnowTable;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.IOException;
 
-@Data
+@Getter
+@Setter
 public class SnowScript extends SnowRecord implements DeactivableSnowRecord {
 
     private String scriptName;
@@ -45,6 +47,4 @@ public class SnowScript extends SnowRecord implements DeactivableSnowRecord {
     public void save(RecordAccessor destination) throws IOException {
         destination.saveSnowScript(this);
     }
-
-
 }

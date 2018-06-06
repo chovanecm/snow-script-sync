@@ -1,0 +1,21 @@
+{
+  "document": "sys_atf_step",
+  "sys_mod_count": "5",
+  "sys_updated_on": "2016-07-23 22:01:28",
+  "sys_tags": "",
+  "document_key": {
+    "link": "https://dev48250.service-now.com/api/now/v1/table/sys_atf_step/cfc6b8d20b10220050192f15d6673a40",
+    "value": "cfc6b8d20b10220050192f15d6673a40"
+  },
+  "sys_class_name": "sys_variable_value",
+  "sys_id": "02faf2a35320220002c6435723dc348b",
+  "sys_updated_by": "russ.sarbora",
+  "sys_created_on": "2016-07-17 16:58:33",
+  "variable": {
+    "link": "https://dev48250.service-now.com/api/now/v1/table/var_dictionary/989d9e235324220002c6435723dc3484",
+    "value": "989d9e235324220002c6435723dc3484"
+  },
+  "value": "// My great script!",
+  "sys_created_by": "russ.sarbora",
+  "order": "100"
+}

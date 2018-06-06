@@ -19,7 +19,6 @@
 package cz.chovanecm.snow.tables;
 
 import cz.chovanecm.snow.json.ClientScriptJsonManipulator;
-import cz.chovanecm.snow.json.JsonManipulator;
 
 public class ClientScriptTable extends ScriptSnowTable {
 
@@ -28,7 +27,7 @@ public class ClientScriptTable extends ScriptSnowTable {
     }
 
     @Override
-    public JsonManipulator getJsonManipulator() {
+    public ClientScriptJsonManipulator getJsonManipulator() {
         return new ClientScriptJsonManipulator(this);
     }
 

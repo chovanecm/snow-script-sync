@@ -1,12 +1,9 @@
 package cz.chovanecm.snow.datalayer.rest;
 
-import com.github.jsonj.JsonObject;
-import com.github.jsonj.tools.JsonParser;
 import cz.chovanecm.snow.records.BusinessRuleSnowScript;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,15 +11,14 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class RestBusinessRuleDaoTest {
-    private JsonParser parser = new JsonParser();
+public class RestBusinessRuleDaoTest extends RestDaoTest {
 
     @Test
     public void getAll_shouldReturnIterableOfBusinessRuleSnowScript() throws IOException {
         // GIVEN
-        RestBusinessRuleDao instance = spy(new RestBusinessRuleDao(null));
+        BusinessRuleRestDao instance = spy(new BusinessRuleRestDao(null));
         doReturn(mock(SnowRestInterface.class)).when(instance).getRestInterface();
-        when(instance.getRestInterface().getAllRecords("sys_script")).thenReturn(
+        when(instance.getRestInterface().getRecords("sys_script")).thenReturn(
                 Arrays.asList(
                         readJsonObject("sys_script_1.json"),
                         readJsonObject("sys_script_2.json")
@@ -38,14 +34,6 @@ public class RestBusinessRuleDaoTest {
         assertEquals(2, scripts.size());
         assertEquals("new IdentificationRuleValidator(current.sys_id).validate();", scripts.get(0).getScript());
         assertEquals("//we do nothing :-) new IdentificationRuleValidator(current.sys_id).validate();", scripts.get(1).getScript());
-    }
-
-    public JsonObject readJsonObject(String resourceName) throws IOException {
-        return parser.parse(getResource(resourceName)).asObject();
-    }
-
-    public InputStreamReader getResource(String resourceName) {
-        return new InputStreamReader(getClass().getResourceAsStream("/cz.chovanecm.snow.datalayer.rest/" + resourceName));
     }
 
 }

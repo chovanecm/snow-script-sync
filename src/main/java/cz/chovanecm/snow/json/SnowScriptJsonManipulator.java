@@ -19,7 +19,6 @@
 package cz.chovanecm.snow.json;
 
 import com.github.jsonj.JsonObject;
-import cz.chovanecm.snow.records.SnowRecord;
 import cz.chovanecm.snow.records.SnowScript;
 import cz.chovanecm.snow.tables.ScriptSnowTable;
 
@@ -39,11 +38,11 @@ public class SnowScriptJsonManipulator extends JsonManipulator {
     }
 
     @Override
-    public SnowRecord readFromJson(JsonObject json) throws ParseException {
+    public SnowScript readFromJson(JsonObject json) throws ParseException {
         return setMyFields(json, new SnowScript(getTable()));
     }
 
-    protected SnowRecord setMyFields(JsonObject json, SnowScript record) throws ParseException {
+    protected SnowScript setMyFields(JsonObject json, SnowScript record) throws ParseException {
         super.setMyFields(json, record);
 
         record.setScript(json.getString(getTable().getScriptField()));

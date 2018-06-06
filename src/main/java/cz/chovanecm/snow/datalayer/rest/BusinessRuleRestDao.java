@@ -7,11 +7,11 @@ import io.reactivex.Flowable;
 
 import java.text.ParseException;
 
-public class RestBusinessRuleDao implements BusinessRuleDao {
+public class BusinessRuleRestDao implements BusinessRuleDao {
     private final BusinessRuleTable table = new BusinessRuleTable();
     SnowRestInterface restInterface;
 
-    public RestBusinessRuleDao(SnowRestInterface restInterface) {
+    public BusinessRuleRestDao(SnowRestInterface restInterface) {
         this.restInterface = restInterface;
     }
 
@@ -28,7 +28,7 @@ public class RestBusinessRuleDao implements BusinessRuleDao {
 
     @Override
     public Iterable<BusinessRuleSnowScript> getAll() {
-        return Flowable.fromIterable(getRestInterface().getAllRecords(table.getTableName()))
+        return Flowable.fromIterable(getRestInterface().getRecords(table.getTableName()))
                 .map(it -> table.getJsonManipulator().readFromJson(it))
                 .blockingIterable();
     }
