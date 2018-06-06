@@ -21,11 +21,11 @@ The command assumes you have a working JDK 1.8 or newer and creates a zip files 
 
 Unpack the distribution file and run in the bin directory    
 
-	snow-scripts-sync -d c:\dev_instance -i demo019.service-now.com -u user_name -p password
+	snow-scripts-sync -d c:\dev_instance -i demo019.service-now.com -u user_name
 
 This will download scripts from demo019 to the c:\dev_instance directory. You can also specify a proxy using the "-x" argument:
 
-	snow-scripts-sync -d c:\dev_instance -i demo019.service-now.com -u user_name -p password -x 10.0.0.1:3128
+	snow-scripts-sync -d c:\dev_instance -i demo019.service-now.com -u user_name -x 10.0.0.1:3128
 
 ## No Liability
 
@@ -49,7 +49,6 @@ These are some ideas to be worked on:
 * Uploading the changes back to ServiceNow
     - detecting (and possibly resolving) conflicts
 * GUI
-* Entering password without passing it as a visible parameter.
 
   
 
