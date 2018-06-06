@@ -27,11 +27,11 @@ import java.io.IOException;
 
 public interface RecordAccessor {
 
-    public void saveDbObject(DbObject dbObject) throws IOException;
+    void saveDbObject(DbObject dbObject) throws IOException;
 
-    public void saveSnowScript(SnowScript script) throws IOException;
+    void saveSnowScript(SnowScript script) throws IOException;
 
-    public void saveBusinessRule(BusinessRuleSnowScript businessRule) throws IOException;
+    void saveBusinessRule(BusinessRuleSnowScript businessRule) throws IOException;
 
-    public void saveClientScript(ClientScript clientScript) throws IOException;
+    void saveClientScript(ClientScript clientScript) throws IOException;
 }

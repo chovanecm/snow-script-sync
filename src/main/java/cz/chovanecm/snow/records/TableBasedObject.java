@@ -25,6 +25,6 @@ public interface TableBasedObject {
      *
      * @return
      */
-    public String getTableName();
+    String getTableName();
 
 }
