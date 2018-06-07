@@ -11,6 +11,11 @@ import lombok.Getter;
 
 public class AutomatedTestScriptRestDao implements AutomatedTestScriptDao {
     private final ScriptSnowTable table = new ScriptSnowTable("sys_variable_value", "value", "sys_id");
+
+    public AutomatedTestScriptRestDao(SnowRestInterface restInterface) {
+        this.restInterface = restInterface;
+    }
+
     @Getter
     SnowRestInterface restInterface;
 
@@ -20,7 +25,7 @@ public class AutomatedTestScriptRestDao implements AutomatedTestScriptDao {
                 getRestInterface().getRecords(
                         QueryGetRequest.builder()
                                 .tableName("sys_variable_value")
-                                .condition("document=sys_atf_step^variable.sys_name=Test%20script")
+                                .condition("document=sys_atf_step^variable.sys_name=Test script")
                                 .build()))
                 .map(it -> {
                     SnowScript script = table.getJsonManipulator().readFromJson(it);
@@ -32,6 +37,7 @@ public class AutomatedTestScriptRestDao implements AutomatedTestScriptDao {
                                     .sysId(it.getObject("document_key").getString("value"))
                                     .build());
                     script.setScriptName(testStepRecord.getObject("test").getString("display_value") + "/" + testStepRecord.getString("order"));
+                    script.setActive("true".equals(testStepRecord.getString("active")));
                     return script;
                 })
                 .blockingIterable();

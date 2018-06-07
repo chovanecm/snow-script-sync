@@ -19,6 +19,7 @@
 package cz.chovanecm.snow;
 
 import cz.chovanecm.snow.api.SnowClient;
+import cz.chovanecm.snow.datalayer.rest.AutomatedTestScriptRestDao;
 import cz.chovanecm.snow.datalayer.rest.BusinessRuleRestDao;
 import cz.chovanecm.snow.files.FileRecordAccessor;
 import cz.chovanecm.snow.records.DbObject;
@@ -39,7 +40,6 @@ import java.util.List;
  * Main class
  */
 public class SnowScriptSynchronizer {
-
 
     public static void run(SnowConnectorConfiguration connectorConfiguration, String destination) {
 
@@ -76,6 +76,7 @@ public class SnowScriptSynchronizer {
                                 .flatMap(tableToProcess -> Flowable.fromIterable(
                                         client.readAll(tableToProcess, 100, SnowScript.class)))
                                 .mergeWith(Flowable.fromIterable(new BusinessRuleRestDao(client).getAll()))
+                                .mergeWith(Flowable.fromIterable(new AutomatedTestScriptRestDao(client).getAll()))
                 )
                 .flatMap(script ->
                         Flowable.just(script)

@@ -31,6 +31,6 @@ public class SnowClientTest {
 
         // THEN
         verify(instance).get(captor.capture());
-        assertEquals("https://my-instance" + API_URL + "my_table?sysparm_display_value=false&sysparm_query=sys_created_by=me&sysparm_limit=100", captor.getValue());
+        assertEquals("https://my-instance" + API_URL + "my_table?sysparm_display_value=false&sysparm_query=sys_created_by%3Dme&sysparm_limit=100", captor.getValue());
     }
 }

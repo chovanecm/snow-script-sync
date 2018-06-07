@@ -3,6 +3,8 @@ package cz.chovanecm.snow.datalayer.rest.request;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +27,11 @@ public class QueryGetRequest extends GetRequest {
     public List<String> getParameters() {
         List<String> parameters = new ArrayList<>(super.getParameters());
         if (getCondition() != null) {
-            parameters.add("sysparm_query=" + getCondition());
+            try {
+                parameters.add("sysparm_query=" + URLEncoder.encode(getCondition(), "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException("Wrong encoding? Developer's fault! ", e);
+            }
         }
         return parameters;
     }

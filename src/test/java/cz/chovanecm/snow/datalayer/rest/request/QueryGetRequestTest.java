@@ -11,7 +11,7 @@ public class QueryGetRequestTest {
     @Test
     public void getParameters_shouldReturnConditionInQuery() {
         QueryGetRequest instance = QueryGetRequest.builder().tableName("table").condition("sys_created_by=me^time=now").build();
-        assertTrue(instance.getParameters().contains("sysparm_query=sys_created_by=me^time=now"));
+        assertTrue(instance.getParameters().contains("sysparm_query=sys_created_by%3Dme%5Etime%3Dnow"));
     }
 
     @Test

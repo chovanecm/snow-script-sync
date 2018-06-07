@@ -19,7 +19,7 @@ public class AutomatedTestScriptRestTest extends RestTest {
         String expectedName = "TestDate/1";
 
         //GIVEN
-        AutomatedTestScriptRestDao instance = spy(new AutomatedTestScriptRestDao());
+        AutomatedTestScriptRestDao instance = spy(new AutomatedTestScriptRestDao(mock(SnowRestInterface.class)));
         doReturn(mock(SnowRestInterface.class)).when(instance).getRestInterface();
         when(instance.getRestInterface().getRecords(any(QueryGetRequest.class))).thenReturn(
                 Arrays.asList(readJsonObject("sys_variable_value-test.json"))
