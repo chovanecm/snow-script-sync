@@ -28,20 +28,21 @@ import cz.chovanecm.snow.records.SnowRecord;
 import cz.chovanecm.snow.tables.SnowTable;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SnowClient implements SnowRestInterface {
 
-    private final static String API_URL = "/api/now/v1/table/";
+    public static final String API_URL = "/api/now/v1/table/";
     private final RestClient client;
     private final String instanceUrl;
     private final int readsPerRequest = 100;
 
     public SnowClient(String instanceUrl, String basicAuthUserName, String basicAuthPassword, String proxyHost, Integer proxyPort) {
         client = new RestClient(proxyHost, proxyPort, basicAuthUserName, basicAuthPassword);
-        client.setAcceptHeader("application/json;charset=utf-8");
+        getClient().setAcceptHeader("application/json;charset=utf-8");
         this.instanceUrl = instanceUrl;
     }
 
@@ -78,7 +79,7 @@ public class SnowClient implements SnowRestInterface {
     }
 
     public SnowApiGetResponse get(String url) throws IOException {
-        return new SnowApiGetResponse(client.get(url));
+        return new SnowApiGetResponse(getClient().get(url));
     }
 
     public <T extends SnowRecord> T getRecordBySysId(SnowTable sourceTable, String sysId, Class<T> type) throws IOException {
@@ -91,9 +92,11 @@ public class SnowClient implements SnowRestInterface {
     public Iterable<JsonObject> getRecords(QueryGetRequest request) {
         return () -> {
             try {
+                ArrayList<String> parameters = new ArrayList<>(request.getParameters());
+                parameters.add("sysparm_limit=" + readsPerRequest);
                 SnowApiGetResponse response = get(API_URL + request.getResource()
-                        + "?sysparm_limit" + String.join("&", request.getParameters()));
-                return new JsonResultIterator(this, response);
+                        + "?" + String.join("&", parameters));
+                return createIterator(response);
             } catch (IOException e) {
                 //FIXME
                 e.printStackTrace();
@@ -104,6 +107,9 @@ public class SnowClient implements SnowRestInterface {
 
     }
 
+    JsonResultIterator createIterator(SnowApiGetResponse response) throws IOException {
+        return new JsonResultIterator(this, response);
+    }
     @Override
     public JsonObject getRecord(SingleRecordGetRequest request) {
         try {
@@ -114,5 +120,9 @@ public class SnowClient implements SnowRestInterface {
             e.printStackTrace();
             return null;
         }
+    }
+
+    RestClient getClient() {
+        return client;
     }
 }
