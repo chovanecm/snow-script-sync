@@ -22,6 +22,7 @@ public class SnowClientTest {
         doReturn(mock(RestClient.class)).when(instance).getClient();
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         doReturn(mock(JsonResultIterator.class)).when(instance).createIterator(any(SnowApiGetResponse.class));
+        doReturn("https://my-instance").when(instance).getInstanceUrl();
 
         // GIVEN
         QueryGetRequest request = QueryGetRequest.builder().tableName("my_table").showDisplayValues(false).condition("sys_created_by=me").build();
@@ -30,6 +31,6 @@ public class SnowClientTest {
 
         // THEN
         verify(instance).get(captor.capture());
-        assertEquals(API_URL + "my_table?sysparm_display_value=false&sysparm_query=sys_created_by=me&sysparm_limit=100", captor.getValue());
+        assertEquals("https://my-instance" + API_URL + "my_table?sysparm_display_value=false&sysparm_query=sys_created_by=me&sysparm_limit=100", captor.getValue());
     }
 }

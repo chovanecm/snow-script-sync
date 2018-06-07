@@ -21,10 +21,10 @@ package cz.chovanecm.snow.records;
 public interface TableBasedObject {
 
     /**
-     * Returns table name
-     *
+     * Returns the table name that the object is valid for.
+     * (e.g. cmdb_ci if it is a business script that should run on cmdb_ci)
      * @return
      */
-    String getTableName();
+    String getAssignedTableName();
 
 }

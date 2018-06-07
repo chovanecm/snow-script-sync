@@ -44,7 +44,7 @@ public class DirectoryTreeBuilder {
      * @return
      */
     public Path getPathForTableBasedObject(TableBasedObject tableBasedObject) {
-        DbObject object = getObjectRegistry().getObjectByName(tableBasedObject.getTableName());
+        DbObject object = getObjectRegistry().getObjectByName(tableBasedObject.getAssignedTableName());
         if (object == null) {
             return Paths.get(".");
         }

@@ -19,10 +19,14 @@
 package cz.chovanecm.snow;
 
 import cz.chovanecm.snow.api.SnowClient;
+import cz.chovanecm.snow.datalayer.rest.BusinessRuleRestDao;
 import cz.chovanecm.snow.files.FileRecordAccessor;
 import cz.chovanecm.snow.records.DbObject;
 import cz.chovanecm.snow.records.SnowScript;
-import cz.chovanecm.snow.tables.*;
+import cz.chovanecm.snow.tables.ClientScriptTable;
+import cz.chovanecm.snow.tables.DbObjectRegistry;
+import cz.chovanecm.snow.tables.DbObjectTable;
+import cz.chovanecm.snow.tables.ScriptSnowTable;
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -53,13 +57,25 @@ public class SnowScriptSynchronizer {
         List<ScriptSnowTable> tables = Arrays.asList(new ScriptSnowTable("sys_script_include", "script", "name"),
                 new ScriptSnowTable("sysevent_in_email_action", "script", "name"),
                 new ScriptSnowTable("sys_script_fix", "script", "name"),
-                new BusinessRuleTable(),
                 new ClientScriptTable());
+        /*
+        for (ScriptSnowTable table : tables) {
+            Iterable<SnowScript> iterable = client.readAll(table, 100, SnowScript.class);
+            for (SnowScript script : iterable) {
+                try {
+                    script.save(fileAccessor);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }*/
         Flowable.fromIterable(tables)
                 .flatMap(tableItem ->
                         Flowable.just(tableItem)
                                 .subscribeOn(Schedulers.io())
-                                .flatMap(tableToProcess -> Flowable.fromIterable(client.readAll(tableToProcess, 100, SnowScript.class)))
+                                .flatMap(tableToProcess -> Flowable.fromIterable(
+                                        client.readAll(tableToProcess, 100, SnowScript.class)))
+                                .mergeWith(Flowable.fromIterable(new BusinessRuleRestDao(client).getAll()))
                 )
                 .flatMap(script ->
                         Flowable.just(script)

@@ -4,6 +4,7 @@ import cz.chovanecm.snow.datalayer.BusinessRuleDao;
 import cz.chovanecm.snow.records.BusinessRuleSnowScript;
 import cz.chovanecm.snow.tables.BusinessRuleTable;
 import io.reactivex.Flowable;
+import io.reactivex.schedulers.Schedulers;
 
 import java.text.ParseException;
 
@@ -29,6 +30,7 @@ public class BusinessRuleRestDao implements BusinessRuleDao {
     @Override
     public Iterable<BusinessRuleSnowScript> getAll() {
         return Flowable.fromIterable(getRestInterface().getRecords(table.getTableName()))
+                .observeOn(Schedulers.io())
                 .map(it -> table.getJsonManipulator().readFromJson(it))
                 .blockingIterable();
     }

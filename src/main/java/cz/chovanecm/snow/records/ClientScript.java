@@ -37,7 +37,7 @@ public class ClientScript extends SnowScript implements TableBasedObject {
     }
 
     @Override
-    public String getTableName() {
+    public String getAssignedTableName() {
         return tableName;
     }
 

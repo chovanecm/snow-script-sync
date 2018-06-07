@@ -32,15 +32,12 @@ import java.io.IOException;
 public class BusinessRuleSnowScript extends SnowScript implements TableBasedObject {
 
     private String when = "";
+    private String assignedTableName = "";
 
     public BusinessRuleSnowScript(SnowTable table) {
         super(table);
     }
 
-    @Override
-    public String getTableName() {
-        return getTable().getTableName();
-    }
 
     @Override
     public void save(RecordAccessor destination) throws IOException {

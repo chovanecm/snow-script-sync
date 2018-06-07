@@ -94,7 +94,7 @@ public class SnowClient implements SnowRestInterface {
             try {
                 ArrayList<String> parameters = new ArrayList<>(request.getParameters());
                 parameters.add("sysparm_limit=" + readsPerRequest);
-                SnowApiGetResponse response = get(API_URL + request.getResource()
+                SnowApiGetResponse response = get(getApiUrl() + request.getResource()
                         + "?" + String.join("&", parameters));
                 return createIterator(response);
             } catch (IOException e) {
@@ -113,7 +113,7 @@ public class SnowClient implements SnowRestInterface {
     @Override
     public JsonObject getRecord(SingleRecordGetRequest request) {
         try {
-            SnowApiGetResponse response = get(API_URL + request.getResource() + "?" + String.join("&", request.getParameters()));
+            SnowApiGetResponse response = get(getApiUrl() + request.getResource() + "?" + String.join("&", request.getParameters()));
             return response.getBody().getObject("result");
         } catch (IOException e) {
             //FIXME

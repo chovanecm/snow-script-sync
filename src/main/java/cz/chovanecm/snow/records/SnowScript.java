@@ -21,6 +21,7 @@ package cz.chovanecm.snow.records;
 import cz.chovanecm.snow.RecordAccessor;
 import cz.chovanecm.snow.tables.SnowTable;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 import java.io.IOException;
@@ -30,6 +31,7 @@ import java.io.IOException;
 public class SnowScript extends SnowRecord implements DeactivableSnowRecord {
 
     private String scriptName;
+    @NonNull
     private String script = "";
     private boolean active = true;
 
