@@ -1,0 +1,214 @@
+{
+  "result": [
+    {
+      "document": "wf_activity",
+      "sys_mod_count": "0",
+      "sys_updated_on": "2017-06-29 15:43:26",
+      "sys_tags": "",
+      "document_key": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/wf_activity/c179659b672332006e6eadab9485ef10",
+        "value": "c179659b672332006e6eadab9485ef10"
+      },
+      "sys_class_name": "sys_variable_value",
+      "sys_id": "0179659b672332006e6eadab9485ef12",
+      "sys_updated_by": "admin",
+      "sys_created_on": "2017-06-29 15:43:26",
+      "variable": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/var_dictionary/c35e03850a0a0ba96248a709503bd0c4",
+        "value": "c35e03850a0a0ba96248a709503bd0c4"
+      },
+      "value": "",
+      "sys_created_by": "admin",
+      "order": "250"
+    },
+    {
+      "document": "wf_activity",
+      "sys_mod_count": "0",
+      "sys_updated_on": "2017-06-29 15:43:26",
+      "sys_tags": "",
+      "document_key": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/wf_activity/4d79659b672332006e6eadab9485ef6d",
+        "value": "4d79659b672332006e6eadab9485ef6d"
+      },
+      "sys_class_name": "sys_variable_value",
+      "sys_id": "0179659b672332006e6eadab9485ef70",
+      "sys_updated_by": "admin",
+      "sys_created_on": "2017-06-29 15:43:26",
+      "variable": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/var_dictionary/8ec7a5dbc0a80066187fa7acf3778705",
+        "value": "8ec7a5dbc0a80066187fa7acf3778705"
+      },
+      "value": "3bf802c20a0a0b52008e2859cd8abcf2",
+      "sys_created_by": "admin",
+      "order": "400"
+    },
+    {
+      "document": "sys_hub_step_instance",
+      "sys_mod_count": "0",
+      "sys_updated_on": "2017-09-28 21:39:02",
+      "sys_tags": "",
+      "document_key": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/sys_hub_step_instance/c1832fa473210300e4fd234ffff6a7dc",
+        "value": "c1832fa473210300e4fd234ffff6a7dc"
+      },
+      "sys_class_name": "sys_variable_value",
+      "sys_id": "01832fa473210300e4fd234ffff6a7e4",
+      "sys_updated_by": "admin",
+      "sys_created_on": "2017-09-28 21:39:02",
+      "variable": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/var_dictionary/3930d57267003200553fafb49585efc5",
+        "value": "3930d57267003200553fafb49585efc5"
+      },
+      "value": "incident",
+      "sys_created_by": "admin",
+      "order": "200"
+    },
+    {
+      "document": "sys_hub_step_instance",
+      "sys_mod_count": "0",
+      "sys_updated_on": "2017-09-15 23:18:03",
+      "sys_tags": "",
+      "document_key": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/sys_hub_step_instance/4d8db0e4731103005e7d234ffff6a7d2",
+        "value": "4d8db0e4731103005e7d234ffff6a7d2"
+      },
+      "sys_class_name": "sys_variable_value",
+      "sys_id": "018db0e4731103005e7d234ffff6a7db",
+      "sys_updated_by": "admin",
+      "sys_created_on": "2017-09-15 23:18:03",
+      "variable": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/var_dictionary/3930d57267003200553fafb49585efc5",
+        "value": "3930d57267003200553fafb49585efc5"
+      },
+      "value": "incident",
+      "sys_created_by": "admin",
+      "order": "200"
+    },
+    {
+      "document": "wf_activity",
+      "sys_mod_count": "0",
+      "sys_updated_on": "2016-12-21 13:25:51",
+      "sys_tags": "",
+      "document_key": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/wf_activity/cdeb26c6d7332200f2d224837e610333",
+        "value": "cdeb26c6d7332200f2d224837e610333"
+      },
+      "sys_class_name": "sys_variable_value",
+      "sys_id": "01eb26c6d7332200f2d224837e610335",
+      "sys_updated_by": "admin",
+      "sys_created_on": "2016-12-21 13:25:51",
+      "variable": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/var_dictionary/d7277ef40a0a0b5f00355fe11ecee145",
+        "value": "d7277ef40a0a0b5f00355fe11ecee145"
+      },
+      "value": "",
+      "sys_created_by": "admin",
+      "order": ""
+    },
+    {
+      "document": "wf_activity",
+      "sys_mod_count": "0",
+      "sys_updated_on": "2016-12-21 13:25:51",
+      "sys_tags": "",
+      "document_key": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/wf_activity/09eb66c6d7332200f2d224837e610357",
+        "value": "09eb66c6d7332200f2d224837e610357"
+      },
+      "sys_class_name": "sys_variable_value",
+      "sys_id": "01eb66c6d7332200f2d224837e610358",
+      "sys_updated_by": "admin",
+      "sys_created_on": "2016-12-21 13:25:51",
+      "variable": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/var_dictionary/c35dd3ef0a0a0ba96248a70947e35325",
+        "value": "c35dd3ef0a0a0ba96248a70947e35325"
+      },
+      "value": "(function() {\r\n\treturn \"\";\r\n}());",
+      "sys_created_by": "admin",
+      "order": "300"
+    },
+    {
+      "document": "wf_activity",
+      "sys_mod_count": "0",
+      "sys_updated_on": "2016-12-21 13:25:51",
+      "sys_tags": "",
+      "document_key": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/wf_activity/c9eb66c6d7332200f2d224837e610358",
+        "value": "c9eb66c6d7332200f2d224837e610358"
+      },
+      "sys_class_name": "sys_variable_value",
+      "sys_id": "01eb66c6d7332200f2d224837e610359",
+      "sys_updated_by": "admin",
+      "sys_created_on": "2016-12-21 13:25:51",
+      "variable": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/var_dictionary/c35dd0310a0a0ba96248a70936d276b3",
+        "value": "c35dd0310a0a0ba96248a70936d276b3"
+      },
+      "value": "(function() {\r\n\tif (current.task.assigned_to != current.task.assigned_to.manager)\r\n\t\treturn current.task.assigned_to.manager + \"\";\r\n\treturn \"\";\r\n}());",
+      "sys_created_by": "admin",
+      "order": "200"
+    },
+    {
+      "document": "wf_activity",
+      "sys_mod_count": "0",
+      "sys_updated_on": "2016-12-21 13:25:51",
+      "sys_tags": "",
+      "document_key": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/wf_activity/8deb66c6d7332200f2d224837e610359",
+        "value": "8deb66c6d7332200f2d224837e610359"
+      },
+      "sys_class_name": "sys_variable_value",
+      "sys_id": "01eb66c6d7332200f2d224837e61035a",
+      "sys_updated_by": "admin",
+      "sys_created_on": "2016-12-21 13:25:51",
+      "variable": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/var_dictionary/c35dcc7a0a0a0ba96248a70926fa68b5",
+        "value": "c35dcc7a0a0a0ba96248a70926fa68b5"
+      },
+      "value": "c301268ed7a2220035ae23c7ce6103db",
+      "sys_created_by": "admin",
+      "order": "100"
+    },
+    {
+      "document": "wf_activity",
+      "sys_mod_count": "0",
+      "sys_updated_on": "2008-12-04 15:48:48",
+      "sys_tags": "",
+      "document_key": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/wf_activity/02afe62f4a362327008b7f57710e548f",
+        "value": "02afe62f4a362327008b7f57710e548f"
+      },
+      "sys_class_name": "sys_variable_value",
+      "sys_id": "02afe6364a362327003346a021c3584b",
+      "sys_updated_by": "admin",
+      "sys_created_on": "2008-12-04 15:48:48",
+      "variable": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/var_dictionary/502163410a6a803f0356332b24dc7945",
+        "value": "502163410a6a803f0356332b24dc7945"
+      },
+      "value": "reject",
+      "sys_created_by": "admin",
+      "order": "325"
+    },
+    {
+      "document": "wf_activity",
+      "sys_mod_count": "0",
+      "sys_updated_on": "2008-12-04 15:48:48",
+      "sys_tags": "",
+      "document_key": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/wf_activity/02afe62f4a362327008b7f57710e548f",
+        "value": "02afe62f4a362327008b7f57710e548f"
+      },
+      "sys_class_name": "sys_variable_value",
+      "sys_id": "02afe6374a362327003346a0c9e45f08",
+      "sys_updated_by": "admin",
+      "sys_created_on": "2008-12-04 15:48:48",
+      "variable": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/var_dictionary/02c618170a0a0b26436f5c2c9f7a3901",
+        "value": "02c618170a0a0b26436f5c2c9f7a3901"
+      },
+      "value": "",
+      "sys_created_by": "admin",
+      "order": "200"
+    }
+  ]
+}

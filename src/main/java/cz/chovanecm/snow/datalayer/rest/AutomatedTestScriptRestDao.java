@@ -2,6 +2,8 @@ package cz.chovanecm.snow.datalayer.rest;
 
 import com.github.jsonj.JsonObject;
 import cz.chovanecm.snow.datalayer.AutomatedTestScriptDao;
+import cz.chovanecm.snow.datalayer.rest.request.QueryGetRequest;
+import cz.chovanecm.snow.datalayer.rest.request.SingleRecordGetRequest;
 import cz.chovanecm.snow.records.SnowScript;
 import cz.chovanecm.snow.tables.ScriptSnowTable;
 import io.reactivex.Flowable;
@@ -16,7 +18,7 @@ public class AutomatedTestScriptRestDao implements AutomatedTestScriptDao {
     public Iterable<SnowScript> getAll() {
         return Flowable.fromIterable(
                 getRestInterface().getRecords(
-                        SnowRestQueryGetRequest.builder()
+                        QueryGetRequest.builder()
                                 .tableName("sys_variable_value")
                                 .condition("document=sys_atf_step^variable.sys_name=Test%20script")
                                 .build()))
@@ -24,7 +26,7 @@ public class AutomatedTestScriptRestDao implements AutomatedTestScriptDao {
                     SnowScript script = table.getJsonManipulator().readFromJson(it);
 
                     JsonObject testStepRecord = getRestInterface().getRecord(
-                            SingleRecordSnowRestGetGetRequest.builder()
+                            SingleRecordGetRequest.builder()
                                     .showDisplayValues(true)
                                     .tableName("sys_atf_step")
                                     .sysId(it.getObject("document_key").getString("value"))

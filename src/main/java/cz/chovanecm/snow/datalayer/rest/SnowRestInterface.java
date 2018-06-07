@@ -1,18 +1,20 @@
 package cz.chovanecm.snow.datalayer.rest;
 
 import com.github.jsonj.JsonObject;
+import cz.chovanecm.snow.datalayer.rest.request.QueryGetRequest;
+import cz.chovanecm.snow.datalayer.rest.request.SingleRecordGetRequest;
 
 public interface SnowRestInterface {
 
-    Iterable<JsonObject> getRecords(SnowRestGetRequest request);
+    Iterable<JsonObject> getRecords(QueryGetRequest request);
 
     default Iterable<JsonObject> getRecords(String tableName) {
-        return getRecords(SnowRestQueryGetRequest.builder().tableName(tableName).build());
+        return getRecords(QueryGetRequest.builder().tableName(tableName).build());
     }
 
     default JsonObject getRecord(String tableName, String sysId) {
-        return getRecord(SingleRecordSnowRestGetGetRequest.builder().tableName(tableName).sysId(sysId).build());
+        return getRecord(SingleRecordGetRequest.builder().tableName(tableName).sysId(sysId).build());
     }
 
-    JsonObject getRecord(SnowRestGetRequest request);
+    JsonObject getRecord(SingleRecordGetRequest request);
 }

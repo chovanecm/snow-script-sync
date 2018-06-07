@@ -11,7 +11,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class RestBusinessRuleDaoTest extends RestDaoTest {
+public class RestBusinessRuleDaoTest extends RestTest {
 
     @Test
     public void getAll_shouldReturnIterableOfBusinessRuleSnowScript() throws IOException {
