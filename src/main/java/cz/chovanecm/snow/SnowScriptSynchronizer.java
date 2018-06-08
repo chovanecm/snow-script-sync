@@ -48,7 +48,7 @@ public class SnowScriptSynchronizer {
 
     public SnowClient getSnowClient() {
         if (snowClient == null) {
-            return new SnowClient(connectorConfiguration);
+            snowClient = new SnowClient(connectorConfiguration);
         }
         return snowClient;
     }
