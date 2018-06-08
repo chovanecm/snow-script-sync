@@ -20,18 +20,17 @@ package cz.chovanecm.snow.json;
 
 import com.github.jsonj.JsonObject;
 import cz.chovanecm.snow.records.DbObject;
-import cz.chovanecm.snow.records.SnowRecord;
 
 import java.text.ParseException;
 
-public class DbObjectJsonManipulator extends JsonManipulator {
+public class DbObjectJsonManipulator extends JsonManipulator<DbObject> {
 
     @Override
-    public SnowRecord readFromJson(JsonObject json) throws ParseException {
+    public DbObject readFromJson(JsonObject json) throws ParseException {
         return this.setMyFields(json, new DbObject());
     }
 
-    protected SnowRecord setMyFields(JsonObject json, DbObject record) throws ParseException {
+    protected DbObject setMyFields(JsonObject json, DbObject record) throws ParseException {
         super.setMyFields(json, record); //To change body of generated methods, choose Tools | Templates.
         record.setName(json.getString("name"));
         record.setSuperClassId(json.getString("super_class", "value"));

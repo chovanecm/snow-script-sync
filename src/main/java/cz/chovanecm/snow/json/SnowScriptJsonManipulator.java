@@ -25,7 +25,7 @@ import cz.chovanecm.snow.tables.ScriptSnowTable;
 import java.text.ParseException;
 import java.util.Set;
 
-public class SnowScriptJsonManipulator extends JsonManipulator {
+public class SnowScriptJsonManipulator extends JsonManipulator<SnowScript> {
 
     private final ScriptSnowTable table;
 

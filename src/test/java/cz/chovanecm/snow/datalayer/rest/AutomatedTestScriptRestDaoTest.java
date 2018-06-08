@@ -12,7 +12,7 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class AutomatedTestScriptRestTest extends RestTest {
+public class AutomatedTestScriptRestDaoTest extends RestTest {
 
     @Test
     public void getAll_shouldReturnClientScriptWithProperName() throws IOException {

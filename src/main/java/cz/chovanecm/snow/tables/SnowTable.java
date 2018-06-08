@@ -19,8 +19,9 @@
 package cz.chovanecm.snow.tables;
 
 import cz.chovanecm.snow.json.JsonManipulator;
+import cz.chovanecm.snow.records.SnowRecord;
 
-public abstract class SnowTable {
+public abstract class SnowTable<T extends SnowRecord> {
     protected final String tableName;
 
     public SnowTable(String tableName) {
@@ -31,5 +32,5 @@ public abstract class SnowTable {
         return tableName;
     }
 
-    public abstract JsonManipulator getJsonManipulator();
+    public abstract JsonManipulator<T> getJsonManipulator();
 }

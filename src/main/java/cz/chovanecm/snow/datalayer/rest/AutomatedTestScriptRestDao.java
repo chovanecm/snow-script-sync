@@ -20,6 +20,11 @@ public class AutomatedTestScriptRestDao implements AutomatedTestScriptDao {
     SnowRestInterface restInterface;
 
     @Override
+    public SnowScript get(String id) {
+        throw new RuntimeException("Get single Automated script is not supported (yet)");
+    }
+
+    @Override
     public Iterable<SnowScript> getAll() {
         return Flowable.fromIterable(
                 getRestInterface().getRecords(
