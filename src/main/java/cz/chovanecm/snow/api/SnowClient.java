@@ -24,14 +24,10 @@ import cz.chovanecm.snow.SnowConnectorConfiguration;
 import cz.chovanecm.snow.datalayer.rest.SnowRestInterface;
 import cz.chovanecm.snow.datalayer.rest.request.QueryGetRequest;
 import cz.chovanecm.snow.datalayer.rest.request.SingleRecordGetRequest;
-import cz.chovanecm.snow.records.SnowRecord;
-import cz.chovanecm.snow.tables.SnowTable;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class SnowClient implements SnowRestInterface {
 
@@ -62,30 +58,9 @@ public class SnowClient implements SnowRestInterface {
         return getInstanceUrl() + API_URL;
     }
 
-    public String getTableApiUrl(SnowTable table) {
-        return getApiUrl() + table.getTableName();
-    }
-
-    public <T extends SnowRecord> Iterable<T> readAll(SnowTable sourceTable, int readsPerRequest, Class<T> type) {
-        return () -> {
-            try {
-                SnowApiGetResponse response = get(getTableApiUrl(sourceTable) + "?sysparm_limit=" + readsPerRequest);
-                return new ResultIterator<T>(this, sourceTable, response);
-            } catch (IOException ex) {
-                Logger.getLogger(SnowClient.class.getName()).log(Level.SEVERE, null, ex);
-                return Collections.emptyIterator();
-            }
-        };
-    }
 
     public SnowApiGetResponse get(String url) throws IOException {
         return new SnowApiGetResponse(getClient().get(url));
-    }
-
-    public <T extends SnowRecord> T getRecordBySysId(SnowTable sourceTable, String sysId, Class<T> type) throws IOException {
-        SnowApiGetResponse response = get(getTableApiUrl(sourceTable) + "?sysparm_query=sys_id=" + sysId);
-        ResultIterator<T> iterator = new ResultIterator<T>(this, sourceTable, response);
-        return iterator.next();
     }
 
     @Override
@@ -110,6 +85,7 @@ public class SnowClient implements SnowRestInterface {
     JsonResultIterator createIterator(SnowApiGetResponse response) throws IOException {
         return new JsonResultIterator(this, response);
     }
+
     @Override
     public JsonObject getRecord(SingleRecordGetRequest request) {
         try {
