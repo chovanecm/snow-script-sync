@@ -21,41 +21,50 @@ package cz.chovanecm.snow;
 import cz.chovanecm.snow.api.SnowClient;
 import cz.chovanecm.snow.datalayer.rest.AutomatedTestScriptRestDao;
 import cz.chovanecm.snow.datalayer.rest.BusinessRuleRestDao;
+import cz.chovanecm.snow.datalayer.rest.ClientScriptRestDao;
 import cz.chovanecm.snow.datalayer.rest.GenericScriptRestDao;
 import cz.chovanecm.snow.files.FileRecordAccessor;
 import cz.chovanecm.snow.records.DbObject;
-import cz.chovanecm.snow.records.SnowScript;
-import cz.chovanecm.snow.tables.ClientScriptTable;
+import cz.chovanecm.snow.records.SnowRecord;
 import cz.chovanecm.snow.tables.DbObjectRegistry;
 import cz.chovanecm.snow.tables.DbObjectTable;
-import cz.chovanecm.snow.tables.ScriptSnowTable;
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Main class
  */
 public class SnowScriptSynchronizer {
+    private final SnowConnectorConfiguration connectorConfiguration;
+    private final String destination;
+    private SnowClient snowClient;
 
-    public static void run(SnowConnectorConfiguration connectorConfiguration, String destination) {
+    public SnowScriptSynchronizer(SnowConnectorConfiguration connectorConfiguration, String destination) {
+        this.connectorConfiguration = connectorConfiguration;
+        this.destination = destination;
+    }
 
-        // This allow us to access the ServiceNow instance
-        SnowClient client = new SnowClient(connectorConfiguration);
+    public SnowClient getSnowClient() {
+        if (snowClient == null) {
+            return new SnowClient(connectorConfiguration);
+        }
+        return snowClient;
+    }
+
+    public void downloadAll() {
 
         // Where the scripts download to
         Path root = Paths.get(destination);
         // Get a registry of all tables to create its folder structure later.
-        DbObjectRegistry registry = new DbObjectRegistry(client.readAll(new DbObjectTable(), 100, DbObject.class));
+        DbObjectRegistry registry = new DbObjectRegistry(getSnowClient().readAll(new DbObjectTable(), 100, DbObject.class));
 
         // TODO: what exactly is this used for?
         FileRecordAccessor fileAccessor = new FileRecordAccessor(registry, root);
         // List of the tables we will download scripts from.
-        List<ScriptSnowTable> tables = Arrays.asList(new ScriptSnowTable("sys_script_include", "script", "name"),
+        /*List<ScriptSnowTable> tables = Arrays.asList(new ScriptSnowTable("sys_script_include", "script", "name"),
                 new ScriptSnowTable("sysevent_in_email_action", "script", "name"),
                 new ScriptSnowTable("sys_script_fix", "script", "name"),
                 new ClientScriptTable());
@@ -71,7 +80,16 @@ public class SnowScriptSynchronizer {
                                 .mergeWith(Flowable.fromIterable(new GenericScriptRestDao(client, "sys_script_include").getAll()))
                                 .mergeWith(Flowable.fromIterable(new GenericScriptRestDao(client, "sysevent_in_email_action").getAll()))
                                 .mergeWith(Flowable.fromIterable(new GenericScriptRestDao(client, "sys_script_fix").getAll()))
-                )
+                                .mergeWith(Flowable.fromIterable(new ClientScriptRestDao(client).getAll()))
+                )*/
+        Flowable.fromIterable(getBusinessRuleDao().getAll())
+                .cast(SnowRecord.class)
+                .observeOn(Schedulers.io())
+                .mergeWith(Flowable.fromIterable(getAutomatedTestScriptDao().getAll()))
+                .mergeWith(Flowable.fromIterable(getSnowScriptDao("sys_script_include").getAll()))
+                .mergeWith(Flowable.fromIterable(getSnowScriptDao("sysevent_in_email_action").getAll()))
+                .mergeWith(Flowable.fromIterable(getSnowScriptDao("sys_script_fix").getAll()))
+                .mergeWith(Flowable.fromIterable(getClientScriptDao().getAll()))
                 .flatMap(script ->
                         Flowable.just(script)
                                 .subscribeOn(Schedulers.io())
@@ -83,7 +101,25 @@ public class SnowScriptSynchronizer {
                     //System.out.println(LocalTime.now().toString() + " Saved " + script.getScriptName());
                 }
         );
+
+
         System.out.println("FINISHED.");
+    }
+
+    public ClientScriptRestDao getClientScriptDao() {
+        return new ClientScriptRestDao(getSnowClient());
+    }
+
+    public GenericScriptRestDao getSnowScriptDao(String scriptTableName) {
+        return new GenericScriptRestDao(getSnowClient(), scriptTableName);
+    }
+
+    public AutomatedTestScriptRestDao getAutomatedTestScriptDao() {
+        return new AutomatedTestScriptRestDao(getSnowClient());
+    }
+
+    public BusinessRuleRestDao getBusinessRuleDao() {
+        return new BusinessRuleRestDao(getSnowClient());
     }
 
 }

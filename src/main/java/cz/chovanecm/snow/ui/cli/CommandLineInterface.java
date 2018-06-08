@@ -42,8 +42,9 @@ public class CommandLineInterface {
         try {
             CommandLineInterface userInterface = new CommandLineInterface(args);
             SnowConnectorConfiguration configuration = userInterface.getConnectorConfiguration();
-            SnowScriptSynchronizer.run(configuration,
+            SnowScriptSynchronizer synchronizer = new SnowScriptSynchronizer(configuration,
                     userInterface.getDestinationFolder());
+            synchronizer.downloadAll();
         } catch (UserInterfaceException e) {
             System.err.println(e.getMessage());
             CommandLineInterface.printHelp();
