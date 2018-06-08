@@ -16,12 +16,10 @@ import java.util.logging.Logger;
  */
 @Deprecated
 public class ResultIterator<T extends SnowRecord> implements Iterator<T> {
-    private SnowClient snowClient;
     private JsonResultIterator iterator;
     private SnowTable table;
 
     public ResultIterator(SnowClient snowClient, SnowTable table, SnowApiGetResponse response) throws IOException {
-        this.snowClient = snowClient;
         this.table = table;
         iterator = new JsonResultIterator(snowClient, response);
     }

@@ -58,17 +58,7 @@ public class SnowScriptSynchronizer {
                 new ScriptSnowTable("sysevent_in_email_action", "script", "name"),
                 new ScriptSnowTable("sys_script_fix", "script", "name"),
                 new ClientScriptTable());
-        /*
-        for (ScriptSnowTable table : tables) {
-            Iterable<SnowScript> iterable = client.readAll(table, 100, SnowScript.class);
-            for (SnowScript script : iterable) {
-                try {
-                    script.save(fileAccessor);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }*/
+
         Flowable.fromIterable(tables)
                 .flatMap(tableItem ->
                         Flowable.just(tableItem)

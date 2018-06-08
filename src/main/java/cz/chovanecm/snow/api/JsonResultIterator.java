@@ -20,7 +20,8 @@ public class JsonResultIterator implements Iterator<JsonObject> {
         this.snowClient = snowClient;
         this.response = response;
         nextUrl = response.getNextRecordsUrl();
-        JsonArray results = response.getBody().getArray("result");
+        JsonObject body = response.getBody();
+        JsonArray results = body.getArray("result");
         iterator = results.iterator();
     }
 
@@ -39,7 +40,8 @@ public class JsonResultIterator implements Iterator<JsonObject> {
                 System.out.println("Downloading: " + nextUrl);
                 response = snowClient.get(nextUrl);
                 nextUrl = response.getNextRecordsUrl();
-                JsonArray results = response.getBody().getArray("result");
+                JsonObject body = response.getBody();
+                JsonArray results = body.getArray("result");
                 iterator = results.iterator();
             } catch (IOException ex) {
                 Logger.getLogger(SnowClient.class.getName()).log(Level.SEVERE, null, ex);

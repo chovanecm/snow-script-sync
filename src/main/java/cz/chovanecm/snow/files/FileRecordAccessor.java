@@ -26,6 +26,7 @@ import cz.chovanecm.snow.records.SnowScript;
 import cz.chovanecm.snow.tables.DbObjectRegistry;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
@@ -63,9 +64,16 @@ public class FileRecordAccessor implements RecordAccessor {
 
     @Override
     public void saveSnowScript(SnowScript script) throws IOException {
-        Path file = getRoot().resolve(script.getTable().getTableName()).resolve(getDirBuilder().getPathForDeactivableSnowRecord(script));
-        file = file.resolve(getSafeFileName(script.getScriptName() + "_" + script.getSysId() + ".js"));
-        writeFile(file, script.getScript().getBytes(CHARSET_NAME), script.getUpdatedOn());
+        String tableName = script.getTable().getTableName();
+        Path file = getRoot().resolve(tableName).resolve(getDirBuilder().getPathForDeactivableSnowRecord(script));
+        String scriptName = script.getScriptName();
+        file = file.resolve(getSafeFileName(scriptName + "_" + script.getSysId() + ".js"));
+        writeFile(file, getScriptAsBytes(script), script.getUpdatedOn());
+    }
+
+    public byte[] getScriptAsBytes(SnowScript script) throws UnsupportedEncodingException {
+        String scriptString = script.getScript();
+        return scriptString.getBytes(CHARSET_NAME);
     }
 
     @Override
@@ -74,7 +82,7 @@ public class FileRecordAccessor implements RecordAccessor {
                 .resolve(getDirBuilder().getPathForTableBasedObject(script))
                 .resolve(getDirBuilder().getPathForDeactivableSnowRecord(script));
         file = file.resolve(getSafeFileName(script.getScriptName() + "_" + script.getSysId() + ".js"));
-        writeFile(file, script.getScript().getBytes(CHARSET_NAME), script.getUpdatedOn());
+        writeFile(file, getScriptAsBytes(script), script.getUpdatedOn());
     }
 
     @Override
@@ -83,7 +91,7 @@ public class FileRecordAccessor implements RecordAccessor {
                 .resolve(getDirBuilder().getPathForTableBasedObject(script))
                 .resolve(getDirBuilder().getPathForDeactivableSnowRecord(script));
         file = file.resolve(getSafeFileName(script.getScriptName() + "_" + script.getSysId() + ".js"));
-        writeFile(file, script.getScript().getBytes(CHARSET_NAME), script.getUpdatedOn());
+        writeFile(file, getScriptAsBytes(script), script.getUpdatedOn());
     }
 
     private String getSafeFileName(String filename) {
