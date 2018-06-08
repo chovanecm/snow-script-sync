@@ -1,6 +1,7 @@
 package cz.chovanecm.snow.datalayer.rest.request;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.io.UnsupportedEncodingException;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@EqualsAndHashCode(callSuper = true)
 public class QueryGetRequest extends GetRequest {
     private String condition = "";
 

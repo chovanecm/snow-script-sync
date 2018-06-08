@@ -21,12 +21,14 @@ package cz.chovanecm.snow.records;
 
 import cz.chovanecm.snow.RecordAccessor;
 import cz.chovanecm.snow.tables.DbObjectTable;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@EqualsAndHashCode(callSuper = true)
 public class DbObject extends SnowRecord {
 
     private final Set<DbObject> children = new HashSet<>();

@@ -42,7 +42,8 @@ public class SnowScriptJsonManipulator extends JsonManipulator<SnowScript> {
         return setMyFields(json, new SnowScript(getTable()));
     }
 
-    protected SnowScript setMyFields(JsonObject json, SnowScript record) throws ParseException {
+    @Override
+    protected SnowScript setMyFields(JsonObject json, SnowScript record) {
         super.setMyFields(json, record);
         String script = json.getString(getTable().getScriptField());
         record.setScript(script == null ? "" : script);

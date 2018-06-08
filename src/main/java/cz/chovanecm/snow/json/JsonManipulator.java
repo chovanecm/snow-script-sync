@@ -31,7 +31,7 @@ public abstract class JsonManipulator<T extends SnowRecord> {
 
     public abstract T readFromJson(JsonObject json) throws ParseException;
 
-    protected T setMyFields(JsonObject json, T record) throws ParseException {
+    protected T setMyFields(JsonObject json, T record) {
         record.setSysId(json.getString("sys_id"));
         ZonedDateTime sysUpdatedOn = ZonedDateTime.parse(json.getString("sys_updated_on") + " GMT", dateFormat);
         ZonedDateTime sysCreatedOn = ZonedDateTime.parse(json.getString("sys_created_on") + " GMT", dateFormat);

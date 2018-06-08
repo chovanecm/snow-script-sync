@@ -20,6 +20,7 @@ package cz.chovanecm.snow.records;
 
 import cz.chovanecm.snow.RecordAccessor;
 import cz.chovanecm.snow.tables.SnowTable;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -28,6 +29,7 @@ import java.io.IOException;
 
 @Getter
 @Setter
+@EqualsAndHashCode(callSuper = true)
 public class SnowScript extends SnowRecord implements DeactivableSnowRecord {
 
     private String scriptName;

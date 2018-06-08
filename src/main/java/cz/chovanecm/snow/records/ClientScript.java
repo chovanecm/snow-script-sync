@@ -20,9 +20,11 @@ package cz.chovanecm.snow.records;
 
 import cz.chovanecm.snow.RecordAccessor;
 import cz.chovanecm.snow.tables.SnowTable;
+import lombok.EqualsAndHashCode;
 
 import java.io.IOException;
 
+@EqualsAndHashCode(callSuper = true)
 public class ClientScript extends SnowScript implements TableBasedObject {
 
     private String tableName;

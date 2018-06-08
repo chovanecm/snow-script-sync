@@ -54,7 +54,7 @@ public class CommandLineInterface {
         try {
             line = new PosixParser().parse(options, args);
         } catch (ParseException e) {
-            throw new UserInterfaceException(String.format("Error when parsing arguments %s. Cause: %s", args, e.getMessage()));
+            throw new UserInterfaceException(String.format("Error when parsing arguments %s. Cause: %s", Arrays.toString(args), e.getMessage()));
         }
         if (!mandatoryFieldsPresent()) {
             throw new UserInterfaceException("Destination, instance, and user are mandatory.");
