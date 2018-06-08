@@ -30,6 +30,8 @@ import io.reactivex.schedulers.Schedulers;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Main class
@@ -61,45 +63,23 @@ public class SnowScriptSynchronizer {
 
         // TODO: what exactly is this used for?
         FileRecordAccessor fileAccessor = new FileRecordAccessor(registry, root);
-        // List of the tables we will download scripts from.
-        /*List<ScriptSnowTable> tables = Arrays.asList(new ScriptSnowTable("sys_script_include", "script", "name"),
-                new ScriptSnowTable("sysevent_in_email_action", "script", "name"),
-                new ScriptSnowTable("sys_script_fix", "script", "name"),
-                new ClientScriptTable());
 
-        Flowable.fromIterable(tables)
-                .flatMap(tableItem ->
-                        Flowable.just(tableItem)
-                                .subscribeOn(Schedulers.io())
-                                .flatMap(tableToProcess -> Flowable.fromIterable(
-                                        client.readAll(tableToProcess, 100, SnowScript.class)))
-                                .mergeWith(Flowable.fromIterable(new BusinessRuleRestDao(client).getAll()))
-                                .mergeWith(Flowable.fromIterable(new AutomatedTestScriptRestDao(client).getAll()))
-                                .mergeWith(Flowable.fromIterable(new GenericScriptRestDao(client, "sys_script_include").getAll()))
-                                .mergeWith(Flowable.fromIterable(new GenericScriptRestDao(client, "sysevent_in_email_action").getAll()))
-                                .mergeWith(Flowable.fromIterable(new GenericScriptRestDao(client, "sys_script_fix").getAll()))
-                                .mergeWith(Flowable.fromIterable(new ClientScriptRestDao(client).getAll()))
-                )*/
-        Flowable.fromIterable(getBusinessRuleDao().getAll())
-                .observeOn(Schedulers.io())
-                .cast(SnowRecord.class)
-                .mergeWith(Flowable.fromIterable(getAutomatedTestScriptDao().getAll()))
-                .mergeWith(Flowable.fromIterable(getSnowScriptDao("sys_script_include").getAll()))
-                .mergeWith(Flowable.fromIterable(getSnowScriptDao("sysevent_in_email_action").getAll()))
-                .mergeWith(Flowable.fromIterable(getSnowScriptDao("sys_script_fix").getAll()))
-                .mergeWith(Flowable.fromIterable(getClientScriptDao().getAll()))
-                .flatMap(script ->
-                        Flowable.just(script)
-                                .subscribeOn(Schedulers.io())
-                                .map(s -> {
-                                    s.save(fileAccessor);
-                                    return s;
-                                })
-                ).blockingSubscribe(script -> {
-                    //System.out.println(LocalTime.now().toString() + " Saved " + script.getScriptName());
-                }
+        List<GenericDao<? extends SnowRecord>> daosToUse = Arrays.asList(
+                getAutomatedTestScriptDao(),
+                getBusinessRuleDao(),
+                getSnowScriptDao("sys_script_include"),
+                getSnowScriptDao("sysevent_in_email_action"),
+                getSnowScriptDao("sys_script_fix"),
+                getClientScriptDao()
         );
 
+        Flowable.fromIterable(daosToUse)
+                .parallel()
+                .runOn(Schedulers.io())
+                .flatMap(dao -> Flowable.fromIterable(dao.getAll()))
+                .doOnNext(script -> script.save(fileAccessor))
+                .sequential()
+                .blockingSubscribe();
 
         System.out.println("FINISHED.");
     }
