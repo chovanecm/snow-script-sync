@@ -1,6 +1,5 @@
 package cz.chovanecm.snow.api;
 
-import cz.chovanecm.rest.RestClient;
 import cz.chovanecm.snow.SnowConnectorConfiguration;
 import cz.chovanecm.snow.datalayer.rest.request.QueryGetRequest;
 import org.junit.jupiter.api.Test;
@@ -19,10 +18,10 @@ public class SnowClientTest {
         SnowConnectorConfiguration config = SnowConnectorConfiguration.builder().serviceNowDomainName("hello")
                 .username("admin").password("password").build();
         SnowClient instance = spy(new SnowClient(config));
-        doReturn(mock(RestClient.class)).when(instance).getClient();
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        doReturn(mock(JsonResultIterator.class)).when(instance).createIterator(any(SnowApiGetResponse.class));
         doReturn("https://my-instance").when(instance).getInstanceUrl();
+        doReturn(mock(SnowApiGetResponse.class)).when(instance).get(anyString());
+        doReturn(mock(JsonResultIterator.class)).when(instance).createIterator(any(SnowApiGetResponse.class));
 
         // GIVEN
         QueryGetRequest request = QueryGetRequest.builder().tableName("my_table").showDisplayValues(false).condition("sys_created_by=me").build();

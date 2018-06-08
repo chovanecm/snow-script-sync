@@ -29,11 +29,16 @@ import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.net.HttpURLConnection.HTTP_OK;
+
 public class SnowApiGetResponse implements AutoCloseable {
 
     private CloseableHttpResponse response;
 
-    public SnowApiGetResponse(CloseableHttpResponse response) {
+    public SnowApiGetResponse(CloseableHttpResponse response) throws IOException {
+        if (response.getStatusLine().getStatusCode() != HTTP_OK) {
+            throw new IOException("Unexpected response from ServiceNow: " + response.getStatusLine());
+        }
         this.response = response;
     }
 
