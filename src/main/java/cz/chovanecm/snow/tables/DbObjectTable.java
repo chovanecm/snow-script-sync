@@ -20,15 +20,16 @@ package cz.chovanecm.snow.tables;
 
 import cz.chovanecm.snow.json.DbObjectJsonManipulator;
 import cz.chovanecm.snow.json.JsonManipulator;
+import cz.chovanecm.snow.records.DbObject;
 
-public class DbObjectTable extends SnowTable {
+public class DbObjectTable extends SnowTable<DbObject> {
 
     public DbObjectTable() {
         super("sys_db_object");
     }
 
     @Override
-    public JsonManipulator getJsonManipulator() {
+    public JsonManipulator<DbObject> getJsonManipulator() {
         return new DbObjectJsonManipulator();
     }
 

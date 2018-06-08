@@ -19,15 +19,12 @@
 package cz.chovanecm.snow;
 
 import cz.chovanecm.snow.api.SnowClient;
-import cz.chovanecm.snow.datalayer.rest.AutomatedTestScriptRestDao;
-import cz.chovanecm.snow.datalayer.rest.BusinessRuleRestDao;
-import cz.chovanecm.snow.datalayer.rest.ClientScriptRestDao;
-import cz.chovanecm.snow.datalayer.rest.GenericScriptRestDao;
+import cz.chovanecm.snow.datalayer.GenericDao;
+import cz.chovanecm.snow.datalayer.rest.*;
 import cz.chovanecm.snow.files.FileRecordAccessor;
 import cz.chovanecm.snow.records.DbObject;
 import cz.chovanecm.snow.records.SnowRecord;
 import cz.chovanecm.snow.tables.DbObjectRegistry;
-import cz.chovanecm.snow.tables.DbObjectTable;
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -59,7 +56,8 @@ public class SnowScriptSynchronizer {
         // Where the scripts download to
         Path root = Paths.get(destination);
         // Get a registry of all tables to create its folder structure later.
-        DbObjectRegistry registry = new DbObjectRegistry(getSnowClient().readAll(new DbObjectTable(), 100, DbObject.class));
+        GenericDao<DbObject> dbObjectDao = getDbObjectDao();
+        DbObjectRegistry registry = new DbObjectRegistry(dbObjectDao.getAll());
 
         // TODO: what exactly is this used for?
         FileRecordAccessor fileAccessor = new FileRecordAccessor(registry, root);
@@ -83,8 +81,8 @@ public class SnowScriptSynchronizer {
                                 .mergeWith(Flowable.fromIterable(new ClientScriptRestDao(client).getAll()))
                 )*/
         Flowable.fromIterable(getBusinessRuleDao().getAll())
-                .cast(SnowRecord.class)
                 .observeOn(Schedulers.io())
+                .cast(SnowRecord.class)
                 .mergeWith(Flowable.fromIterable(getAutomatedTestScriptDao().getAll()))
                 .mergeWith(Flowable.fromIterable(getSnowScriptDao("sys_script_include").getAll()))
                 .mergeWith(Flowable.fromIterable(getSnowScriptDao("sysevent_in_email_action").getAll()))
@@ -104,6 +102,10 @@ public class SnowScriptSynchronizer {
 
 
         System.out.println("FINISHED.");
+    }
+
+    public GenericDao<DbObject> getDbObjectDao() {
+        return new DbObjectRestDao(getSnowClient());
     }
 
     public ClientScriptRestDao getClientScriptDao() {
