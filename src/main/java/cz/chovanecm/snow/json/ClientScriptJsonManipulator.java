@@ -36,9 +36,9 @@ public class ClientScriptJsonManipulator extends SnowScriptJsonManipulator {
     }
 
 
-    protected ClientScript setMyFields(JsonObject json, ClientScript record) throws ParseException {
+    protected ClientScript setMyFields(JsonObject json, ClientScript record) {
         super.setMyFields(json, record);
-        record.setTableName(json.getString("table"));
+        record.setAssignedTableName(json.getString("table"));
         return record;
     }
 

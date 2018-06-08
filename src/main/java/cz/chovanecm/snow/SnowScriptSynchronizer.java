@@ -21,6 +21,7 @@ package cz.chovanecm.snow;
 import cz.chovanecm.snow.api.SnowClient;
 import cz.chovanecm.snow.datalayer.rest.AutomatedTestScriptRestDao;
 import cz.chovanecm.snow.datalayer.rest.BusinessRuleRestDao;
+import cz.chovanecm.snow.datalayer.rest.GenericScriptRestDao;
 import cz.chovanecm.snow.files.FileRecordAccessor;
 import cz.chovanecm.snow.records.DbObject;
 import cz.chovanecm.snow.records.SnowScript;
@@ -67,6 +68,9 @@ public class SnowScriptSynchronizer {
                                         client.readAll(tableToProcess, 100, SnowScript.class)))
                                 .mergeWith(Flowable.fromIterable(new BusinessRuleRestDao(client).getAll()))
                                 .mergeWith(Flowable.fromIterable(new AutomatedTestScriptRestDao(client).getAll()))
+                                .mergeWith(Flowable.fromIterable(new GenericScriptRestDao(client, "sys_script_include").getAll()))
+                                .mergeWith(Flowable.fromIterable(new GenericScriptRestDao(client, "sysevent_in_email_action").getAll()))
+                                .mergeWith(Flowable.fromIterable(new GenericScriptRestDao(client, "sys_script_fix").getAll()))
                 )
                 .flatMap(script ->
                         Flowable.just(script)

@@ -30,7 +30,7 @@ public class DbObjectJsonManipulator extends JsonManipulator<DbObject> {
 
     @Override
     protected DbObject setMyFields(JsonObject json, DbObject record) {
-        super.setMyFields(json, record); //To change body of generated methods, choose Tools | Templates.
+        super.setMyFields(json, record);
         record.setName(json.getString("name"));
         record.setSuperClassId(json.getString("super_class", "value"));
         if (record.getSuperClassId() == null) {

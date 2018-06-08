@@ -43,7 +43,7 @@ public class ClientScript extends SnowScript implements TableBasedObject {
         return tableName;
     }
 
-    public void setTableName(String tableName) {
+    public void setAssignedTableName(String tableName) {
         this.tableName = tableName;
     }
 
