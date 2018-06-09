@@ -2,7 +2,7 @@ package cz.chovanecm.snow.datalayer.rest.request;
 
 import lombok.Data;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -28,6 +28,6 @@ public abstract class GetRequest {
      * @return URL parameters. format [x=1, y=2]
      */
     public List<String> getParameters() {
-        return Arrays.asList(String.format("sysparm_display_value=%s", isShowDisplayValues()));
+        return Collections.singletonList(String.format("sysparm_display_value=%s", isShowDisplayValues()));
     }
 }

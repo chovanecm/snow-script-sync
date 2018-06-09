@@ -27,7 +27,7 @@ import java.io.IOException;
 
 public interface RecordAccessor {
 
-    void saveDbObject(DbObject dbObject) throws IOException;
+    void saveDbObject(DbObject dbObject);
 
     void saveSnowScript(SnowScript script) throws IOException;
 

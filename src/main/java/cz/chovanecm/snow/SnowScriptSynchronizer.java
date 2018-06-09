@@ -22,8 +22,7 @@ import cz.chovanecm.snow.api.SnowClient;
 import cz.chovanecm.snow.datalayer.GenericDao;
 import cz.chovanecm.snow.datalayer.rest.*;
 import cz.chovanecm.snow.files.FileRecordAccessor;
-import cz.chovanecm.snow.records.DbObject;
-import cz.chovanecm.snow.records.SnowRecord;
+import cz.chovanecm.snow.records.*;
 import cz.chovanecm.snow.tables.DbObjectRegistry;
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
@@ -88,19 +87,19 @@ public class SnowScriptSynchronizer {
         return new DbObjectRestDao(getSnowClient());
     }
 
-    public GenericDao<? extends SnowRecord> getClientScriptDao() {
+    public GenericDao<ClientScript> getClientScriptDao() {
         return new ClientScriptRestDao(getSnowClient());
     }
 
-    public GenericDao<? extends SnowRecord> getSnowScriptDao(String scriptTableName) {
+    public GenericDao<SnowScript> getSnowScriptDao(String scriptTableName) {
         return new SnowScriptRestDao(getSnowClient(), scriptTableName);
     }
 
-    public GenericDao<? extends SnowRecord> getAutomatedTestScriptDao() {
+    public GenericDao<SnowScript> getAutomatedTestScriptDao() {
         return new AutomatedTestScriptRestDao(getSnowClient());
     }
 
-    public GenericDao<? extends SnowRecord> getBusinessRuleDao() {
+    public GenericDao<BusinessRuleSnowScript> getBusinessRuleDao() {
         return new BusinessRuleRestDao(getSnowClient());
     }
 
