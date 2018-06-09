@@ -19,7 +19,6 @@
 package cz.chovanecm.snow.records;
 
 import cz.chovanecm.snow.RecordAccessor;
-import cz.chovanecm.snow.tables.SnowTable;
 import lombok.EqualsAndHashCode;
 
 import java.io.IOException;
@@ -30,12 +29,11 @@ public class ClientScript extends SnowScript implements TableBasedObject {
     private String tableName;
 
 
-    public ClientScript(String sysId, String scriptName, String script, SnowTable table) {
-        super(sysId, scriptName, script, table);
+    public ClientScript(String sysId, String scriptName, String script) {
+        super(sysId, scriptName, script);
     }
 
-    public ClientScript(SnowTable table) {
-        super(table);
+    public ClientScript() {
     }
 
     @Override

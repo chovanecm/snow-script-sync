@@ -1,19 +1,18 @@
 package cz.chovanecm.snow.datalayer.rest;
 
 import cz.chovanecm.snow.datalayer.BusinessRuleDao;
+import cz.chovanecm.snow.json.BusinessRuleJsonManipulator;
+import cz.chovanecm.snow.json.JsonManipulator;
 import cz.chovanecm.snow.records.BusinessRuleSnowScript;
-import cz.chovanecm.snow.tables.BusinessRuleTable;
-import cz.chovanecm.snow.tables.SnowTable;
 
-public class BusinessRuleRestDao extends GenericRestDao<BusinessRuleSnowScript> implements BusinessRuleDao {
-    private final BusinessRuleTable table = new BusinessRuleTable();
+public class BusinessRuleRestDao extends GenericBaseRestDao<BusinessRuleSnowScript> implements BusinessRuleDao {
 
     public BusinessRuleRestDao(SnowRestInterface restInterface) {
-        super(restInterface);
+        super(restInterface, "sys_script");
     }
 
     @Override
-    protected SnowTable<BusinessRuleSnowScript> getTable() {
-        return table;
+    protected JsonManipulator<BusinessRuleSnowScript> getJsonManipulator() {
+        return new BusinessRuleJsonManipulator();
     }
 }

@@ -19,7 +19,6 @@
 package cz.chovanecm.snow.records;
 
 import cz.chovanecm.snow.RecordAccessor;
-import cz.chovanecm.snow.tables.SnowTable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
@@ -37,14 +36,13 @@ public class SnowScript extends SnowRecord implements DeactivableSnowRecord {
     private String script = "";
     private boolean active = true;
 
-    public SnowScript(String sysId, String scriptName, String script, SnowTable table) {
-        super(table, sysId);
+    public SnowScript(String sysId, String scriptName, String script) {
+        super(sysId);
         this.scriptName = scriptName;
         this.script = script;
     }
 
-    public SnowScript(SnowTable table) {
-        super(table);
+    public SnowScript() {
     }
 
     @Override

@@ -24,11 +24,6 @@ import cz.chovanecm.snow.records.DbObject;
 public class DbObjectJsonManipulator extends JsonManipulator<DbObject> {
 
     @Override
-    public DbObject readFromJson(JsonObject json) {
-        return this.setMyFields(json, new DbObject());
-    }
-
-    @Override
     protected DbObject setMyFields(JsonObject json, DbObject record) {
         super.setMyFields(json, record);
         record.setName(json.getString("name"));
@@ -39,5 +34,8 @@ public class DbObjectJsonManipulator extends JsonManipulator<DbObject> {
         return record;
     }
 
-
+    @Override
+    protected DbObject initializeEmptyRecord() {
+        return new DbObject();
+    }
 }

@@ -19,7 +19,6 @@
 package cz.chovanecm.snow.records;
 
 import cz.chovanecm.snow.RecordAccessor;
-import cz.chovanecm.snow.tables.SnowTable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -32,19 +31,16 @@ import java.util.Set;
 @Data
 @EqualsAndHashCode
 public abstract class SnowRecord {
-    private final SnowTable table;
     private final Map<String, String> attributes = new HashMap<>();
     private String sysId;
     private ZonedDateTime updatedOn;
     private ZonedDateTime createdOn;
 
-    public SnowRecord(SnowTable table) {
-        this.table = table;
+    public SnowRecord(String sysId) {
+        this.sysId = sysId;
     }
 
-    public SnowRecord(SnowTable table, String sysId) {
-        this.table = table;
-        this.sysId = sysId;
+    public SnowRecord() {
     }
 
     public Set<String> getAttributes() {

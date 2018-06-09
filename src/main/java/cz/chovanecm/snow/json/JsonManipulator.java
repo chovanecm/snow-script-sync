@@ -21,7 +21,6 @@ package cz.chovanecm.snow.json;
 import com.github.jsonj.JsonObject;
 import cz.chovanecm.snow.records.SnowRecord;
 
-import java.text.ParseException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -29,7 +28,9 @@ public abstract class JsonManipulator<T extends SnowRecord> {
 
     private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss z");
 
-    public abstract T readFromJson(JsonObject json) throws ParseException;
+    public T readFromJson(JsonObject json) {
+        return setMyFields(json, initializeEmptyRecord());
+    }
 
     protected T setMyFields(JsonObject json, T record) {
         record.setSysId(json.getString("sys_id"));
@@ -40,4 +41,5 @@ public abstract class JsonManipulator<T extends SnowRecord> {
         return record;
     }
 
+    protected abstract T initializeEmptyRecord();
 }

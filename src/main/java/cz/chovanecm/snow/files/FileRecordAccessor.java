@@ -64,7 +64,7 @@ public class FileRecordAccessor implements RecordAccessor {
 
     @Override
     public void saveSnowScript(SnowScript script) throws IOException {
-        String tableName = script.getTable().getTableName();
+        String tableName = getTableName();
         Path file = getRoot().resolve(tableName).resolve(getDirBuilder().getPathForDeactivableSnowRecord(script));
         String scriptName = script.getScriptName();
         file = file.resolve(getSafeFileName(scriptName + "_" + script.getSysId() + ".js"));
@@ -78,7 +78,7 @@ public class FileRecordAccessor implements RecordAccessor {
 
     @Override
     public void saveBusinessRule(BusinessRuleSnowScript script) throws IOException {
-        Path file = getRoot().resolve(script.getTable().getTableName())
+        Path file = getRoot().resolve(getTableName())
                 .resolve(getDirBuilder().getPathForTableBasedObject(script))
                 .resolve(getDirBuilder().getPathForDeactivableSnowRecord(script));
         file = file.resolve(getSafeFileName(script.getScriptName() + "_" + script.getSysId() + ".js"));
@@ -87,12 +87,18 @@ public class FileRecordAccessor implements RecordAccessor {
 
     @Override
     public void saveClientScript(ClientScript script) throws IOException {
-        Path file = getRoot().resolve(script.getTable().getTableName())
+        Path file = getRoot().resolve(getTableName())
                 .resolve(getDirBuilder().getPathForTableBasedObject(script))
                 .resolve(getDirBuilder().getPathForDeactivableSnowRecord(script));
         file = file.resolve(getSafeFileName(script.getScriptName() + "_" + script.getSysId() + ".js"));
         writeFile(file, getScriptAsBytes(script), script.getUpdatedOn());
     }
+
+    private String getTableName() {
+        //TODO FIXME
+        return "anyTabule";
+    }
+
 
     private String getSafeFileName(String filename) {
         return filename.replaceAll("[^\\. 0-9\\(\\),_a-zA-Z]", "_");

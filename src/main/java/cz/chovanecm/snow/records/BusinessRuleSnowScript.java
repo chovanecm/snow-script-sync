@@ -19,7 +19,6 @@
 package cz.chovanecm.snow.records;
 
 import cz.chovanecm.snow.RecordAccessor;
-import cz.chovanecm.snow.tables.SnowTable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -34,8 +33,7 @@ public class BusinessRuleSnowScript extends SnowScript implements TableBasedObje
     private String when = "";
     private String assignedTableName = "";
 
-    public BusinessRuleSnowScript(SnowTable table) {
-        super(table);
+    public BusinessRuleSnowScript() {
     }
 
 

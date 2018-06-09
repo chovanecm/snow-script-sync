@@ -25,26 +25,22 @@ package cz.chovanecm.snow.json;
 
 import com.github.jsonj.JsonObject;
 import cz.chovanecm.snow.records.BusinessRuleSnowScript;
-import cz.chovanecm.snow.tables.ScriptSnowTable;
 
-import java.text.ParseException;
+public class BusinessRuleJsonManipulator extends AbstractSnowScriptJsonManipulator<BusinessRuleSnowScript> {
 
-public class BusinessRuleJsonManipulator extends SnowScriptJsonManipulator {
-
-    public BusinessRuleJsonManipulator(ScriptSnowTable table) {
-        super(table);
+    public BusinessRuleJsonManipulator() {
     }
 
     @Override
-    public BusinessRuleSnowScript readFromJson(JsonObject json) throws ParseException {
-        return this.setMyFields(json, new BusinessRuleSnowScript(getTable()));
-    }
-
-    protected BusinessRuleSnowScript setMyFields(JsonObject json, BusinessRuleSnowScript script) throws ParseException {
+    protected BusinessRuleSnowScript setMyFields(JsonObject json, BusinessRuleSnowScript script) {
         super.setMyFields(json, script);
         script.setWhen(json.getString("when"));
         script.setAssignedTableName(json.getString("collection"));
         return script;
     }
 
+    @Override
+    protected BusinessRuleSnowScript initializeEmptyRecord() {
+        return new BusinessRuleSnowScript();
+    }
 }

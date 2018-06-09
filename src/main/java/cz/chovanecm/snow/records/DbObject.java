@@ -20,7 +20,6 @@ package cz.chovanecm.snow.records;
 
 
 import cz.chovanecm.snow.RecordAccessor;
-import cz.chovanecm.snow.tables.DbObjectTable;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -41,11 +40,10 @@ public class DbObject extends SnowRecord {
     private DbObject superClass;
 
     public DbObject(String sysId) {
-        super(new DbObjectTable(), sysId);
+        super(sysId);
     }
 
     public DbObject() {
-        super(new DbObjectTable());
     }
 
     public void addChildObject(DbObject child) {

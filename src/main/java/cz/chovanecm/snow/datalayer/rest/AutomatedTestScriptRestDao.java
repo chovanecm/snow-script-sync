@@ -4,13 +4,14 @@ import com.github.jsonj.JsonObject;
 import cz.chovanecm.snow.datalayer.AutomatedTestScriptDao;
 import cz.chovanecm.snow.datalayer.rest.request.QueryGetRequest;
 import cz.chovanecm.snow.datalayer.rest.request.SingleRecordGetRequest;
+import cz.chovanecm.snow.json.JsonManipulator;
+import cz.chovanecm.snow.json.SnowScriptJsonManipulator;
 import cz.chovanecm.snow.records.SnowScript;
-import cz.chovanecm.snow.tables.ScriptSnowTable;
 import io.reactivex.Flowable;
 import lombok.Getter;
 
 public class AutomatedTestScriptRestDao implements AutomatedTestScriptDao {
-    private final ScriptSnowTable table = new ScriptSnowTable("sys_variable_value", "value", "sys_id");
+    private final SnowScriptJsonManipulator jsonManipulator = new SnowScriptJsonManipulator("value", "sys_id");
 
     public AutomatedTestScriptRestDao(SnowRestInterface restInterface) {
         this.restInterface = restInterface;
@@ -33,8 +34,7 @@ public class AutomatedTestScriptRestDao implements AutomatedTestScriptDao {
                                 .condition("document=sys_atf_step^variable.sys_name=Test script")
                                 .build()))
                 .map(it -> {
-                    SnowScript script = table.getJsonManipulator().readFromJson(it);
-
+                    SnowScript script = getJsonManipulator().readFromJson(it);
                     JsonObject testStepRecord = getRestInterface().getRecord(
                             SingleRecordGetRequest.builder()
                                     .showDisplayValues(true)
@@ -46,5 +46,9 @@ public class AutomatedTestScriptRestDao implements AutomatedTestScriptDao {
                     return script;
                 })
                 .blockingIterable();
+    }
+
+    private JsonManipulator<SnowScript> getJsonManipulator() {
+        return jsonManipulator;
     }
 }

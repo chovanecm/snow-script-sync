@@ -88,19 +88,19 @@ public class SnowScriptSynchronizer {
         return new DbObjectRestDao(getSnowClient());
     }
 
-    public ClientScriptRestDao getClientScriptDao() {
+    public GenericDao<? extends SnowRecord> getClientScriptDao() {
         return new ClientScriptRestDao(getSnowClient());
     }
 
-    public GenericScriptRestDao getSnowScriptDao(String scriptTableName) {
-        return new GenericScriptRestDao(getSnowClient(), scriptTableName);
+    public GenericDao<? extends SnowRecord> getSnowScriptDao(String scriptTableName) {
+        return new SnowScriptRestDao(getSnowClient(), scriptTableName);
     }
 
-    public AutomatedTestScriptRestDao getAutomatedTestScriptDao() {
+    public GenericDao<? extends SnowRecord> getAutomatedTestScriptDao() {
         return new AutomatedTestScriptRestDao(getSnowClient());
     }
 
-    public BusinessRuleRestDao getBusinessRuleDao() {
+    public GenericDao<? extends SnowRecord> getBusinessRuleDao() {
         return new BusinessRuleRestDao(getSnowClient());
     }
 

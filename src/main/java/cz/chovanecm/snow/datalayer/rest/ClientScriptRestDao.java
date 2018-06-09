@@ -1,19 +1,17 @@
 package cz.chovanecm.snow.datalayer.rest;
 
+import cz.chovanecm.snow.json.ClientScriptJsonManipulator;
+import cz.chovanecm.snow.json.JsonManipulator;
 import cz.chovanecm.snow.records.ClientScript;
-import cz.chovanecm.snow.tables.ClientScriptTable;
-import cz.chovanecm.snow.tables.SnowTable;
 
-public class ClientScriptRestDao extends GenericRestDao<ClientScript> {
-    private final ClientScriptTable table;
+public class ClientScriptRestDao extends GenericBaseRestDao<ClientScript> {
 
     public ClientScriptRestDao(SnowRestInterface restInterface) {
-        super(restInterface);
-        this.table = new ClientScriptTable();
+        super(restInterface, "sys_script_client");
     }
 
     @Override
-    protected SnowTable<ClientScript> getTable() {
-        return table;
+    protected JsonManipulator<ClientScript> getJsonManipulator() {
+        return new ClientScriptJsonManipulator();
     }
 }
