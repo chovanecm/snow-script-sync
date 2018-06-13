@@ -14,7 +14,7 @@ public abstract class AbstractScriptFileActiveRecord implements ActiveRecord {
         Path file = getFilePath();
         try {
             getFileWriter().writeFile(File.builder()
-                    .file(file)
+                    .filePath(file)
                     .textContent(getRecord().getScript())
                     .lastModified(getRecord().getUpdatedOn())
                     .build());

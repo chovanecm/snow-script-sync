@@ -17,7 +17,7 @@ public class File {
     private String textContent;
     private byte[] byteContent;
     @NonNull
-    private Path file;
+    private Path filePath;
 
     public byte[] getByteContent() {
         if (byteContent == null) {

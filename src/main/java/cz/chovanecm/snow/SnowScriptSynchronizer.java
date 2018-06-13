@@ -65,8 +65,6 @@ public class SnowScriptSynchronizer {
         GenericDao<DbObject> dbObjectDao = getDbObjectDao();
         DbObjectRegistry registry = new DbObjectRegistry(dbObjectDao.getAll());
 
-        // TODO: what exactly is this used for?
-        //FileRecordAccessor fileAccessor = new FileRecordAccessor(registry, root);
         ActiveRecordFactory fileFactory = new FileActiveRecordFactory(root, registry);
 
         List<GenericDao<? extends SnowScript>> daosToUse = Arrays.asList(

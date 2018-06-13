@@ -8,9 +8,9 @@ import java.nio.file.attribute.FileTime;
 public class FileWriter {
 
     public void writeFile(File file) throws IOException {
-        createParentDirectories(file.getFile());
-        Files.write(file.getFile(), file.getByteContent());
-        Files.setLastModifiedTime(file.getFile(), FileTime.from(file.getLastModified().toInstant()));
+        createParentDirectories(file.getFilePath());
+        Files.write(file.getFilePath(), file.getByteContent());
+        Files.setLastModifiedTime(file.getFilePath(), FileTime.from(file.getLastModified().toInstant()));
     }
 
     private void createParentDirectories(Path file) throws IOException {
