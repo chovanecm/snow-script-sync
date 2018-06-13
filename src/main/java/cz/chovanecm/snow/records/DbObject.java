@@ -20,14 +20,13 @@ package cz.chovanecm.snow.records;
 
 
 import cz.chovanecm.snow.RecordAccessor;
-import cz.chovanecm.snow.tables.DbObjectTable;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class DbObject extends SnowRecord {
+public class DbObject extends AbstractSnowRecord {
 
     private final Set<DbObject> children = new HashSet<>();
     @Getter
@@ -41,11 +40,10 @@ public class DbObject extends SnowRecord {
     private DbObject superClass;
 
     public DbObject(String sysId) {
-        super(new DbObjectTable(), sysId);
+        super(sysId);
     }
 
     public DbObject() {
-        super(new DbObjectTable());
     }
 
     public void addChildObject(DbObject child) {
@@ -61,5 +59,4 @@ public class DbObject extends SnowRecord {
     public void save(RecordAccessor destination) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
 }

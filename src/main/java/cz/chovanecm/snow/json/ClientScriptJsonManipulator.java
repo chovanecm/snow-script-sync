@@ -20,27 +20,21 @@ package cz.chovanecm.snow.json;
 
 import com.github.jsonj.JsonObject;
 import cz.chovanecm.snow.records.ClientScript;
-import cz.chovanecm.snow.records.SnowRecord;
-import cz.chovanecm.snow.tables.ScriptSnowTable;
 
-import java.text.ParseException;
+public class ClientScriptJsonManipulator extends AbstractSnowScriptJsonManipulator<ClientScript> {
 
-public class ClientScriptJsonManipulator extends SnowScriptJsonManipulator {
-
-    public ClientScriptJsonManipulator(ScriptSnowTable table) {
-        super(table);
+    public ClientScriptJsonManipulator() {
     }
 
     @Override
-    public SnowRecord readFromJson(JsonObject json) throws ParseException {
-        return this.setMyFields(json, new ClientScript(getTable()));
-    }
-
-
-    protected SnowRecord setMyFields(JsonObject json, ClientScript record) throws ParseException {
+    protected ClientScript setMyFields(JsonObject json, ClientScript record) {
         super.setMyFields(json, record);
-        record.setTableName(json.getString("table"));
+        record.setAssignedTableName(json.getString("table"));
         return record;
     }
 
+    @Override
+    protected ClientScript initializeEmptyRecord() {
+        return new ClientScript();
+    }
 }

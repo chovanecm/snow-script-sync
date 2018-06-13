@@ -28,6 +28,7 @@ dependencies {
     compile group: 'com.github.jsonj', name: 'jsonj', version: '0.8'
     compile group: 'commons-cli', name: 'commons-cli', version: '1.2'
     compile "io.reactivex.rxjava2:rxjava:2.1.13"
+
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.16.20'
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.16.20'
 
@@ -35,6 +36,7 @@ dependencies {
     testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.2.0'
     testRuntime group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.2.0'
 
+    testCompile "org.mockito:mockito-core:2.+"
 }
 
 

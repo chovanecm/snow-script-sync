@@ -19,44 +19,32 @@
 package cz.chovanecm.snow.records;
 
 import cz.chovanecm.snow.RecordAccessor;
-import cz.chovanecm.snow.tables.SnowTable;
+import cz.chovanecm.snow.datalayer.ActiveRecord;
+import cz.chovanecm.snow.datalayer.ActiveRecordFactory;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 import java.io.IOException;
 
-public class SnowScript extends SnowRecord implements DeactivableSnowRecord {
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
+public class SnowScript extends AbstractSnowRecord implements DeactivableSnowRecord {
 
-    @Getter @Setter
     private String scriptName;
+    @NonNull
     private String script = "";
     private boolean active = true;
 
-    public SnowScript(String sysId, String scriptName, String script, SnowTable table) {
-        super(table, sysId);
+    public SnowScript(String sysId, String scriptName, String script) {
+        super(sysId);
         this.scriptName = scriptName;
         this.script = script;
     }
 
-    public SnowScript(SnowTable table) {
-        super(table);
-    }
-
-    public String getScript() {
-        return script;
-    }
-
-    public void setScript(String script) {
-        this.script = script != null ? script : "";
-    }
-
-    @Override
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
+    public SnowScript() {
     }
 
     @Override
@@ -64,5 +52,8 @@ public class SnowScript extends SnowRecord implements DeactivableSnowRecord {
         destination.saveSnowScript(this);
     }
 
-
+    @Override
+    public ActiveRecord getActiveRecord(ActiveRecordFactory factory) {
+        return factory.getActiveRecordFor(this);
+    }
 }

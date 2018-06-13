@@ -1,0 +1,36 @@
+{
+  "step_config": {
+    "display_value": "Run Server Side Script",
+    "link": "https://dev48250.service-now.com/api/now/v1/table/sys_atf_step_config/41de4a935332120028bc29cac2dc349a"
+  },
+  "test": {
+    "display_value": "TestDate",
+    "link": "https://dev48250.service-now.com/api/now/v1/table/sys_atf_test/8a419ad14f221300885a8020a310c7e4"
+  },
+  "inputs": "",
+  "sys_mod_count": "1",
+  "active": "true",
+  "description": "Run Server Side Validation Script",
+  "sys_updated_on": "2018-06-06 05:57:09",
+  "display_name": "Run Server Side Script",
+  "sys_tags": "",
+  "sys_class_name": "Test Step",
+  "timeout": "",
+  "sys_id": "19711ed14f221300885a8020a310c756",
+  "sys_package": {
+    "display_value": "Global",
+    "link": "https://dev48250.service-now.com/api/now/v1/table/sys_package/global"
+  },
+  "sys_update_name": "sys_atf_step_19711ed14f221300885a8020a310c756",
+  "sys_updated_by": "admin",
+  "sys_created_on": "2018-06-06 05:55:16",
+  "sys_name": "Run Server Side Script",
+  "sys_scope": {
+    "display_value": "Global",
+    "link": "https://dev48250.service-now.com/api/now/v1/table/sys_scope/global"
+  },
+  "sys_created_by": "admin",
+  "table": "",
+  "order": "1",
+  "sys_policy": null
+}

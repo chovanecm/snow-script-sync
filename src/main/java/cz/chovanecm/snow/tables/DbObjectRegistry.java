@@ -36,7 +36,7 @@ public class DbObjectRegistry {
         }
 
         sysIdToObject.values().stream()
-                .filter((table) -> (!"".equals(table.getSuperClassId())))
+                .filter(table -> (!"".equals(table.getSuperClassId())))
                 .forEach((DbObject table) -> {
                     try {
                         sysIdToObject.get(table.getSuperClassId()).addChildObject(table);

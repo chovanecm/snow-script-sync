@@ -1,0 +1,214 @@
+{
+  "result": [
+    {
+      "document": "wf_activity",
+      "sys_mod_count": "0",
+      "sys_updated_on": "2017-03-07 12:12:48",
+      "sys_tags": "",
+      "document_key": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/wf_activity/480439a2eb113200c2b9666cd206fe4b",
+        "value": "480439a2eb113200c2b9666cd206fe4b"
+      },
+      "sys_class_name": "sys_variable_value",
+      "sys_id": "000439a2eb113200c2b9666cd206fe4e",
+      "sys_updated_by": "admin",
+      "sys_created_on": "2017-03-07 12:12:48",
+      "variable": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/var_dictionary/a8a63d44c0a8006617a1a568e6ee0d9e",
+        "value": "a8a63d44c0a8006617a1a568e6ee0d9e"
+      },
+      "value": "",
+      "sys_created_by": "admin",
+      "order": "1150"
+    },
+    {
+      "document": "wf_activity",
+      "sys_mod_count": "0",
+      "sys_updated_on": "2015-08-04 00:32:43",
+      "sys_tags": "",
+      "document_key": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/wf_activity/cc101f93c3210200635f188f91d3ae6b",
+        "value": "cc101f93c3210200635f188f91d3ae6b"
+      },
+      "sys_class_name": "sys_variable_value",
+      "sys_id": "00101f93c3210200635f188f91d3ae6c",
+      "sys_updated_by": "shravan.pai",
+      "sys_created_on": "2015-08-04 00:32:43",
+      "variable": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/var_dictionary/c35ddef20a0a0ba96248a7090eccd518",
+        "value": "c35ddef20a0a0ba96248a7090eccd518"
+      },
+      "value": "run();\r\n\r\nfunction run() {\r\n\tvar userName = workflow.inputs.u_user_name;\r\n\tvar credStoreId = workflow.inputs.u_cred_store_id;\r\n\r\n\tcurrent.condition = 'success';\r\n\t\t\r\n\t// get the user\r\n\tvar gr = new GlideRecord('sys_user');\r\n\tgr.addQuery('user_name', userName);\r\n\tgr.query();\r\n\tif (!gr.next()) {\r\n\t\tprocessResult('Cannot find user: ' + userName, 'failure');\r\n\t\treturn;\r\n\t}\r\n\t// if locked out return failure\r\n\tif (gr.locked_out) {\r\n\t\tprocessResult('User (' + userName + ') is locked out', 'failure');\r\n\t\treturn;\r\n\t}\r\n\r\n\t// verify old password\r\n\tvar enc = new GlideEncrypter();\r\n\tvar decryptedOldPassword = '' + enc.decrypt(workflow.inputs.u_old_password);\r\n\tvar authed = user.authenticate(userName, decryptedOldPassword);\r\n\tif (!authed) {\r\n\t\tprocessResult('The old password is incorrect for user: ' + userName, 'incorrect old password');\r\n\t\treturn;\r\n\t}\r\n\r\n\t// set the new password\r\n\tvar decryptedNewPassword = '' + enc.decrypt(workflow.inputs.u_new_password);\t\r\n\tgr.user_password.setDisplayValue(decryptedNewPassword);\r\n\tif (!gr.update()) {\r\n\t\tprocessResult('Could not update new password for user: ' + userName, 'failure');\r\n\t\treturn;\r\n\t}\r\n}\r\n\r\nfunction processResult(msg, condition) {\r\n\tactivity.result = condition;\r\n\tcurrent.condition = condition;\r\n\tactivity.fault_description = msg;\r\n\tworkflow.error(msg);\r\n\tworkflow.scratchpad.fault_description = msg;\r\n\tworkflow.scratchpad.ret = condition;\r\n}\r\n",
+      "sys_created_by": "shravan.pai",
+      "order": "1"
+    },
+    {
+      "document": "sys_hub_action_type_snapshot",
+      "sys_mod_count": "0",
+      "sys_updated_on": "2017-08-23 22:13:01",
+      "sys_tags": "",
+      "document_key": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/sys_hub_action_type_snapshot/bf0256c10b30030085c083eb37673ac0",
+        "value": "bf0256c10b30030085c083eb37673ac0"
+      },
+      "sys_class_name": "sys_variable_value",
+      "sys_id": "001296c10b30030085c083eb37673a23",
+      "sys_updated_by": "admin",
+      "sys_created_on": "2017-08-23 22:13:01",
+      "variable": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/var_dictionary/841296c10b30030085c083eb37673a08",
+        "value": "841296c10b30030085c083eb37673a08"
+      },
+      "value": "",
+      "sys_created_by": "admin",
+      "order": "2"
+    },
+    {
+      "document": "sys_hub_step_instance",
+      "sys_mod_count": "0",
+      "sys_updated_on": "2018-01-18 19:09:19",
+      "sys_tags": "",
+      "document_key": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/sys_hub_step_instance/c053bfa473330300a155234ffff6a7e7",
+        "value": "c053bfa473330300a155234ffff6a7e7"
+      },
+      "sys_class_name": "sys_variable_value",
+      "sys_id": "0053bfa473330300a155234ffff6a7ef",
+      "sys_updated_by": "admin",
+      "sys_created_on": "2018-01-18 19:09:19",
+      "variable": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/var_dictionary/3930d57267003200553fafb49585efc5",
+        "value": "3930d57267003200553fafb49585efc5"
+      },
+      "value": "incident",
+      "sys_created_by": "admin",
+      "order": "200"
+    },
+    {
+      "document": "wf_activity",
+      "sys_mod_count": "0",
+      "sys_updated_on": "2012-11-28 03:05:10",
+      "sys_tags": "",
+      "document_key": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/wf_activity/4486ca9037023000158bbfc8bcbe5db2",
+        "value": "4486ca9037023000158bbfc8bcbe5db2"
+      },
+      "sys_class_name": "sys_variable_value",
+      "sys_id": "0086ca9037023000158bbfc8bcbe5db5",
+      "sys_updated_by": "admin",
+      "sys_created_on": "2012-11-28 03:05:10",
+      "variable": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/var_dictionary/8f6d4120c0a8006655edc4495deb43ab",
+        "value": "8f6d4120c0a8006655edc4495deb43ab"
+      },
+      "value": "",
+      "sys_created_by": "admin",
+      "order": "720"
+    },
+    {
+      "document": "wf_activity",
+      "sys_mod_count": "0",
+      "sys_updated_on": "2012-11-28 03:05:10",
+      "sys_tags": "",
+      "document_key": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/wf_activity/8486ca9037023000158bbfc8bcbe5dba",
+        "value": "8486ca9037023000158bbfc8bcbe5dba"
+      },
+      "sys_class_name": "sys_variable_value",
+      "sys_id": "0086ca9037023000158bbfc8bcbe5dbd",
+      "sys_updated_by": "admin",
+      "sys_created_on": "2012-11-28 03:05:10",
+      "variable": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/var_dictionary/8f6d4120c0a8006655edc4495deb43ab",
+        "value": "8f6d4120c0a8006655edc4495deb43ab"
+      },
+      "value": "",
+      "sys_created_by": "admin",
+      "order": "720"
+    },
+    {
+      "document": "wf_activity",
+      "sys_mod_count": "0",
+      "sys_updated_on": "2012-11-28 03:05:10",
+      "sys_tags": "",
+      "document_key": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/wf_activity/8486ca9037023000158bbfc8bcbe5dc4",
+        "value": "8486ca9037023000158bbfc8bcbe5dc4"
+      },
+      "sys_class_name": "sys_variable_value",
+      "sys_id": "0086ca9037023000158bbfc8bcbe5dc7",
+      "sys_updated_by": "admin",
+      "sys_created_on": "2012-11-28 03:05:10",
+      "variable": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/var_dictionary/8f6d4120c0a8006655edc4495deb43ab",
+        "value": "8f6d4120c0a8006655edc4495deb43ab"
+      },
+      "value": "",
+      "sys_created_by": "admin",
+      "order": "720"
+    },
+    {
+      "document": "wf_activity",
+      "sys_mod_count": "0",
+      "sys_updated_on": "2012-11-28 03:05:10",
+      "sys_tags": "",
+      "document_key": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/wf_activity/0c86ca9037023000158bbfc8bcbe5dce",
+        "value": "0c86ca9037023000158bbfc8bcbe5dce"
+      },
+      "sys_class_name": "sys_variable_value",
+      "sys_id": "0086ca9037023000158bbfc8bcbe5dd2",
+      "sys_updated_by": "admin",
+      "sys_created_on": "2012-11-28 03:05:10",
+      "variable": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/var_dictionary/acb99baa0a0a0ba300d0938182192ad4",
+        "value": "acb99baa0a0a0ba300d0938182192ad4"
+      },
+      "value": "",
+      "sys_created_by": "admin",
+      "order": "1700"
+    },
+    {
+      "document": "wf_activity",
+      "sys_mod_count": "0",
+      "sys_updated_on": "2014-02-25 13:37:29",
+      "sys_tags": "",
+      "document_key": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/wf_activity/c909daaec30311003d2ae219cdba8f30",
+        "value": "c909daaec30311003d2ae219cdba8f30"
+      },
+      "sys_class_name": "sys_variable_value",
+      "sys_id": "0109daaec30311003d2ae219cdba8f31",
+      "sys_updated_by": "chris.henson",
+      "sys_created_on": "2014-02-25 13:37:29",
+      "variable": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/var_dictionary/c35e50810a0a0ba96248a709b450fc32",
+        "value": "c35e50810a0a0ba96248a709b450fc32"
+      },
+      "value": "// This script needs to set answer to 'yes' or 'no' to indicate the state of the activity.\r\n//\r\n// For example,\r\n//\r\n//   answer = ifScript();\r\n//\r\n//   function ifScript() {\r\n//      if (condition is true) {\r\n//         return 'yes';\r\n//      }\r\n//      return 'no';\r\n//   }\r\n",
+      "sys_created_by": "chris.henson",
+      "order": "300"
+    },
+    {
+      "document": "sys_hub_step_instance",
+      "sys_mod_count": "0",
+      "sys_updated_on": "2017-07-18 21:09:07",
+      "sys_tags": "",
+      "document_key": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/sys_hub_step_instance/fc3a68292fc00300e8f802d3c18c950b",
+        "value": "fc3a68292fc00300e8f802d3c18c950b"
+      },
+      "sys_class_name": "sys_variable_value",
+      "sys_id": "013a68292fc00300e8f802d3c18c9534",
+      "sys_updated_by": "admin",
+      "sys_created_on": "2017-07-18 21:09:07",
+      "variable": {
+        "link": "https://dev48250.service-now.com/api/now/v1/table/var_dictionary/71aa7f6647032200b4fad7527c9a719b",
+        "value": "71aa7f6647032200b4fad7527c9a719b"
+      },
+      "value": "(function execute(inputs, outputs) {\n    \n  var boardManager =new sn_vtb.BoardManager();\n  boardManager.addUser(inputs[\"boardId\"], inputs[\"userId\"]);  \n\n})(inputs, outputs);\n",
+      "sys_created_by": "admin",
+      "order": "200"
+    }
+  ]
+}

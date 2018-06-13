@@ -18,31 +18,27 @@
 
 package cz.chovanecm.snow.api;
 
-import com.github.jsonj.JsonArray;
-import com.github.jsonj.JsonElement;
 import com.github.jsonj.JsonObject;
 import cz.chovanecm.rest.RestClient;
 import cz.chovanecm.snow.SnowConnectorConfiguration;
-import cz.chovanecm.snow.records.SnowRecord;
-import cz.chovanecm.snow.tables.SnowTable;
-import org.apache.http.client.methods.CloseableHttpResponse;
+import cz.chovanecm.snow.datalayer.rest.SnowRestInterface;
+import cz.chovanecm.snow.datalayer.rest.request.QueryGetRequest;
+import cz.chovanecm.snow.datalayer.rest.request.SingleRecordGetRequest;
 
 import java.io.IOException;
-import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-public class SnowClient {
+public class SnowClient implements SnowRestInterface {
 
-    private final static String API_URL = "/api/now/v1/table/";
+    public static final String API_URL = "/api/now/v1/table/";
     private final RestClient client;
     private final String instanceUrl;
+    private final int readsPerRequest = 100;
 
     public SnowClient(String instanceUrl, String basicAuthUserName, String basicAuthPassword, String proxyHost, Integer proxyPort) {
         client = new RestClient(proxyHost, proxyPort, basicAuthUserName, basicAuthPassword);
-        client.setAcceptHeader("application/json;charset=utf-8");
+        getClient().setAcceptHeader("application/json;charset=utf-8");
         this.instanceUrl = instanceUrl;
     }
 
@@ -62,75 +58,47 @@ public class SnowClient {
         return getInstanceUrl() + API_URL;
     }
 
-    public String getTableApiUrl(SnowTable table) {
-        return getApiUrl() + table.getTableName();
+
+    public SnowApiGetResponse get(String url) throws IOException {
+        return new SnowApiGetResponse(getClient().get(url));
     }
 
-    public <T extends SnowRecord> Iterable<T> readAll(SnowTable sourceTable, int readsPerRequest, Class<T> type) {
+    @Override
+    public Iterable<JsonObject> getRecords(QueryGetRequest request) {
         return () -> {
             try {
-                SnowApiGetResponse response = new SnowApiGetResponse(client.get(getTableApiUrl(sourceTable) + "?sysparm_limit=" + readsPerRequest));
-                return new ResultIterator<T>(sourceTable, response);
-            } catch (IOException ex) {
-                Logger.getLogger(SnowClient.class.getName()).log(Level.SEVERE, null, ex);
+                ArrayList<String> parameters = new ArrayList<>(request.getParameters());
+                parameters.add("sysparm_limit=" + readsPerRequest);
+                SnowApiGetResponse response = get(getApiUrl() + request.getResource()
+                        + "?" + String.join("&", parameters));
+                return createIterator(response);
+            } catch (IOException e) {
+                //FIXME
+                e.printStackTrace();
                 return Collections.emptyIterator();
             }
+
         };
-    }
-
-    public <T extends SnowRecord> T getRecordBySysId(SnowTable sourceTable, String sysId, Class<T> type) throws IOException {
-        CloseableHttpResponse httpResponse = client.get(getTableApiUrl(sourceTable) + "?sysparm_query=sys_id=" + sysId);
-        SnowApiGetResponse response = new SnowApiGetResponse(httpResponse);
-        ResultIterator<T> iterator = new ResultIterator<T>(sourceTable, response);
-        return iterator.next();
-    }
-
-    public class ResultIterator<T extends SnowRecord> implements Iterator<T> {
-
-        private SnowApiGetResponse response;
-        private String nextUrl;
-        private Iterator<JsonElement> iterator;
-        private SnowTable table;
-
-        public ResultIterator(SnowTable table, SnowApiGetResponse response) throws IOException {
-            this.response = response;
-            this.table = table;
-            nextUrl = response.getNextRecordsUrl();
-            JsonArray results = response.getBody().getArray("result");
-            iterator = results.iterator();
-        }
-
-        @Override
-        public boolean hasNext() {
-            return nextUrl != null || iterator.hasNext();
-        }
-
-        @Override
-        public T next() {
-            if (!hasNext()) {
-                return null;
-            }
-            if (!iterator.hasNext()) {
-                try {
-                    System.out.println("Downloading: " + nextUrl);
-                    response = new SnowApiGetResponse(client.get(nextUrl));
-                    nextUrl = response.getNextRecordsUrl();
-                    JsonArray results = response.getBody().getArray("result");
-                    iterator = results.iterator();
-                } catch (IOException ex) {
-                    Logger.getLogger(SnowClient.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            JsonElement element = iterator.next();
-            JsonObject object = element.asObject();
-            try {
-                return (T) table.getJsonManipulator().readFromJson(object);
-            } catch (ParseException ex) {
-                Logger.getLogger(SnowClient.class.getName()).log(Level.SEVERE, null, ex);
-                return null;
-            }
-        }
 
     }
 
+    JsonResultIterator createIterator(SnowApiGetResponse response) throws IOException {
+        return new JsonResultIterator(this, response);
+    }
+
+    @Override
+    public JsonObject getRecord(SingleRecordGetRequest request) {
+        try {
+            SnowApiGetResponse response = get(getApiUrl() + request.getResource() + "?" + String.join("&", request.getParameters()));
+            return response.getBody().getObject("result");
+        } catch (IOException e) {
+            //FIXME
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    RestClient getClient() {
+        return client;
+    }
 }

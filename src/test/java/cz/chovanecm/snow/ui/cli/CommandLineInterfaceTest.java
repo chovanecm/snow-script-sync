@@ -9,16 +9,15 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 
 public class CommandLineInterfaceTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"",
-            "-d dir -i tlx.com -u user",
-            "-d dir -i tlx.com -p pwd",
+            "-i tlx.com -u user",
             "-d dir -i tlx.com",
-            "-d dir -u user -p pwd",
-            "-i tlx.com -u user -p pwd",
             "-i tlx.com",})
     public void newInstance_shouldThrowException_whenMandatoryFieldsAreMissing(String commandLine) {
         Assertions.assertThrows(UserInterfaceException.class, () -> new CommandLineInterface(commandLine.split(" ")));
@@ -27,9 +26,9 @@ public class CommandLineInterfaceTest {
     @Test
     public void getConnectorConfiguration_shouldReturnFullConfiguration_whenInstanceUserPasswordAndProxySpecified() throws UserInterfaceException {
         // GIVEN
-        String commandLine = "-d dir -i tlx.com -u user1 -p password2 -x proxyHost.com:1234";
-        CommandLineInterface cli = new CommandLineInterface(commandLine.split(" "));
-
+        String commandLine = "-d dir -i tlx.com -u user1 -x proxyHost.com:1234";
+        CommandLineInterface cli = spy(new CommandLineInterface(commandLine.split(" ")));
+        doReturn("password2").when(cli).getPassword();
         // WHEN
         SnowConnectorConfiguration configuration = cli.getConnectorConfiguration();
 
@@ -44,9 +43,9 @@ public class CommandLineInterfaceTest {
     @Test
     public void getConnectorConfiguration_shouldReturnConfigurationWithoutProxy_whenInstanceUserPasswordSpecified() throws UserInterfaceException {
         // GIVEN
-        String commandLine = "-d dir -i tlx.com -u user1 -p password2";
-        CommandLineInterface cli = new CommandLineInterface(commandLine.split(" "));
-
+        String commandLine = "-d dir -i tlx.com -u user1";
+        CommandLineInterface cli = spy(new CommandLineInterface(commandLine.split(" ")));
+        doReturn("password2").when(cli).getPassword();
         // WHEN
         SnowConnectorConfiguration configuration = cli.getConnectorConfiguration();
 

@@ -19,41 +19,43 @@
 package cz.chovanecm.snow.records;
 
 import cz.chovanecm.snow.RecordAccessor;
-import cz.chovanecm.snow.datalayer.ActiveRecord;
-import cz.chovanecm.snow.datalayer.ActiveRecordFactory;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.IOException;
+import java.time.ZonedDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
-@EqualsAndHashCode(callSuper = true)
-public class ClientScript extends SnowScript implements TableAwareObject {
+@Data
+@EqualsAndHashCode
+public abstract class AbstractSnowRecord implements SnowRecord {
+    private final Map<String, String> attributes = new HashMap<>();
+    private String sysId;
+    private ZonedDateTime updatedOn;
+    private ZonedDateTime createdOn;
+    private String category = "";
 
-    private String tableName;
-
-
-    public ClientScript(String sysId, String scriptName, String script) {
-        super(sysId, scriptName, script);
+    public AbstractSnowRecord(String sysId) {
+        this.sysId = sysId;
     }
 
-    public ClientScript() {
+    public AbstractSnowRecord() {
     }
 
-    @Override
-    public String getAssignedTableName() {
-        return tableName;
+    public Set<String> getAttributes() {
+        return this.attributes.keySet();
     }
 
-    public void setAssignedTableName(String tableName) {
-        this.tableName = tableName;
+    public String getAttributeValue(String attribute) {
+        return this.attributes.get(attribute);
     }
 
-    @Override
-    public void save(RecordAccessor destination) throws IOException {
-        destination.saveClientScript(this);
+    public String setAttributeValue(String attribute, String value) {
+        return attributes.put(attribute, value);
     }
 
-    @Override
-    public ActiveRecord getActiveRecord(ActiveRecordFactory factory) {
-        return factory.getActiveRecordFor(this);
-    }
+    public abstract void save(RecordAccessor destination) throws IOException;
+
 }

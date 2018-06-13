@@ -19,7 +19,8 @@
 package cz.chovanecm.snow.records;
 
 import cz.chovanecm.snow.RecordAccessor;
-import cz.chovanecm.snow.tables.SnowTable;
+import cz.chovanecm.snow.datalayer.ActiveRecord;
+import cz.chovanecm.snow.datalayer.ActiveRecordFactory;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -29,23 +30,22 @@ import java.io.IOException;
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class BusinessRuleSnowScript extends SnowScript implements TableBasedObject {
+public class BusinessRuleSnowScript extends SnowScript implements TableAwareObject {
 
-    private String tableName = "";
     private String when = "";
+    private String assignedTableName = "";
 
-    public BusinessRuleSnowScript(SnowTable table) {
-        super(table);
+    public BusinessRuleSnowScript() {
     }
 
-    @Override
-    public String getTableName() {
-        return tableName;
-    }
 
     @Override
     public void save(RecordAccessor destination) throws IOException {
         destination.saveBusinessRule(this);
     }
 
+    @Override
+    public ActiveRecord getActiveRecord(ActiveRecordFactory factory) {
+        return factory.getActiveRecordFor(this);
+    }
 }

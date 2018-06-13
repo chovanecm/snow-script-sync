@@ -19,10 +19,16 @@
 package cz.chovanecm.snow;
 
 import cz.chovanecm.snow.api.SnowClient;
-import cz.chovanecm.snow.files.FileRecordAccessor;
+import cz.chovanecm.snow.datalayer.ActiveRecord;
+import cz.chovanecm.snow.datalayer.ActiveRecordFactory;
+import cz.chovanecm.snow.datalayer.GenericDao;
+import cz.chovanecm.snow.datalayer.file.FileActiveRecordFactory;
+import cz.chovanecm.snow.datalayer.rest.*;
+import cz.chovanecm.snow.records.BusinessRuleSnowScript;
+import cz.chovanecm.snow.records.ClientScript;
 import cz.chovanecm.snow.records.DbObject;
 import cz.chovanecm.snow.records.SnowScript;
-import cz.chovanecm.snow.tables.*;
+import cz.chovanecm.snow.tables.DbObjectRegistry;
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -35,44 +41,72 @@ import java.util.List;
  * Main class
  */
 public class SnowScriptSynchronizer {
+    private final SnowConnectorConfiguration connectorConfiguration;
+    private final String destination;
+    private SnowClient snowClient;
 
+    public SnowScriptSynchronizer(SnowConnectorConfiguration connectorConfiguration, String destination) {
+        this.connectorConfiguration = connectorConfiguration;
+        this.destination = destination;
+    }
 
-    public static void run(SnowConnectorConfiguration connectorConfiguration, String destination) {
+    public SnowClient getSnowClient() {
+        if (snowClient == null) {
+            snowClient = new SnowClient(connectorConfiguration);
+        }
+        return snowClient;
+    }
 
-        // This allow us to access the ServiceNow instance
-        SnowClient client = new SnowClient(connectorConfiguration);
+    public void downloadAll() {
 
         // Where the scripts download to
         Path root = Paths.get(destination);
         // Get a registry of all tables to create its folder structure later.
-        DbObjectRegistry registry = new DbObjectRegistry(client.readAll(new DbObjectTable(), 100, DbObject.class));
+        GenericDao<DbObject> dbObjectDao = getDbObjectDao();
+        DbObjectRegistry registry = new DbObjectRegistry(dbObjectDao.getAll());
 
-        // TODO: what exactly is this used for?
-        FileRecordAccessor fileAccessor = new FileRecordAccessor(registry, root);
-        // List of the tables we will download scripts from.
-        List<ScriptSnowTable> tables = Arrays.asList(new ScriptSnowTable("sys_script_include", "script", "name"),
-                new ScriptSnowTable("sysevent_in_email_action", "script", "name"),
-                new ScriptSnowTable("sys_script_fix", "script", "name"),
-                new BusinessRuleTable(),
-                new ClientScriptTable());
-        Flowable.fromIterable(tables)
-                .flatMap(tableItem ->
-                        Flowable.just(tableItem)
-                                .subscribeOn(Schedulers.io())
-                                .flatMap(tableToProcess -> Flowable.fromIterable(client.readAll(tableToProcess, 100, SnowScript.class)))
-                )
-                .flatMap(script ->
-                        Flowable.just(script)
-                                .subscribeOn(Schedulers.io())
-                                .map(s -> {
-                                    s.save(fileAccessor);
-                                    return s;
-                                })
-                ).blockingSubscribe(script -> {
-                    //System.out.println(LocalTime.now().toString() + " Saved " + script.getScriptName());
-                }
+        ActiveRecordFactory fileFactory = new FileActiveRecordFactory(root, registry);
+
+        List<GenericDao<? extends SnowScript>> daosToUse = Arrays.asList(
+                getAutomatedTestScriptDao(),
+                getBusinessRuleDao(),
+                getSnowScriptDao("sys_script_include"),
+                getSnowScriptDao("sysevent_in_email_action"),
+                getSnowScriptDao("sys_script_fix"),
+                getClientScriptDao()
         );
+
+
+        Flowable.fromIterable(daosToUse)
+                .parallel()
+                .runOn(Schedulers.io())
+                .flatMap(dao -> Flowable.fromIterable(dao.getAll()))
+                .map(script -> script.getActiveRecord(fileFactory))
+                .doOnNext(ActiveRecord::save)
+                .sequential()
+                .blockingSubscribe();
+
         System.out.println("FINISHED.");
+    }
+
+    public GenericDao<DbObject> getDbObjectDao() {
+        return new DbObjectRestDao(getSnowClient());
+    }
+
+    public GenericDao<ClientScript> getClientScriptDao() {
+        return new ClientScriptRestDao(getSnowClient());
+    }
+
+    public GenericDao<SnowScript> getSnowScriptDao(String scriptTableName) {
+        return new SnowScriptRestDao(getSnowClient(), scriptTableName);
+    }
+
+    public GenericDao<SnowScript> getAutomatedTestScriptDao() {
+        return new AutomatedTestScriptRestDao(getSnowClient());
+    }
+
+    public GenericDao<BusinessRuleSnowScript> getBusinessRuleDao() {
+        return new BusinessRuleRestDao(getSnowClient());
     }
 
 }

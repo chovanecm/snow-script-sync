@@ -16,20 +16,15 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package cz.chovanecm.snow.tables;
+package cz.chovanecm.snow.records;
 
-import cz.chovanecm.snow.json.JsonManipulator;
+public interface TableAwareObject {
 
-public abstract class SnowTable {
-    protected final String tableName;
+    /**
+     * Returns the table name that the object is valid for.
+     * (e.g. cmdb_ci if it is a business script that should run on cmdb_ci)
+     * @return
+     */
+    String getAssignedTableName();
 
-    public SnowTable(String tableName) {
-        this.tableName = tableName;
-    }
-
-    public String getTableName() {
-        return tableName;
-    }
-
-    public abstract JsonManipulator getJsonManipulator();
 }
