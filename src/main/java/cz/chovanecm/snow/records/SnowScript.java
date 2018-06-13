@@ -19,6 +19,8 @@
 package cz.chovanecm.snow.records;
 
 import cz.chovanecm.snow.RecordAccessor;
+import cz.chovanecm.snow.datalayer.ActiveRecord;
+import cz.chovanecm.snow.datalayer.ActiveRecordFactory;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
@@ -29,7 +31,7 @@ import java.io.IOException;
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
-public class SnowScript extends SnowRecord implements DeactivableSnowRecord {
+public class SnowScript extends AbstractSnowRecord implements DeactivableSnowRecord {
 
     private String scriptName;
     @NonNull
@@ -48,5 +50,10 @@ public class SnowScript extends SnowRecord implements DeactivableSnowRecord {
     @Override
     public void save(RecordAccessor destination) throws IOException {
         destination.saveSnowScript(this);
+    }
+
+    @Override
+    public ActiveRecord getActiveRecord(ActiveRecordFactory factory) {
+        return factory.getActiveRecordFor(this);
     }
 }

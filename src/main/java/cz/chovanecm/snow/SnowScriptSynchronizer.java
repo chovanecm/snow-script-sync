@@ -19,10 +19,15 @@
 package cz.chovanecm.snow;
 
 import cz.chovanecm.snow.api.SnowClient;
+import cz.chovanecm.snow.datalayer.ActiveRecord;
+import cz.chovanecm.snow.datalayer.ActiveRecordFactory;
 import cz.chovanecm.snow.datalayer.GenericDao;
+import cz.chovanecm.snow.datalayer.file.FileActiveRecordFactory;
 import cz.chovanecm.snow.datalayer.rest.*;
-import cz.chovanecm.snow.files.FileRecordAccessor;
-import cz.chovanecm.snow.records.*;
+import cz.chovanecm.snow.records.BusinessRuleSnowScript;
+import cz.chovanecm.snow.records.ClientScript;
+import cz.chovanecm.snow.records.DbObject;
+import cz.chovanecm.snow.records.SnowScript;
 import cz.chovanecm.snow.tables.DbObjectRegistry;
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
@@ -61,9 +66,10 @@ public class SnowScriptSynchronizer {
         DbObjectRegistry registry = new DbObjectRegistry(dbObjectDao.getAll());
 
         // TODO: what exactly is this used for?
-        FileRecordAccessor fileAccessor = new FileRecordAccessor(registry, root);
+        //FileRecordAccessor fileAccessor = new FileRecordAccessor(registry, root);
+        ActiveRecordFactory fileFactory = new FileActiveRecordFactory(root, registry);
 
-        List<GenericDao<? extends SnowRecord>> daosToUse = Arrays.asList(
+        List<GenericDao<? extends SnowScript>> daosToUse = Arrays.asList(
                 getAutomatedTestScriptDao(),
                 getBusinessRuleDao(),
                 getSnowScriptDao("sys_script_include"),
@@ -72,11 +78,13 @@ public class SnowScriptSynchronizer {
                 getClientScriptDao()
         );
 
+
         Flowable.fromIterable(daosToUse)
                 .parallel()
                 .runOn(Schedulers.io())
                 .flatMap(dao -> Flowable.fromIterable(dao.getAll()))
-                .doOnNext(script -> script.save(fileAccessor))
+                .map(script -> script.getActiveRecord(fileFactory))
+                .doOnNext(ActiveRecord::save)
                 .sequential()
                 .blockingSubscribe();
 

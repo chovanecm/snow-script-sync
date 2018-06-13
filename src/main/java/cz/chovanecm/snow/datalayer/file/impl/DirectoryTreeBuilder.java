@@ -16,11 +16,9 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package cz.chovanecm.snow.files;
+package cz.chovanecm.snow.datalayer.file.impl;
 
 import cz.chovanecm.snow.records.DbObject;
-import cz.chovanecm.snow.records.DeactivableSnowRecord;
-import cz.chovanecm.snow.records.TableBasedObject;
 import cz.chovanecm.snow.tables.DbObjectRegistry;
 
 import java.nio.file.Path;
@@ -40,11 +38,11 @@ public class DirectoryTreeBuilder {
     /**
      * Returns path based on table according to table extensions, e.g. cmdb_ci/cmdb_ci_hardware/cmdb_ci_computer
      *
-     * @param tableBasedObject
+     * @param tableName
      * @return
      */
-    public Path getPathForTableBasedObject(TableBasedObject tableBasedObject) {
-        DbObject object = getObjectRegistry().getObjectByName(tableBasedObject.getAssignedTableName());
+    public Path getPathInTableHierarchy(String tableName) {
+        DbObject object = getObjectRegistry().getObjectByName(tableName);
         if (object == null) {
             return Paths.get(".");
         }
@@ -56,7 +54,4 @@ public class DirectoryTreeBuilder {
         return path;
     }
 
-    public Path getPathForDeactivableSnowRecord(DeactivableSnowRecord record) {
-        return (record.isActive() ? Paths.get(".") : Paths.get("_inactive_"));
-    }
 }

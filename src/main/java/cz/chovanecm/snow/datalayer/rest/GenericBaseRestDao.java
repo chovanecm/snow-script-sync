@@ -2,13 +2,13 @@ package cz.chovanecm.snow.datalayer.rest;
 
 import com.github.jsonj.JsonObject;
 import cz.chovanecm.snow.json.JsonManipulator;
-import cz.chovanecm.snow.records.SnowRecord;
+import cz.chovanecm.snow.records.AbstractSnowRecord;
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
 import lombok.Getter;
 
 @Getter
-public abstract class GenericBaseRestDao<T extends SnowRecord> implements cz.chovanecm.snow.datalayer.GenericDao<T> {
+public abstract class GenericBaseRestDao<T extends AbstractSnowRecord> implements cz.chovanecm.snow.datalayer.GenericDao<T> {
     private final SnowRestInterface restInterface;
     private final String tableName;
 
@@ -28,6 +28,7 @@ public abstract class GenericBaseRestDao<T extends SnowRecord> implements cz.cho
         return Flowable.fromIterable(getRestInterface().getRecords(getTableName()))
                 .observeOn(Schedulers.io())
                 .map(it -> getJsonManipulator().readFromJson(it))
+                .doOnNext(it -> it.setCategory(getTableName()))
                 .blockingIterable();
     }
 

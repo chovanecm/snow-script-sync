@@ -18,7 +18,7 @@
 
 package cz.chovanecm.snow.records;
 
-public interface TableBasedObject {
+public interface TableAwareObject {
 
     /**
      * Returns the table name that the object is valid for.
