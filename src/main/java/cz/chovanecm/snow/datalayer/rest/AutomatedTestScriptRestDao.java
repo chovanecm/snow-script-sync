@@ -43,6 +43,7 @@ public class AutomatedTestScriptRestDao implements AutomatedTestScriptDao {
                                     .build());
                     script.setScriptName(testStepRecord.getObject("test").getString("display_value") + "/" + testStepRecord.getString("order"));
                     script.setActive("true".equals(testStepRecord.getString("active")));
+                    script.setCategory("automated-test");
                     return script;
                 })
                 .blockingIterable();
