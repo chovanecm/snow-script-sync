@@ -1,5 +1,6 @@
-package cz.chovanecm.snow.datalayer.rest;
+package cz.chovanecm.snow.datalayer.rest.dao;
 
+import cz.chovanecm.snow.datalayer.rest.SnowRestInterface;
 import cz.chovanecm.snow.json.DbObjectJsonManipulator;
 import cz.chovanecm.snow.json.JsonManipulator;
 import cz.chovanecm.snow.records.DbObject;

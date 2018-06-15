@@ -1,6 +1,8 @@
-package cz.chovanecm.snow.datalayer.file.impl;
+package cz.chovanecm.snow.datalayer.file.impl.activerecord;
 
 import cz.chovanecm.snow.datalayer.ActiveRecord;
+import cz.chovanecm.snow.datalayer.file.impl.File;
+import cz.chovanecm.snow.datalayer.file.impl.FileWriter;
 import cz.chovanecm.snow.records.SnowScript;
 
 import java.io.IOException;

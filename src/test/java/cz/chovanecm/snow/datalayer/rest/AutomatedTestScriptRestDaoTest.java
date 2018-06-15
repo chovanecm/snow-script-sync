@@ -1,6 +1,7 @@
 package cz.chovanecm.snow.datalayer.rest;
 
 
+import cz.chovanecm.snow.datalayer.rest.dao.AutomatedTestScriptRestDao;
 import cz.chovanecm.snow.datalayer.rest.request.QueryGetRequest;
 import cz.chovanecm.snow.datalayer.rest.request.SingleRecordGetRequest;
 import cz.chovanecm.snow.records.SnowScript;

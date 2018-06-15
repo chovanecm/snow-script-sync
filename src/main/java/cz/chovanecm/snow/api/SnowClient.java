@@ -19,16 +19,19 @@
 package cz.chovanecm.snow.api;
 
 import com.github.jsonj.JsonObject;
+import com.github.jsonj.tools.JsonSerializer;
 import cz.chovanecm.rest.RestClient;
 import cz.chovanecm.snow.SnowConnectorConfiguration;
 import cz.chovanecm.snow.datalayer.rest.SnowRestInterface;
 import cz.chovanecm.snow.datalayer.rest.request.QueryGetRequest;
 import cz.chovanecm.snow.datalayer.rest.request.SingleRecordGetRequest;
+import lombok.Getter;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
+@Getter
 public class SnowClient implements SnowRestInterface {
 
     public static final String API_URL = "/api/now/v1/table/";
@@ -50,9 +53,6 @@ public class SnowClient implements SnowRestInterface {
                 connectorConfiguration.isProxySet() ? connectorConfiguration.getProxyServerPort() : null);
     }
 
-    public String getInstanceUrl() {
-        return instanceUrl;
-    }
 
     public String getApiUrl() {
         return getInstanceUrl() + API_URL;
@@ -98,7 +98,15 @@ public class SnowClient implements SnowRestInterface {
         }
     }
 
-    RestClient getClient() {
-        return client;
+    @Override
+    public void saveRecord(String table, String sysId, JsonObject object) {
+        String endpoint = getApiUrl() + "/" + table + "/" + sysId;
+        try {
+            getClient().put(endpoint, JsonSerializer.serialize(object));
+        } catch (IOException | RestClient.RestClientException e) {
+            //FIXME
+            e.printStackTrace();
+        }
     }
+
 }

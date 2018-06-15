@@ -1,6 +1,7 @@
-package cz.chovanecm.snow.datalayer.rest;
+package cz.chovanecm.snow.datalayer.rest.dao;
 
 import cz.chovanecm.snow.datalayer.BusinessRuleDao;
+import cz.chovanecm.snow.datalayer.rest.SnowRestInterface;
 import cz.chovanecm.snow.json.BusinessRuleJsonManipulator;
 import cz.chovanecm.snow.json.JsonManipulator;
 import cz.chovanecm.snow.records.BusinessRuleSnowScript;

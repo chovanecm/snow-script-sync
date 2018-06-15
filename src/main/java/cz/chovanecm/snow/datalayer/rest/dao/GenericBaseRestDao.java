@@ -1,6 +1,7 @@
-package cz.chovanecm.snow.datalayer.rest;
+package cz.chovanecm.snow.datalayer.rest.dao;
 
 import com.github.jsonj.JsonObject;
+import cz.chovanecm.snow.datalayer.rest.SnowRestInterface;
 import cz.chovanecm.snow.json.JsonManipulator;
 import cz.chovanecm.snow.records.AbstractSnowRecord;
 import io.reactivex.Flowable;

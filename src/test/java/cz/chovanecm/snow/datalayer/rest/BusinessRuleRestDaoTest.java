@@ -1,5 +1,6 @@
 package cz.chovanecm.snow.datalayer.rest;
 
+import cz.chovanecm.snow.datalayer.rest.dao.BusinessRuleRestDao;
 import cz.chovanecm.snow.records.BusinessRuleSnowScript;
 import org.junit.jupiter.api.Test;
 

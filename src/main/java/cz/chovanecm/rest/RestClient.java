@@ -23,11 +23,16 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 
 import java.io.IOException;
+
+import static java.net.HttpURLConnection.HTTP_OK;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class RestClient {
 
@@ -78,4 +83,19 @@ public class RestClient {
     }
 
 
+    public void put(String url, String content) throws IOException, RestClientException {
+        HttpPut request = new HttpPut(url);
+        request.addHeader("Content-Type", getAcceptHeader());
+        request.setEntity(new StringEntity(content, UTF_8));
+        CloseableHttpResponse response = client.execute(request);
+        if (response.getStatusLine().getStatusCode() != HTTP_OK) {
+            throw new RestClientException(response.getStatusLine().toString());
+        }
+    }
+
+    public static class RestClientException extends Exception {
+        public RestClientException(String message) {
+            super(message);
+        }
+    }
 }

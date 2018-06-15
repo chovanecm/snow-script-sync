@@ -3,7 +3,7 @@ package cz.chovanecm.snow.datalayer.file;
 import cz.chovanecm.snow.datalayer.ActiveRecord;
 import cz.chovanecm.snow.datalayer.ActiveRecordFactory;
 import cz.chovanecm.snow.datalayer.file.impl.DirectoryTreeBuilder;
-import cz.chovanecm.snow.datalayer.file.impl.SnowScriptFileActiveRecord;
+import cz.chovanecm.snow.datalayer.file.impl.activerecord.SnowScriptFileActiveRecord;
 import cz.chovanecm.snow.records.BusinessRuleSnowScript;
 import cz.chovanecm.snow.records.ClientScript;
 import cz.chovanecm.snow.records.SnowScript;

@@ -23,7 +23,7 @@ import cz.chovanecm.snow.datalayer.ActiveRecord;
 import cz.chovanecm.snow.datalayer.ActiveRecordFactory;
 import cz.chovanecm.snow.datalayer.GenericDao;
 import cz.chovanecm.snow.datalayer.file.FileActiveRecordFactory;
-import cz.chovanecm.snow.datalayer.rest.*;
+import cz.chovanecm.snow.datalayer.rest.dao.*;
 import cz.chovanecm.snow.records.BusinessRuleSnowScript;
 import cz.chovanecm.snow.records.ClientScript;
 import cz.chovanecm.snow.records.DbObject;

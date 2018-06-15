@@ -1,7 +1,8 @@
-package cz.chovanecm.snow.datalayer.rest;
+package cz.chovanecm.snow.datalayer.rest.dao;
 
 import com.github.jsonj.JsonObject;
 import cz.chovanecm.snow.datalayer.AutomatedTestScriptDao;
+import cz.chovanecm.snow.datalayer.rest.SnowRestInterface;
 import cz.chovanecm.snow.datalayer.rest.request.QueryGetRequest;
 import cz.chovanecm.snow.datalayer.rest.request.SingleRecordGetRequest;
 import cz.chovanecm.snow.json.JsonManipulator;
