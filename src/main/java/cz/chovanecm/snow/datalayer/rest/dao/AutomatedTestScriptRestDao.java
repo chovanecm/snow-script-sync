@@ -23,7 +23,7 @@ public class AutomatedTestScriptRestDao implements AutomatedTestScriptDao {
 
     @Override
     public SnowScript get(String id) {
-        throw new RuntimeException("Get single Automated script is not supported (yet)");
+        throw new RuntimeException("Getting single Automated script is not supported (yet)");
     }
 
     @Override
