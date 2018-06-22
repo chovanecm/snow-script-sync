@@ -37,7 +37,6 @@ public class JsonResultIterator implements Iterator<JsonObject> {
         }
         if (!iterator.hasNext()) {
             try {
-                System.out.println("Downloading: " + nextUrl);
                 response = snowClient.get(nextUrl);
                 nextUrl = response.getNextRecordsUrl();
                 JsonObject body = response.getBody();

@@ -34,7 +34,7 @@ import java.util.Collections;
 @Getter
 public class SnowClient implements SnowRestInterface {
 
-    public static final String API_URL = "/api/now/v1/table/";
+    public static final String API_URL = "/api/now/v2/table/";
     private final RestClient client;
     private final String instanceUrl;
     private final int readsPerRequest = 100;
@@ -60,7 +60,13 @@ public class SnowClient implements SnowRestInterface {
 
 
     public SnowApiGetResponse get(String url) throws IOException {
-        return new SnowApiGetResponse(getClient().get(url));
+        try {
+            System.out.println("Downloading: " + url);
+            return new SnowApiGetResponse(getClient().get(url));
+        } catch (IOException ex) {
+            throw new IOException("IO Exception while downloading URL " + url, ex);
+        }
+
     }
 
     @Override

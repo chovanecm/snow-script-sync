@@ -16,33 +16,39 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package cz.chovanecm.snow.records;
+package cz.chovanecm.snow.tables;
 
+import cz.chovanecm.snow.records.DbObject;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
-public class DbObject extends AbstractSnowRecord {
+public class HashMapDbObjectRegistry implements DbObjectRegistry {
 
-    @Getter
-    @Setter
-    private String name = "";
-    @Getter
-    @Setter
-    private String superClassId = "";
-    @Getter
-    @Setter
-    private DbObject superClass;
+    private Map<String, DbObject> sysIdToObject = new HashMap<>();
+    private Map<String, DbObject> nameToObject = new HashMap<>();
 
-    public DbObject(String sysId) {
-        super(sysId);
+    public HashMapDbObjectRegistry(Iterable<DbObject> dbObjects) {
+        for (DbObject table : dbObjects) {
+            sysIdToObject.put(table.getSysId(), table);
+            nameToObject.put(table.getName(), table);
+        }
     }
 
-    public DbObject() {
+
+    public DbObject getObjectBySysId(String sysId) {
+        return sysIdToObject.get(sysId);
     }
 
-    public boolean hasSuperClass() {
-        return superClassId != null && !"".equals(superClassId);
+    @Override
+    public DbObject getObjectByName(String name) {
+        return nameToObject.get(name);
+    }
+
+
+    public Collection<DbObject> getAllObjects() {
+        return sysIdToObject.values();
     }
 
 }

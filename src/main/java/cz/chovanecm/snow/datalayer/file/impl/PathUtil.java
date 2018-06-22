@@ -11,7 +11,10 @@ import java.nio.file.Paths;
 public class PathUtil {
 
     public static Path getPathForTableBasedObject(TableAwareObject object, DirectoryTreeBuilder treeBuilder) {
-        return treeBuilder.getPathInTableHierarchy(object.getAssignedTableName());
+        if (!"".equals(object.getAssignedTableName())) {
+            return treeBuilder.getPathInTableHierarchy(object.getAssignedTableName());
+        }
+        return Paths.get(".");
     }
 
     public static Path getPathForDeactivableSnowRecord(DeactivableSnowRecord record) {

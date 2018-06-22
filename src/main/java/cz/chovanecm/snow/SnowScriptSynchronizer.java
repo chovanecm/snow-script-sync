@@ -23,14 +23,11 @@ import cz.chovanecm.snow.datalayer.ActiveRecord;
 import cz.chovanecm.snow.datalayer.ActiveRecordFactory;
 import cz.chovanecm.snow.datalayer.GenericDao;
 import cz.chovanecm.snow.datalayer.file.FileActiveRecordFactory;
-import cz.chovanecm.snow.datalayer.rest.dao.AutomatedTestScriptRestDao;
-import cz.chovanecm.snow.datalayer.rest.dao.DbObjectRestDao;
-import cz.chovanecm.snow.datalayer.rest.dao.SnowScriptRestDao;
-import cz.chovanecm.snow.datalayer.rest.dao.TableAwareScriptRestDao;
-import cz.chovanecm.snow.records.DbObject;
+import cz.chovanecm.snow.datalayer.rest.dao.*;
 import cz.chovanecm.snow.records.SnowScript;
 import cz.chovanecm.snow.records.TableAwareSnowScript;
 import cz.chovanecm.snow.tables.DbObjectRegistry;
+import cz.chovanecm.snow.tables.PrefetchDbObjectRegistry;
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -64,8 +61,8 @@ public class SnowScriptSynchronizer {
         // Where the scripts download to
         Path root = Paths.get(destination);
         // Get a registry of all tables to create its folder structure later.
-        GenericDao<DbObject> dbObjectDao = getDbObjectDao();
-        DbObjectRegistry registry = new DbObjectRegistry(dbObjectDao.getAll());
+        DbObjectDao dbObjectDao = getDbObjectDao();
+        DbObjectRegistry registry = new PrefetchDbObjectRegistry(dbObjectDao);
 
         ActiveRecordFactory fileFactory = new FileActiveRecordFactory(root, registry);
 
@@ -91,7 +88,7 @@ public class SnowScriptSynchronizer {
         System.out.println("FINISHED.");
     }
 
-    public GenericDao<DbObject> getDbObjectDao() {
+    public DbObjectDao getDbObjectDao() {
         return new DbObjectRestDao(getSnowClient());
     }
 
