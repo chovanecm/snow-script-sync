@@ -16,22 +16,27 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package cz.chovanecm.snow;
+package cz.chovanecm.snow.records;
 
-import cz.chovanecm.snow.records.BusinessRuleSnowScript;
-import cz.chovanecm.snow.records.ClientScript;
-import cz.chovanecm.snow.records.DbObject;
-import cz.chovanecm.snow.records.SnowScript;
+import cz.chovanecm.snow.datalayer.ActiveRecord;
+import cz.chovanecm.snow.datalayer.ActiveRecordFactory;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
-import java.io.IOException;
+@Data
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+public class TableAwareSnowScript extends SnowScript implements TableAwareObject {
 
-public interface RecordAccessor {
+    private String assignedTableName = "";
 
-    void saveDbObject(DbObject dbObject);
+    public TableAwareSnowScript() {
+    }
 
-    void saveSnowScript(SnowScript script) throws IOException;
 
-    void saveBusinessRule(BusinessRuleSnowScript businessRule) throws IOException;
-
-    void saveClientScript(ClientScript clientScript) throws IOException;
+    @Override
+    public ActiveRecord getActiveRecord(ActiveRecordFactory factory) {
+        return factory.getActiveRecordForTableAwareSnowScript(this);
+    }
 }

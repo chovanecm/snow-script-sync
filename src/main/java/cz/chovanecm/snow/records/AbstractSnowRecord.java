@@ -18,11 +18,9 @@
 
 package cz.chovanecm.snow.records;
 
-import cz.chovanecm.snow.RecordAccessor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +53,5 @@ public abstract class AbstractSnowRecord implements SnowRecord {
     public String setAttributeValue(String attribute, String value) {
         return attributes.put(attribute, value);
     }
-
-    public abstract void save(RecordAccessor destination) throws IOException;
 
 }

@@ -18,12 +18,9 @@
 
 package cz.chovanecm.snow.records;
 
-import cz.chovanecm.snow.RecordAccessor;
 import cz.chovanecm.snow.datalayer.ActiveRecord;
 import cz.chovanecm.snow.datalayer.ActiveRecordFactory;
 import lombok.EqualsAndHashCode;
-
-import java.io.IOException;
 
 @EqualsAndHashCode(callSuper = true)
 public class ClientScript extends SnowScript implements TableAwareObject {
@@ -47,13 +44,9 @@ public class ClientScript extends SnowScript implements TableAwareObject {
         this.tableName = tableName;
     }
 
-    @Override
-    public void save(RecordAccessor destination) throws IOException {
-        destination.saveClientScript(this);
-    }
 
     @Override
     public ActiveRecord getActiveRecord(ActiveRecordFactory factory) {
-        return factory.getActiveRecordFor(this);
+        return factory.getActiveRecordForSnowScript(this);
     }
 }

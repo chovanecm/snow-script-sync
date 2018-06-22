@@ -2,9 +2,7 @@ package cz.chovanecm.snow.datalayer.rest;
 
 import cz.chovanecm.snow.datalayer.ActiveRecord;
 import cz.chovanecm.snow.datalayer.ActiveRecordFactory;
-import cz.chovanecm.snow.datalayer.rest.impl.activerecord.BusinessRuleActiveRecord;
-import cz.chovanecm.snow.records.BusinessRuleSnowScript;
-import cz.chovanecm.snow.records.ClientScript;
+import cz.chovanecm.snow.datalayer.rest.impl.activerecord.SnowScriptRestActiveRecord;
 import cz.chovanecm.snow.records.SnowScript;
 import lombok.Getter;
 
@@ -18,17 +16,11 @@ public class RestActiveRecordFactory implements ActiveRecordFactory {
     }
 
     @Override
-    public ActiveRecord getActiveRecordFor(BusinessRuleSnowScript businessRule) {
-        return new BusinessRuleActiveRecord(businessRule, getRestInterface());
-    }
-
-    @Override
-    public ActiveRecord getActiveRecordFor(ClientScript clientScript) {
-        return null;
-    }
-
-    @Override
-    public ActiveRecord getActiveRecordFor(SnowScript snowScript) {
-        return null;
+    public ActiveRecord getActiveRecordForSnowScript(SnowScript snowScript) {
+        return SnowScriptRestActiveRecord.builder().restInterface(getRestInterface())
+                .script(snowScript)
+                //TODO a better solution would be preferable
+                .targetTable(snowScript.getCategory())
+                .build();
     }
 }

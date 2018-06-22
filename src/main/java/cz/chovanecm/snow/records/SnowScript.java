@@ -18,15 +18,12 @@
 
 package cz.chovanecm.snow.records;
 
-import cz.chovanecm.snow.RecordAccessor;
 import cz.chovanecm.snow.datalayer.ActiveRecord;
 import cz.chovanecm.snow.datalayer.ActiveRecordFactory;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-
-import java.io.IOException;
 
 @Getter
 @Setter
@@ -47,13 +44,9 @@ public class SnowScript extends AbstractSnowRecord implements DeactivableSnowRec
     public SnowScript() {
     }
 
-    @Override
-    public void save(RecordAccessor destination) throws IOException {
-        destination.saveSnowScript(this);
-    }
 
     @Override
     public ActiveRecord getActiveRecord(ActiveRecordFactory factory) {
-        return factory.getActiveRecordFor(this);
+        return factory.getActiveRecordForSnowScript(this);
     }
 }

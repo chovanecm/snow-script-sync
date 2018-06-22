@@ -23,11 +23,13 @@ import cz.chovanecm.snow.datalayer.ActiveRecord;
 import cz.chovanecm.snow.datalayer.ActiveRecordFactory;
 import cz.chovanecm.snow.datalayer.GenericDao;
 import cz.chovanecm.snow.datalayer.file.FileActiveRecordFactory;
-import cz.chovanecm.snow.datalayer.rest.dao.*;
-import cz.chovanecm.snow.records.BusinessRuleSnowScript;
-import cz.chovanecm.snow.records.ClientScript;
+import cz.chovanecm.snow.datalayer.rest.dao.AutomatedTestScriptRestDao;
+import cz.chovanecm.snow.datalayer.rest.dao.DbObjectRestDao;
+import cz.chovanecm.snow.datalayer.rest.dao.SnowScriptRestDao;
+import cz.chovanecm.snow.datalayer.rest.dao.TableAwareScriptRestDao;
 import cz.chovanecm.snow.records.DbObject;
 import cz.chovanecm.snow.records.SnowScript;
+import cz.chovanecm.snow.records.TableAwareSnowScript;
 import cz.chovanecm.snow.tables.DbObjectRegistry;
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
@@ -93,8 +95,8 @@ public class SnowScriptSynchronizer {
         return new DbObjectRestDao(getSnowClient());
     }
 
-    public GenericDao<ClientScript> getClientScriptDao() {
-        return new ClientScriptRestDao(getSnowClient());
+    public GenericDao<TableAwareSnowScript> getClientScriptDao() {
+        return new TableAwareScriptRestDao(getSnowClient(), "sys_script_client", "table");
     }
 
     public GenericDao<SnowScript> getSnowScriptDao(String scriptTableName) {
@@ -105,8 +107,8 @@ public class SnowScriptSynchronizer {
         return new AutomatedTestScriptRestDao(getSnowClient());
     }
 
-    public GenericDao<BusinessRuleSnowScript> getBusinessRuleDao() {
-        return new BusinessRuleRestDao(getSnowClient());
+    public GenericDao<TableAwareSnowScript> getBusinessRuleDao() {
+        return new TableAwareScriptRestDao(getSnowClient(), "sys_script", "collection");
     }
 
 }

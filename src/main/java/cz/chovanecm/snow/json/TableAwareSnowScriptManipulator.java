@@ -24,23 +24,27 @@
 package cz.chovanecm.snow.json;
 
 import com.github.jsonj.JsonObject;
-import cz.chovanecm.snow.records.BusinessRuleSnowScript;
+import cz.chovanecm.snow.records.TableAwareSnowScript;
+import lombok.Getter;
 
-public class BusinessRuleJsonManipulator extends AbstractSnowScriptJsonManipulator<BusinessRuleSnowScript> {
+public class TableAwareSnowScriptManipulator extends AbstractSnowScriptJsonManipulator<TableAwareSnowScript> {
 
-    public BusinessRuleJsonManipulator() {
+    @Getter
+    private String tableNameField;
+
+    public TableAwareSnowScriptManipulator(String tableNameField) {
+        this.tableNameField = tableNameField;
     }
 
     @Override
-    protected BusinessRuleSnowScript setMyFields(JsonObject json, BusinessRuleSnowScript script) {
+    protected TableAwareSnowScript setMyFields(JsonObject json, TableAwareSnowScript script) {
         super.setMyFields(json, script);
-        script.setWhen(json.getString("when"));
-        script.setAssignedTableName(json.getString("collection"));
+        script.setAssignedTableName(json.getString(getTableNameField()));
         return script;
     }
 
     @Override
-    protected BusinessRuleSnowScript initializeEmptyRecord() {
-        return new BusinessRuleSnowScript();
+    protected TableAwareSnowScript initializeEmptyRecord() {
+        return new TableAwareSnowScript();
     }
 }

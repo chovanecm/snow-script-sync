@@ -19,7 +19,6 @@
 package cz.chovanecm.snow.records;
 
 
-import cz.chovanecm.snow.RecordAccessor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -53,10 +52,5 @@ public class DbObject extends AbstractSnowRecord {
 
     public Set<DbObject> getChildren() {
         return children;
-    }
-
-    @Override
-    public void save(RecordAccessor destination) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

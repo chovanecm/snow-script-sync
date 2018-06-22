@@ -1,7 +1,7 @@
 package cz.chovanecm.snow.datalayer.rest;
 
-import cz.chovanecm.snow.datalayer.rest.dao.BusinessRuleRestDao;
-import cz.chovanecm.snow.records.BusinessRuleSnowScript;
+import cz.chovanecm.snow.datalayer.rest.dao.TableAwareScriptRestDao;
+import cz.chovanecm.snow.records.TableAwareSnowScript;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -12,12 +12,12 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class BusinessRuleRestDaoTest extends RestTest {
+public class TableAwareScriptRestDaoTest extends RestTest {
 
     @Test
-    public void getAll_shouldReturnIterableOfBusinessRuleSnowScript() throws IOException {
+    public void getAll_shouldReturnIterableOfTableAwareSnowScript() throws IOException {
         // GIVEN
-        BusinessRuleRestDao instance = spy(new BusinessRuleRestDao(null));
+        TableAwareScriptRestDao instance = spy(new TableAwareScriptRestDao(null, "sys_script", "collection"));
         doReturn(mock(SnowRestInterface.class)).when(instance).getRestInterface();
         when(instance.getRestInterface().getRecords("sys_script")).thenReturn(
                 Arrays.asList(
@@ -27,8 +27,8 @@ public class BusinessRuleRestDaoTest extends RestTest {
         );
 
         // WHEN
-        Iterable<BusinessRuleSnowScript> iterable = instance.getAll();
-        List<BusinessRuleSnowScript> scripts = new ArrayList<>();
+        Iterable<TableAwareSnowScript> iterable = instance.getAll();
+        List<TableAwareSnowScript> scripts = new ArrayList<>();
         iterable.iterator().forEachRemaining(scripts::add);
 
         // THEN
