@@ -3,7 +3,6 @@ package cz.chovanecm.snow.datalayer.file.impl.dao;
 import cz.chovanecm.snow.records.SnowScript;
 import org.junit.jupiter.api.Test;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -13,7 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 public class FileSystemDaoTest {
@@ -26,43 +24,13 @@ public class FileSystemDaoTest {
         assertEquals("First lineSecond lineThird lineFourth line", result);
     }
 
-    @Test
-    public void testGetFileById_shouldReturnPath_whenFileExists() throws URISyntaxException, IOException {
-        Path rootPath = Paths.get(getClass().getResource("/cz.chovanecm.snow.datalayer.file.impl.dao").toURI());
-        Path file1 = rootPath.resolve("subdirectory1/My script_SYSIDABC123.js");
-        Path file2 = rootPath.resolve("subdirectory2/My script_SYSIDXYZ000.js");
-        givenFileExists(file1);
-        givenFileExists(file2);
-        FileSystemDao dao = new FileSystemDao(rootPath);
-
-        assertEquals(file2, dao.getFileById("SYSIDXYZ000"));
-    }
-
-    @Test
-    public void testGetFileById_shouldThrowException_whenFileDoesNotExist() throws URISyntaxException {
-        Path rootPath = Paths.get(getClass().getResource("/cz.chovanecm.snow.datalayer.file.impl.dao").toURI());
-        FileSystemDao dao = new FileSystemDao(rootPath);
-
-        assertThrows(FileNotFoundException.class, () -> dao.getFileById("RANDOMRANDOMRANDOm"));
-    }
-
-    @Test
-    public void testGetCategoryById_shouldReturnDirectoryNameInWhichTheFileResides() throws URISyntaxException, IOException {
-        Path rootPath = Paths.get(getClass().getResource("/cz.chovanecm.snow.datalayer.file.impl.dao").toURI());
-        Path file2 = rootPath.resolve("subdirectory2/My script_SYSIDXYZ000.js");
-        givenFileExists(file2);
-        FileSystemDao dao = new FileSystemDao(rootPath);
-
-        assertEquals("subdirectory2", dao.getCategoryById("SYSIDXYZ000"));
-    }
-
 
     @Test
     public void testGetById_shouldReturnSnowScriptWithAppropriateContent() throws URISyntaxException, IOException {
         Path rootPath = Paths.get(getClass().getResource("/cz.chovanecm.snow.datalayer.file.impl.dao").toURI());
         Path file2 = rootPath.resolve("subdirectory2/My script_SYSIDXYZ000.js");
         givenFileExists(file2);
-        FileSystemDao dao = new FileSystemDao(rootPath);
+        FileSystemDao dao = new FileSystemDao(new FilenameBasedFileLocator(rootPath));
 
         // WHEN
         SnowScript script = dao.get("SYSIDXYZ000");
