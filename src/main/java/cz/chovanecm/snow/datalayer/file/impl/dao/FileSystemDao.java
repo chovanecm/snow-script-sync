@@ -40,17 +40,17 @@ public class FileSystemDao implements GenericDao<SnowScript> {
 
     private String getContentById(String id) throws IOException {
         Path path = getFileById(id);
-        return Files.readAllLines(path).stream().reduce("", String::concat);
+        return String.join(System.lineSeparator(), Files.readAllLines(path));
     }
 
-    private String getCategoryById(String id) throws IOException {
+    String getCategoryById(String id) throws IOException {
         Path path = getFileById(id);
         Path relativePath = getRoot().relativize(path);
         return relativePath.getName(0).toString();
     }
 
-    private Path getFileById(String id) throws IOException {
-        return Files.find(getRoot(), 255, (path, attributes) -> !Files.isDirectory(path) && path.endsWith(id + ".js"))
+    Path getFileById(String id) throws IOException {
+        return Files.find(getRoot(), 255, (path, attributes) -> !path.toFile().isDirectory() && path.toString().endsWith(id + ".js"))
                 .findFirst().orElseThrow(() -> new FileNotFoundException("No file found for file sys id " + id + " under " + getRoot()));
     }
 
