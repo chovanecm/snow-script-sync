@@ -31,6 +31,7 @@ import cz.chovanecm.snow.tables.DbObjectRegistry;
 import cz.chovanecm.snow.tables.PrefetchDbObjectRegistry;
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
+import lombok.Getter;
 import lombok.Value;
 
 import java.io.IOException;
@@ -46,6 +47,7 @@ import java.util.function.Function;
  */
 public class SnowScriptSynchronizer {
     private final SnowConnectorConfiguration connectorConfiguration;
+    @Getter
     private final String destination;
     private SnowClient snowClient;
 
@@ -66,10 +68,10 @@ public class SnowScriptSynchronizer {
      * e.g.
      * src/script_include/DHLGltAutomaticRuleProcessor.js:script_include:d7bbb77a4f621300bc4df3117310c7b3
      */
-    public void donwloadByFile() {
+    public void downloadByFile() {
         final String fileName = "snow-files.txt";
         try {
-            List<String> lines = Files.readAllLines(Paths.get(fileName));
+            List<String> lines = Files.readAllLines(Paths.get(getDestination()).resolve(fileName));
             Function<String, Function<String, List<String>>> split;
             split = pattern -> str -> Arrays.asList(str.split(pattern));
             Function<String, List<String>> splitByColons = split.apply(":");
@@ -84,7 +86,7 @@ public class SnowScriptSynchronizer {
                         return record.getActiveRecord(snowScript -> new AbstractScriptFileActiveRecord() {
                             @Override
                             public Path getFilePath() {
-                                return Paths.get(snowRecord.getFileName());
+                                return Paths.get(getDestination()).resolve(snowRecord.getFileName());
                             }
 
                             @Override

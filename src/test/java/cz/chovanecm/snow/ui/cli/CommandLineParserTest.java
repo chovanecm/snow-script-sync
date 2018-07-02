@@ -3,6 +3,7 @@ package cz.chovanecm.snow.ui.cli;
 
 import cz.chovanecm.snow.SnowConnectorConfiguration;
 import cz.chovanecm.snow.ui.UserInterfaceException;
+import org.apache.commons.cli.ParseException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -12,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 
-public class CommandLineInterfaceTest {
+public class CommandLineParserTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"",
@@ -24,11 +25,12 @@ public class CommandLineInterfaceTest {
     }
 
     @Test
-    public void getConnectorConfiguration_shouldReturnFullConfiguration_whenInstanceUserPasswordAndProxySpecified() throws UserInterfaceException {
+    public void getConnectorConfiguration_shouldReturnFullConfiguration_whenInstanceUserPasswordAndProxySpecified() throws UserInterfaceException, ParseException {
         // GIVEN
         String commandLine = "-d dir -i tlx.com -u user1 -x proxyHost.com:1234";
-        CommandLineInterface cli = spy(new CommandLineInterface(commandLine.split(" ")));
+        CommandLineParser cli = spy(new CommandLineParser());
         doReturn("password2").when(cli).getPassword();
+        cli.parse(commandLine.split(" "));
         // WHEN
         SnowConnectorConfiguration configuration = cli.getConnectorConfiguration();
 
@@ -41,11 +43,13 @@ public class CommandLineInterfaceTest {
     }
 
     @Test
-    public void getConnectorConfiguration_shouldReturnConfigurationWithoutProxy_whenInstanceUserPasswordSpecified() throws UserInterfaceException {
+    public void getConnectorConfiguration_shouldReturnConfigurationWithoutProxy_whenInstanceUserPasswordSpecified() throws UserInterfaceException, ParseException {
         // GIVEN
         String commandLine = "-d dir -i tlx.com -u user1";
-        CommandLineInterface cli = spy(new CommandLineInterface(commandLine.split(" ")));
+        CommandLineParser cli = spy(new CommandLineParser());
         doReturn("password2").when(cli).getPassword();
+        cli.parse(commandLine.split(" "));
+
         // WHEN
         SnowConnectorConfiguration configuration = cli.getConnectorConfiguration();
 

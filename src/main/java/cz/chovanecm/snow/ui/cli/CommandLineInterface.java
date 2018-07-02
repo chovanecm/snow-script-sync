@@ -25,95 +25,54 @@ package cz.chovanecm.snow.ui.cli;
 
 import cz.chovanecm.snow.SnowConnectorConfiguration;
 import cz.chovanecm.snow.SnowScriptSynchronizer;
+import cz.chovanecm.snow.ui.TaskVariables;
 import cz.chovanecm.snow.ui.UserInterfaceException;
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.ParseException;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CommandLineInterface {
-    private static final String[] MANDATORY_CLI_OPTIONS = {"d", "u", "i"};
-    private CommandLine line;
-    private static Options options = new Options();
-    static {
-        setupCommandLineOptions();
+    private final CommandLineParser commandLineParser;
+    private final TaskVariables result;
+    private Map<TaskVariables.Action, Runnable> availableActions = new HashMap<>();
+
+
+    public CommandLineInterface(String[] args) throws UserInterfaceException {
+        commandLineParser = new CommandLineParser();
+        try {
+            result = commandLineParser.parse(args);
+            SnowConnectorConfiguration configuration = result.getConnectorConfiguration();
+            SnowScriptSynchronizer synchronizer = new SnowScriptSynchronizer(configuration, result.getDestinationFolder());
+
+            availableActions.put(TaskVariables.Action.DOWNLOAD_ALL, synchronizer::downloadAll);
+            availableActions.put(TaskVariables.Action.DOWNLOAD_BY_FILE, synchronizer::downloadByFile);
+        } catch (ParseException | UserInterfaceException e) {
+            System.err.println(String.format("Error when parsing arguments %s. Cause: %s", Arrays.toString(args), e.getMessage()));
+            printHelp();
+            throw new UserInterfaceException(e);
+        }
     }
 
     public static void main(String[] args) {
         try {
-            CommandLineInterface userInterface = new CommandLineInterface(args);
-            SnowConnectorConfiguration configuration = userInterface.getConnectorConfiguration();
-            SnowScriptSynchronizer synchronizer = new SnowScriptSynchronizer(configuration,
-                    userInterface.getDestinationFolder());
-            //synchronizer.downloadAll();
-            synchronizer.donwloadByFile();
+            CommandLineInterface userInterface = null;
+            userInterface = new CommandLineInterface(args);
+            userInterface.runTask();
         } catch (UserInterfaceException e) {
-            System.err.println(e.getMessage());
-            CommandLineInterface.printHelp();
+            // just exit
         }
     }
 
-    public CommandLineInterface(String[] args) throws UserInterfaceException {
-        try {
-            line = new PosixParser().parse(options, args);
-        } catch (ParseException e) {
-            throw new UserInterfaceException(String.format("Error when parsing arguments %s. Cause: %s", Arrays.toString(args), e.getMessage()));
-        }
-        if (!mandatoryFieldsPresent()) {
-            throw new UserInterfaceException("Destination, instance, and user are mandatory.");
-        }
+    public void runTask() {
+        availableActions.get(result.getAction()).run();
     }
 
-    public String getDestinationFolder() {
-        return getLine().getOptionValue("d");
+    public void printHelp() {
+        new HelpFormatter().printHelp("_", commandLineParser.getOptions());
     }
 
-
-    public SnowConnectorConfiguration getConnectorConfiguration() throws UserInterfaceException {
-        return buildProxyConfiguration(SnowConnectorConfiguration.builder())
-                .serviceNowDomainName(getLine().getOptionValue("i"))
-                .username(getLine().getOptionValue("u"))
-                .password(getPassword())
-                .build();
-
-    }
-
-    public String getPassword() {
-        return String.copyValueOf(System.console().readPassword("Password:"));
-    }
-
-    private CommandLine getLine() {
-        return line;
-    }
-
-    private SnowConnectorConfiguration.SnowConnectorConfigurationBuilder buildProxyConfiguration(SnowConnectorConfiguration.SnowConnectorConfigurationBuilder builder) throws UserInterfaceException {
-        if (!getLine().hasOption("x")) {
-            return builder;
-        }
-        String[] proxyString = getLine().getOptionValue("x").split(":");
-        if (proxyString.length != 2) {
-            throw new UserInterfaceException("Proxy format is host:port.");
-        }
-        try {
-            return builder.proxyServerPort(Integer.parseInt(proxyString[1]))
-                    .proxyServerAddress(proxyString[0]);
-        } catch (NumberFormatException ex) {
-            throw new UserInterfaceException("Proxy port number must be a number.");
-        }
-    }
-
-    public static void printHelp() {
-        new HelpFormatter().printHelp("_", options);
-    }
-
-    private boolean mandatoryFieldsPresent() {
-        return Arrays.stream(MANDATORY_CLI_OPTIONS).allMatch(option -> getLine().hasOption(option));
-    }
-
-    private static void setupCommandLineOptions() {
-        options.addOption("x", "proxy", true, "Use proxy, e.g. 10.0.0.1:3128");
-        options.addOption("u", "user", true, "Use this user to connect to ServiceNow");
-        options.addOption("d", "dest", true, "Where to download scripts");
-        options.addOption("i", "instance", true, "Instance, e.g. demo019.service-now.com");
-    }
 
 }
