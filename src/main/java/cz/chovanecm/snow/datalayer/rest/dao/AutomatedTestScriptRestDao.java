@@ -23,32 +23,38 @@ public class AutomatedTestScriptRestDao implements AutomatedTestScriptDao {
 
     @Override
     public SnowScript get(String id) {
-        throw new RuntimeException("Getting single Automated script is not supported (yet)");
+        return jsonObjectToSnowScript(getRestInterface().getRecord("sys_variable_value", id));
     }
 
     @Override
     public Iterable<SnowScript> getAll() {
-        return Flowable.fromIterable(
-                getRestInterface().getRecords(
-                        QueryGetRequest.builder()
-                                .tableName("sys_variable_value")
-                                .condition("document=sys_atf_step^variable.sys_name=Test script")
-                                .build()))
-                .map(it -> {
-                    SnowScript script = getJsonManipulator().readFromJson(it);
-                    JsonObject testStepRecord = getRestInterface().getRecord(
-                            SingleRecordGetRequest.builder()
-                                    .showDisplayValues(true)
-                                    .tableName("sys_atf_step")
-                                    .sysId(it.getObject("document_key").getString("value"))
-                                    .build());
-                    script.setScriptName(testStepRecord.getObject("test").getString("display_value") + "/" + testStepRecord.getString("order"));
-                    script.setActive("true".equals(testStepRecord.getString("active")));
-                    script.setCategory("automated-test");
-                    return script;
-                })
+        return Flowable.fromIterable(readAllTests())
+                .map(this::jsonObjectToSnowScript)
                 .blockingIterable();
     }
+
+    public SnowScript jsonObjectToSnowScript(JsonObject object) {
+        SnowScript script = getJsonManipulator().readFromJson(object);
+        JsonObject testStepRecord = getRestInterface().getRecord(
+                SingleRecordGetRequest.builder()
+                        .showDisplayValues(true)
+                        .tableName("sys_atf_step")
+                        .sysId(object.getObject("document_key").getString("value"))
+                        .build());
+        script.setScriptName(testStepRecord.getObject("test").getString("display_value") + "/" + testStepRecord.getString("order"));
+        script.setActive("true".equals(testStepRecord.getString("active")));
+        script.setCategory("automated-test");
+        return script;
+    }
+
+    public Iterable<JsonObject> readAllTests() {
+        return getRestInterface().getRecords(
+                QueryGetRequest.builder()
+                        .tableName("sys_variable_value")
+                        .condition("document=sys_atf_step^variable.sys_name=Test script")
+                        .build());
+    }
+
 
     private JsonManipulator<SnowScript> getJsonManipulator() {
         return jsonManipulator;
