@@ -171,6 +171,7 @@ public class SnowScriptSynchronizer {
                 getSnowScriptDao("sys_script_include"),
                 getSnowScriptDao("sysevent_in_email_action"),
                 getSnowScriptDao("sys_script_fix"),
+                getUiActionDao(),
                 getClientScriptDao()
         );
 
@@ -192,19 +193,37 @@ public class SnowScriptSynchronizer {
     }
 
     public GenericDao<TableAwareSnowScript> getClientScriptDao() {
-        return new TableAwareScriptRestDao(getSnowClient(), "sys_script_client", "table");
+        TableAwareScriptRestDao dao = new TableAwareScriptRestDao(getSnowClient(), "sys_script_client", "table");
+        setQuery(dao);
+        return dao;
+    }
+
+    public GenericDao<TableAwareSnowScript> getUiActionDao() {
+        TableAwareScriptRestDao dao = new TableAwareScriptRestDao(getSnowClient(), "sys_ui_action", "table");
+        setQuery(dao);
+        return dao;
     }
 
     public GenericDao<SnowScript> getSnowScriptDao(String scriptTableName) {
-        return new SnowScriptRestDao(getSnowClient(), scriptTableName);
+        SnowScriptRestDao dao = new SnowScriptRestDao(getSnowClient(), scriptTableName);
+        setQuery(dao);
+        return dao;
     }
 
     public GenericDao<SnowScript> getAutomatedTestScriptDao() {
-        return new AutomatedTestScriptRestDao(getSnowClient());
+        AutomatedTestScriptRestDao dao = new AutomatedTestScriptRestDao(getSnowClient());
+        setQuery(dao);
+        return dao;
     }
 
     public GenericDao<TableAwareSnowScript> getBusinessRuleDao() {
-        return new TableAwareScriptRestDao(getSnowClient(), "sys_script", "collection");
+        TableAwareScriptRestDao dao = new TableAwareScriptRestDao(getSnowClient(), "sys_script", "collection");
+        setQuery(dao);
+        return dao;
+    }
+
+    private void setQuery(Filterable in) {
+        in.setQuery("sys_updated_bySTARTSWITHsnc_operator");
     }
 
 }

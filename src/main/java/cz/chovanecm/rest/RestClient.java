@@ -89,7 +89,6 @@ public class RestClient {
         request.setEntity(new StringEntity(content, UTF_8));
         System.out.println(request);
         System.out.println(request.getEntity());
-        System.err.println(content);
         CloseableHttpResponse response = client.execute(request);
         if (response.getStatusLine().getStatusCode() != HTTP_OK) {
             throw new RestClientException(response.getStatusLine().toString());

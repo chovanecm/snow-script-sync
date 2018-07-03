@@ -10,9 +10,13 @@ import cz.chovanecm.snow.json.SnowScriptJsonManipulator;
 import cz.chovanecm.snow.records.SnowScript;
 import io.reactivex.Flowable;
 import lombok.Getter;
+import lombok.Setter;
 
-public class AutomatedTestScriptRestDao implements AutomatedTestScriptDao {
+public class AutomatedTestScriptRestDao implements AutomatedTestScriptDao, Filterable {
     private final SnowScriptJsonManipulator jsonManipulator = new SnowScriptJsonManipulator("value", "sys_id");
+    @Getter
+    @Setter
+    private String query = "";
 
     public AutomatedTestScriptRestDao(SnowRestInterface restInterface) {
         this.restInterface = restInterface;
@@ -51,7 +55,7 @@ public class AutomatedTestScriptRestDao implements AutomatedTestScriptDao {
         return getRestInterface().getRecords(
                 QueryGetRequest.builder()
                         .tableName("sys_variable_value")
-                        .condition("document=sys_atf_step^variable.sys_name=Test script")
+                        .condition("document=sys_atf_step^variable.sys_name=Test script^" + getQuery())
                         .build());
     }
 
