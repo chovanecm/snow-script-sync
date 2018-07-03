@@ -24,6 +24,8 @@ import cz.chovanecm.snow.datalayer.ActiveRecordFactory;
 import cz.chovanecm.snow.datalayer.GenericDao;
 import cz.chovanecm.snow.datalayer.file.FileActiveRecordFactory;
 import cz.chovanecm.snow.datalayer.file.impl.activerecord.AbstractScriptFileActiveRecord;
+import cz.chovanecm.snow.datalayer.file.impl.dao.FileSystemDao;
+import cz.chovanecm.snow.datalayer.rest.RestActiveRecordFactory;
 import cz.chovanecm.snow.datalayer.rest.dao.*;
 import cz.chovanecm.snow.records.SnowScript;
 import cz.chovanecm.snow.records.TableAwareSnowScript;
@@ -47,14 +49,10 @@ import java.util.function.Function;
  */
 public class SnowScriptSynchronizer {
     private final SnowConnectorConfiguration connectorConfiguration;
-    @Getter
-    private final String destination;
+    final String mappingFile = "snow-files.txt";
     private SnowClient snowClient;
-
-    public SnowScriptSynchronizer(SnowConnectorConfiguration connectorConfiguration, String destination) {
-        this.connectorConfiguration = connectorConfiguration;
-        this.destination = destination;
-    }
+    @Getter
+    private final Path destination;
 
     public SnowClient getSnowClient() {
         if (snowClient == null) {
@@ -63,21 +61,24 @@ public class SnowScriptSynchronizer {
         return snowClient;
     }
 
+    Function<String, Function<String, List<String>>> split = pattern -> str -> Arrays.asList(str.split(pattern));
+    Function<String, List<String>> splitByColons = split.apply(":");
+    Function<List<String>, SnowFilesRecord> listToSnowFilesRecord = list -> new SnowFilesRecord(list.get(0), list.get(1), list.get(2));
+    Function<String, SnowFilesRecord> lineToSnowFilesRecord = splitByColons.andThen(listToSnowFilesRecord);
+
+    public SnowScriptSynchronizer(SnowConnectorConfiguration connectorConfiguration, String destination) {
+        this.connectorConfiguration = connectorConfiguration;
+        this.destination = Paths.get(destination);
+    }
+
     /**
      * Expects file snow-files.txt to contain information about localFile:category:sys_id
      * e.g.
      * src/script_include/DHLGltAutomaticRuleProcessor.js:script_include:d7bbb77a4f621300bc4df3117310c7b3
      */
     public void downloadByFile() {
-        final String fileName = "snow-files.txt";
         try {
-            List<String> lines = Files.readAllLines(Paths.get(getDestination()).resolve(fileName));
-            Function<String, Function<String, List<String>>> split;
-            split = pattern -> str -> Arrays.asList(str.split(pattern));
-            Function<String, List<String>> splitByColons = split.apply(":");
-            Function<List<String>, SnowFilesRecord> listToSnowFilesRecord = list -> new SnowFilesRecord(list.get(0), list.get(1), list.get(2));
-            Function<String, SnowFilesRecord> lineToSnowFilesRecord = splitByColons.andThen(listToSnowFilesRecord);
-
+            List<String> lines = Files.readAllLines(getDestination().resolve(mappingFile));
             Flowable.fromIterable(lines)
                     .map(lineToSnowFilesRecord::apply)
                     .subscribeOn(Schedulers.io())
@@ -86,7 +87,7 @@ public class SnowScriptSynchronizer {
                         return record.getActiveRecord(snowScript -> new AbstractScriptFileActiveRecord() {
                             @Override
                             public Path getFilePath() {
-                                return Paths.get(getDestination()).resolve(snowRecord.getFileName());
+                                return getDestination().resolve(snowRecord.getFileName());
                             }
 
                             @Override
@@ -96,6 +97,39 @@ public class SnowScriptSynchronizer {
                         });
                     })
                     .blockingSubscribe(ActiveRecord::save);
+        } catch (IOException e) {
+            //TODO
+            e.printStackTrace();
+        }
+    }
+
+    public void uploadFile(String filename) {
+        Path file = Paths.get(filename);
+        if (!file.isAbsolute()) {
+            file = getDestination().resolve(file);
+        }
+        try {
+            List<String> lines = Files.readAllLines(getDestination().resolve(mappingFile));
+            Path finalFile = file;
+            SnowFilesRecord snowRecord = lines.stream().map(lineToSnowFilesRecord)
+                    .filter(record -> getDestination().resolve(record.getFileName()).equals(finalFile))
+                    .findFirst().orElseThrow(IOException::new);
+
+            GenericDao<SnowScript> dao = new FileSystemDao(id -> getDestination().resolve(snowRecord.getFileName()), id -> snowRecord.getCategory());
+
+            SnowScript script = dao.get(snowRecord.getSysId());
+
+            //TODO oh no, another ugly hack
+            switch (script.getCategory()) {
+                case "script_include":
+                    script.setCategory("sys_script_include");
+                    break;
+                case "automated-test":
+                    script.setCategory("sys_variable_value");
+                    break;
+            }
+            script.getActiveRecord(new RestActiveRecordFactory(getSnowClient())).save();
+
         } catch (IOException e) {
             //TODO
             e.printStackTrace();
@@ -124,7 +158,7 @@ public class SnowScriptSynchronizer {
     public void downloadAll() {
 
         // Where the scripts download to
-        Path root = Paths.get(destination);
+        Path root = getDestination();
         // Get a registry of all tables to create its folder structure later.
         DbObjectDao dbObjectDao = getDbObjectDao();
         DbObjectRegistry registry = new PrefetchDbObjectRegistry(dbObjectDao);

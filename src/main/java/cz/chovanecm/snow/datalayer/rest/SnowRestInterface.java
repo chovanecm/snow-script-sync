@@ -18,5 +18,5 @@ public interface SnowRestInterface {
 
     JsonObject getRecord(SingleRecordGetRequest request);
 
-    void saveRecord(String table, String sysId, JsonObject object);
+    void saveRecord(String table, String sysId, com.google.gson.JsonObject object);
 }

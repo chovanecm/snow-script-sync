@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class FilenameBasedFileLocator implements FileLocator {
+public class FilenameBasedFileLocator implements FileLocator, CategoryIdentifier {
     @Getter
     private Path root;
 

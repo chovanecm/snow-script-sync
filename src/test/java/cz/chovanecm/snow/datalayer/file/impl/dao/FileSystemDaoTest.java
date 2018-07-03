@@ -30,7 +30,7 @@ public class FileSystemDaoTest {
         Path rootPath = Paths.get(getClass().getResource("/cz.chovanecm.snow.datalayer.file.impl.dao").toURI());
         Path file2 = rootPath.resolve("subdirectory2/My script_SYSIDXYZ000.js");
         givenFileExists(file2);
-        FileSystemDao dao = new FileSystemDao(new FilenameBasedFileLocator(rootPath));
+        FileSystemDao dao = new FileSystemDao(new FilenameBasedFileLocator(rootPath), new FilenameBasedFileLocator(rootPath));
 
         // WHEN
         SnowScript script = dao.get("SYSIDXYZ000");

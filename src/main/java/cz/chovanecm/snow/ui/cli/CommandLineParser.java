@@ -31,12 +31,21 @@ public class CommandLineParser {
         if (!mandatoryFieldsPresent()) {
             throw new UserInterfaceException("Missing mandatory arguments (" + Arrays.toString(MANDATORY_CLI_OPTIONS) + ")");
         }
-        return new TaskVariables(getDestinationFolder(), getConnectorConfiguration(), getAction());
+        return new TaskVariables(getDestinationFolder(), getConnectorConfiguration(), getAction(), getFileToUpload());
+    }
+
+    private String getFileToUpload() {
+        return getLine().getOptionValue("fu");
     }
 
     private TaskVariables.Action getAction() {
-        //TODO
-        return TaskVariables.Action.DOWNLOAD_ALL;
+        if (getLine().getOptionValue("fu") != null) {
+            return TaskVariables.Action.UPLOAD_FILE;
+        } else {
+            // default
+            return TaskVariables.Action.DOWNLOAD_ALL;
+        }
+
     }
 
     String getDestinationFolder() {
@@ -82,5 +91,6 @@ public class CommandLineParser {
         options.addOption("u", "user", true, "Use this user to connect to ServiceNow");
         options.addOption("d", "dest", true, "Where to store scripts scripts");
         options.addOption("i", "instance", true, "Instance, e.g. demo019.service-now.com");
+        options.addOption("fu", "fileToUpload", true, "File to upload, e.g. src/hello.js");
     }
 }

@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class FilenameBasedFileLocatorTest {
 
     private FileLocator fileLocator;
+    private CategoryIdentifier categoryIdentifier;
     private Path file2;
     private Path file1;
 
@@ -30,7 +31,9 @@ public class FilenameBasedFileLocatorTest {
         givenFileExists(file1);
         givenFileExists(file2);
 
-        fileLocator = new FilenameBasedFileLocator(rootPath);
+        FilenameBasedFileLocator instance = new FilenameBasedFileLocator(rootPath);
+        fileLocator = instance;
+        categoryIdentifier = instance;
     }
 
 
@@ -46,7 +49,7 @@ public class FilenameBasedFileLocatorTest {
 
     @Test
     public void testGetCategoryById_shouldReturnDirectoryNameInWhichTheFileResides() throws IOException {
-        assertEquals("subdirectory2", fileLocator.getCategoryById("SYSIDXYZ000"));
+        assertEquals("subdirectory2", categoryIdentifier.getCategoryById("SYSIDXYZ000"));
     }
 
     private void givenFileExists(Path fileName) throws IOException {

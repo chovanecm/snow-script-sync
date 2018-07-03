@@ -19,7 +19,7 @@
 package cz.chovanecm.snow.api;
 
 import com.github.jsonj.JsonObject;
-import com.github.jsonj.tools.JsonSerializer;
+import com.google.gson.Gson;
 import cz.chovanecm.rest.RestClient;
 import cz.chovanecm.snow.SnowConnectorConfiguration;
 import cz.chovanecm.snow.datalayer.rest.SnowRestInterface;
@@ -105,10 +105,10 @@ public class SnowClient implements SnowRestInterface {
     }
 
     @Override
-    public void saveRecord(String table, String sysId, JsonObject object) {
-        String endpoint = getApiUrl() + "/" + table + "/" + sysId;
+    public void saveRecord(String table, String sysId, com.google.gson.JsonObject object) {
+        String endpoint = getApiUrl() + table + "/" + sysId;
         try {
-            getClient().put(endpoint, JsonSerializer.serialize(object));
+            getClient().patch(endpoint, new Gson().toJson(object));
         } catch (IOException | RestClient.RestClientException e) {
             //FIXME
             e.printStackTrace();

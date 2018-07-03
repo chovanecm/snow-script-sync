@@ -12,17 +12,20 @@ public class FileSystemDao implements GenericDao<SnowScript> {
 
     @Getter
     private final FileLocator fileLocator;
+    @Getter
+    private final CategoryIdentifier categoryIdentifier;
 
 
-    public FileSystemDao(FileLocator fileLocator) {
+    public FileSystemDao(FileLocator fileLocator, CategoryIdentifier categoryIdentifier) {
         this.fileLocator = fileLocator;
+        this.categoryIdentifier = categoryIdentifier;
     }
 
     @Override
     public SnowScript get(String id) {
         try {
             String name = getNameById(id);
-            String category = getFileLocator().getCategoryById(id);
+            String category = getCategoryIdentifier().getCategoryById(id);
             String content = null;
             content = getContentById(id);
             return createSnowScript(id, category, name, content);

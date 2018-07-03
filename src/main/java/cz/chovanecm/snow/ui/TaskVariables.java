@@ -11,9 +11,11 @@ public class TaskVariables {
     private String destinationFolder;
     private SnowConnectorConfiguration connectorConfiguration;
     private Action action;
+    private String fileToUpload;
 
     public enum Action {
         DOWNLOAD_ALL,
-        DOWNLOAD_BY_FILE
+        DOWNLOAD_BY_FILE,
+        UPLOAD_FILE
     }
 }

@@ -1,12 +1,14 @@
 package cz.chovanecm.snow.datalayer.rest.impl.activerecord;
 
-import com.github.jsonj.JsonObject;
+import com.google.gson.JsonObject;
 import cz.chovanecm.snow.datalayer.ActiveRecord;
 import cz.chovanecm.snow.datalayer.rest.SnowRestInterface;
 import cz.chovanecm.snow.records.SnowScript;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
+
+import java.util.function.Function;
 
 @Builder
 @Getter
@@ -34,10 +36,13 @@ public class SnowScriptRestActiveRecord implements ActiveRecord {
                 asJsonObject());
     }
 
+    private final Function<String, Function<String, Function<String, String>>> replace = (String search) -> (String replacement) -> (String str) -> str.replace(search, replacement);
+
     private JsonObject asJsonObject() {
-        JsonObject json = new JsonObject();
-        json.put(getScriptFieldName(), getScript().getScript());
-        return json;
+        com.google.gson.JsonObject element = new com.google.gson.JsonObject();
+        element.addProperty(getScriptFieldName(), getScript().getScript());
+
+        return element;
     }
 
 
