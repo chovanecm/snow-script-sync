@@ -36,6 +36,11 @@ public class TableAwareSnowScriptManipulator extends AbstractSnowScriptJsonManip
         this.tableNameField = tableNameField;
     }
 
+    public TableAwareSnowScriptManipulator(String scriptFieldName, String nameFieldName, String tableNameField) {
+        super(scriptFieldName, nameFieldName);
+        this.tableNameField = tableNameField;
+    }
+
     @Override
     protected TableAwareSnowScript setMyFields(JsonObject json, TableAwareSnowScript script) {
         super.setMyFields(json, script);

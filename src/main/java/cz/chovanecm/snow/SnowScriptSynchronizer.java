@@ -172,7 +172,8 @@ public class SnowScriptSynchronizer {
                 getSnowScriptDao("sysevent_in_email_action"),
                 getSnowScriptDao("sys_script_fix"),
                 getUiActionDao(),
-                getClientScriptDao()
+                getClientScriptDao(),
+                getCalculatedFieldDao()
         );
 
 
@@ -219,6 +220,15 @@ public class SnowScriptSynchronizer {
     public GenericDao<TableAwareSnowScript> getBusinessRuleDao() {
         TableAwareScriptRestDao dao = new TableAwareScriptRestDao(getSnowClient(), "sys_script", "collection");
         setQuery(dao);
+        return dao;
+    }
+
+    public GenericDao<TableAwareSnowScript> getCalculatedFieldDao() {
+        TableAwareScriptRestDao dao = new TableAwareScriptRestDao(getSnowClient(), "sys_dictionary",
+                "calculation", "element", "name");
+        setQuery(dao);
+        dao.setQuery(dao.getQuery() + "^virtual=true");
+        dao.setCategoryNameSupplier(() -> "calculated_fields");
         return dao;
     }
 

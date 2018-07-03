@@ -10,12 +10,16 @@ import io.reactivex.schedulers.Schedulers;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.function.Supplier;
+
 @Getter
 public abstract class GenericBaseRestDao<T extends AbstractSnowRecord> implements cz.chovanecm.snow.datalayer.GenericDao<T>, Filterable {
     private final SnowRestInterface restInterface;
     private final String tableName;
     @Setter
     private String query = "";
+    @Setter
+    private Supplier<String> categoryNameSupplier = this::getTableName;
 
     public GenericBaseRestDao(SnowRestInterface restInterface, String tableName) {
         this.restInterface = restInterface;
@@ -36,7 +40,7 @@ public abstract class GenericBaseRestDao<T extends AbstractSnowRecord> implement
                         .condition(getQuery()).build()))
                 .observeOn(Schedulers.io())
                 .map(it -> getJsonManipulator().readFromJson(it))
-                .doOnNext(it -> it.setCategory(getTableName()))
+                .doOnNext(it -> it.setCategory(getCategoryNameSupplier().get()))
                 .blockingIterable();
     }
 
