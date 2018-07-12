@@ -10,15 +10,23 @@ import lombok.Getter;
 public class RestActiveRecordFactory implements ActiveRecordFactory {
 
     private SnowRestInterface restInterface;
+    private final String scriptFieldName;
 
     public RestActiveRecordFactory(SnowRestInterface restInterface) {
         this.restInterface = restInterface;
+        scriptFieldName = "script";
+    }
+
+    public RestActiveRecordFactory(SnowRestInterface restInterface, String scriptFieldName) {
+        this.restInterface = restInterface;
+        this.scriptFieldName = scriptFieldName;
     }
 
     @Override
     public ActiveRecord getActiveRecordForSnowScript(SnowScript snowScript) {
         return SnowScriptRestActiveRecord.builder().restInterface(getRestInterface())
                 .script(snowScript)
+                .scriptFieldName(getScriptFieldName())
                 //TODO a better solution would be preferable
                 .targetTable(snowScript.getCategory())
                 .build();

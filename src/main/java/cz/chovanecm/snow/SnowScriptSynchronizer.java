@@ -119,6 +119,8 @@ public class SnowScriptSynchronizer {
 
             SnowScript script = dao.get(snowRecord.getSysId());
 
+            RestActiveRecordFactory activeRecordFactory = new RestActiveRecordFactory(getSnowClient());
+
             //TODO oh no, another ugly hack
             switch (script.getCategory()) {
                 case "script_include":
@@ -126,9 +128,14 @@ public class SnowScriptSynchronizer {
                     break;
                 case "automated-test":
                     script.setCategory("sys_variable_value");
+                    activeRecordFactory = new RestActiveRecordFactory(getSnowClient(), "value");
+                    break;
+                case "calculated_field":
+                    script.setCategory("sys_dictionary");
+                    activeRecordFactory = new RestActiveRecordFactory(getSnowClient(), "calculation");
                     break;
             }
-            script.getActiveRecord(new RestActiveRecordFactory(getSnowClient())).save();
+            script.getActiveRecord(activeRecordFactory).save();
 
         } catch (IOException e) {
             //TODO
@@ -228,7 +235,7 @@ public class SnowScriptSynchronizer {
                 "calculation", "element", "name");
         setQuery(dao);
         dao.setQuery(dao.getQuery() + "^virtual=true");
-        dao.setCategoryNameSupplier(() -> "calculated_fields");
+        dao.setCategoryNameSupplier(() -> "calculated_field");
         return dao;
     }
 
