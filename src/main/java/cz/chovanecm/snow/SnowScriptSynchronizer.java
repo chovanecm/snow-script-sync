@@ -144,23 +144,13 @@ public class SnowScriptSynchronizer {
         }
     }
 
-    @Value
-    private class SnowFilesRecord {
-        private String fileName;
-        private String category;
-        private String sysId;
-
-        public GenericDao<SnowScript> getServiceNowDao() {
-            switch (getCategory()) {
-                case "script_include":
-                    return getSnowScriptDao("sys_script_include");
-                case "automated-test":
-                    return getAutomatedTestScriptDao();
-                default:
-                    throw new IllegalArgumentException("Category " + getCategory() + " not supported yet.");
-            }
-        }
-
+    public GenericDao<? extends SnowScript> getCalculatedFieldDao() {
+        TableAwareScriptRestDao dao = new TableAwareScriptRestDao(getSnowClient(), "sys_dictionary",
+                "calculation", "element", "name");
+        setQuery(dao);
+        dao.setQuery(dao.getQuery() + "^virtual=true");
+        dao.setCategoryNameSupplier(() -> "calculated_field");
+        return dao;
     }
 
     public void downloadAll() {
@@ -231,13 +221,25 @@ public class SnowScriptSynchronizer {
         return dao;
     }
 
-    public GenericDao<TableAwareSnowScript> getCalculatedFieldDao() {
-        TableAwareScriptRestDao dao = new TableAwareScriptRestDao(getSnowClient(), "sys_dictionary",
-                "calculation", "element", "name");
-        setQuery(dao);
-        dao.setQuery(dao.getQuery() + "^virtual=true");
-        dao.setCategoryNameSupplier(() -> "calculated_field");
-        return dao;
+    @Value
+    private class SnowFilesRecord {
+        private String fileName;
+        private String category;
+        private String sysId;
+
+        public GenericDao<? extends SnowScript> getServiceNowDao() {
+            switch (getCategory()) {
+                case "script_include":
+                    return getSnowScriptDao("sys_script_include");
+                case "automated-test":
+                    return getAutomatedTestScriptDao();
+                case "calculated_field":
+                    return getCalculatedFieldDao();
+                default:
+                    return getSnowScriptDao(getCategory());
+            }
+        }
+
     }
 
     private void setQuery(Filterable in) {
