@@ -77,6 +77,7 @@ public class SnowScriptSynchronizer {
      * src/script_include/DHLGltAutomaticRuleProcessor.js:script_include:d7bbb77a4f621300bc4df3117310c7b3
      */
     public void downloadByFile() {
+        System.out.println("Re-downloading files!");
         try {
             List<String> lines = Files.readAllLines(getDestination().resolve(mappingFile));
             Flowable.fromIterable(lines)

@@ -38,9 +38,12 @@ public class CommandLineParser {
         return getLine().getOptionValue("fu");
     }
 
+
     private TaskVariables.Action getAction() {
         if (getLine().getOptionValue("fu") != null) {
             return TaskVariables.Action.UPLOAD_FILE;
+        } else if (getLine().hasOption("rd")) {
+            return TaskVariables.Action.DOWNLOAD_BY_FILE;
         } else {
             // default
             return TaskVariables.Action.DOWNLOAD_ALL;
@@ -92,5 +95,6 @@ public class CommandLineParser {
         options.addOption("d", "dest", true, "Where to store scripts scripts");
         options.addOption("i", "instance", true, "Instance, e.g. demo019.service-now.com");
         options.addOption("fu", "fileToUpload", true, "File to upload, e.g. src/hello.js");
+        options.addOption("rd", "redownload", false, "Re-download files specified in snow-files.txt");
     }
 }

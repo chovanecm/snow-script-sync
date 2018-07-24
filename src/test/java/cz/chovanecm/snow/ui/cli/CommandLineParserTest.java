@@ -2,6 +2,7 @@ package cz.chovanecm.snow.ui.cli;
 
 
 import cz.chovanecm.snow.SnowConnectorConfiguration;
+import cz.chovanecm.snow.ui.TaskVariables;
 import cz.chovanecm.snow.ui.UserInterfaceException;
 import org.apache.commons.cli.ParseException;
 import org.junit.jupiter.api.Assertions;
@@ -58,5 +59,19 @@ public class CommandLineParserTest {
         assertEquals("password2", configuration.getPassword());
         assertNull(configuration.getProxyServerAddress());
         assertFalse(configuration.isProxySet());
+    }
+
+    @Test
+    public void parse_shouldReturnActionRedownload_whenCommandLineContainsRd() throws ParseException, UserInterfaceException {
+        // GIVEN
+        String commandLine = "-d dir -i tlx.com -u user1 -rd";
+        CommandLineParser cli = spy(new CommandLineParser());
+        doReturn("password2").when(cli).getPassword();
+
+        //WHEN
+        TaskVariables result = cli.parse(commandLine.split(" "));
+
+        //THEN
+        assertEquals(TaskVariables.Action.DOWNLOAD_BY_FILE, result.getAction());
     }
 }
