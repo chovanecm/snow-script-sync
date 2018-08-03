@@ -31,4 +31,6 @@ public class RestActiveRecordFactory implements ActiveRecordFactory {
                 .targetTable(snowScript.getCategory())
                 .build();
     }
+
+
 }

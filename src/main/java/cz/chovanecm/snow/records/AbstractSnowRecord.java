@@ -28,7 +28,7 @@ import java.util.Set;
 
 @Data
 @EqualsAndHashCode
-public abstract class AbstractSnowRecord implements SnowRecord {
+public class AbstractSnowRecord implements SnowRecord {
     private final Map<String, String> attributes = new HashMap<>();
     private String sysId;
     private ZonedDateTime updatedOn;
@@ -42,14 +42,17 @@ public abstract class AbstractSnowRecord implements SnowRecord {
     public AbstractSnowRecord() {
     }
 
+    @Override
     public Set<String> getAttributes() {
         return this.attributes.keySet();
     }
 
+    @Override
     public String getAttributeValue(String attribute) {
         return this.attributes.get(attribute);
     }
 
+    @Override
     public String setAttributeValue(String attribute, String value) {
         return attributes.put(attribute, value);
     }

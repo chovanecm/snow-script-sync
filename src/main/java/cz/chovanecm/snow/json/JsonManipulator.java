@@ -19,12 +19,12 @@
 package cz.chovanecm.snow.json;
 
 import com.github.jsonj.JsonObject;
-import cz.chovanecm.snow.records.AbstractSnowRecord;
+import cz.chovanecm.snow.records.SnowRecord;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-public abstract class JsonManipulator<T extends AbstractSnowRecord> {
+public abstract class JsonManipulator<T extends SnowRecord> {
 
     private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss z");
 
@@ -38,6 +38,7 @@ public abstract class JsonManipulator<T extends AbstractSnowRecord> {
         ZonedDateTime sysCreatedOn = ZonedDateTime.parse(json.getString("sys_created_on") + " GMT", dateFormat);
         record.setUpdatedOn(sysUpdatedOn);
         record.setCreatedOn(sysCreatedOn);
+        record.setCategory(json.getString("sys_class_name"));
         return record;
     }
 

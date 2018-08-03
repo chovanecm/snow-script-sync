@@ -19,14 +19,15 @@
 package cz.chovanecm.snow;
 
 import cz.chovanecm.snow.api.SnowClient;
-import cz.chovanecm.snow.datalayer.ActiveRecord;
-import cz.chovanecm.snow.datalayer.ActiveRecordFactory;
-import cz.chovanecm.snow.datalayer.GenericDao;
+import cz.chovanecm.snow.datalayer.*;
 import cz.chovanecm.snow.datalayer.file.FileActiveRecordFactory;
 import cz.chovanecm.snow.datalayer.file.impl.activerecord.AbstractScriptFileActiveRecord;
 import cz.chovanecm.snow.datalayer.file.impl.dao.FileSystemDao;
 import cz.chovanecm.snow.datalayer.rest.RestActiveRecordFactory;
+import cz.chovanecm.snow.datalayer.rest.RestSnowVariable;
 import cz.chovanecm.snow.datalayer.rest.dao.*;
+import cz.chovanecm.snow.datalayer.rest.impl.activerecord.ChangeAwareRestActiveRecord;
+import cz.chovanecm.snow.records.SnowRecord;
 import cz.chovanecm.snow.records.SnowScript;
 import cz.chovanecm.snow.records.TableAwareSnowScript;
 import cz.chovanecm.snow.tables.DbObjectRegistry;
@@ -130,7 +131,11 @@ public class SnowScriptSynchronizer {
                 case "automated-test":
                     script.setCategory("sys_variable_value");
                     activeRecordFactory = new RestActiveRecordFactory(getSnowClient(), "value");
-                    break;
+                    ChangeAwareSnowRecord record = new ChangeAwareSnowRecord(getVariable(script.getSysId()).getRelatedRecord());
+                    script.getActiveRecord(activeRecordFactory).save();
+                    record.setAttributeValue("description", "Run server-side script");
+                    new ChangeAwareRestActiveRecord(getSnowClient(), record).save();
+                    return; //End the program here
                 case "calculated_field":
                     script.setCategory("sys_dictionary");
                     activeRecordFactory = new RestActiveRecordFactory(getSnowClient(), "calculation");
@@ -142,6 +147,11 @@ public class SnowScriptSynchronizer {
             //TODO
             e.printStackTrace();
         }
+    }
+
+    private SnowVariable getVariable(String sysId) {
+        SnowRecord variableRecord = new SnowRecordScriptRestDao(getSnowClient(), "sys_variable_value").get(sysId);
+        return new RestSnowVariable(getSnowClient(), variableRecord);
     }
 
     public GenericDao<? extends SnowScript> getCalculatedFieldDao() {

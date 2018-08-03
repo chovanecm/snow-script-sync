@@ -24,6 +24,7 @@ public class QueryGetRequestTest {
     @Test
     public void getParameters_displayValueShouldBeTrue_whenSet() {
         QueryGetRequest instance = QueryGetRequest.builder().tableName("table").condition("sys_created_by=me^time=now").showDisplayValues(true).build();
+        System.out.println(instance.getParameters());
         assertTrue(instance.getParameters().contains("sysparm_display_value=true"));
     }
 

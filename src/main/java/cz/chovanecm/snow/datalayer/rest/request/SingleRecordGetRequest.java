@@ -11,8 +11,8 @@ public class SingleRecordGetRequest extends GetRequest {
     private String sysId;
 
     @Builder
-    public SingleRecordGetRequest(String tableName, boolean showDisplayValues, String sysId) {
-        super(tableName, showDisplayValues);
+    public SingleRecordGetRequest(String tableName, boolean showDisplayValues, boolean excludeReferenceLink, String sysId) {
+        super(tableName, showDisplayValues, excludeReferenceLink);
         this.sysId = sysId;
     }
 

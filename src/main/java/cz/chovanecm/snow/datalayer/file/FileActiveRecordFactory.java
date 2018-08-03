@@ -37,4 +37,5 @@ public class FileActiveRecordFactory implements ActiveRecordFactory {
                 getRoot(),
                 snowScript.getCategory());
     }
+
 }

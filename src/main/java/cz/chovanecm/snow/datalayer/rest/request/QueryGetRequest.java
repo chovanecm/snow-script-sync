@@ -15,8 +15,8 @@ public class QueryGetRequest extends GetRequest {
     private String condition = "";
 
     @Builder
-    public QueryGetRequest(String tableName, boolean showDisplayValues, String condition) {
-        super(tableName, showDisplayValues);
+    public QueryGetRequest(String tableName, boolean showDisplayValues, boolean excludeReferenceLink, String condition) {
+        super(tableName, showDisplayValues, excludeReferenceLink);
         this.condition = condition;
     }
 

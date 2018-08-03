@@ -9,4 +9,5 @@ public interface ActiveRecordFactory {
     }
 
     ActiveRecord getActiveRecordForSnowScript(SnowScript snowScript);
+
 }

@@ -4,7 +4,7 @@ import com.github.jsonj.JsonObject;
 import cz.chovanecm.snow.datalayer.rest.SnowRestInterface;
 import cz.chovanecm.snow.datalayer.rest.request.QueryGetRequest;
 import cz.chovanecm.snow.json.JsonManipulator;
-import cz.chovanecm.snow.records.AbstractSnowRecord;
+import cz.chovanecm.snow.records.SnowRecord;
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import lombok.Setter;
 import java.util.function.Supplier;
 
 @Getter
-public abstract class GenericBaseRestDao<T extends AbstractSnowRecord> implements cz.chovanecm.snow.datalayer.GenericDao<T>, Filterable {
+public abstract class GenericBaseRestDao<T extends SnowRecord> implements cz.chovanecm.snow.datalayer.GenericDao<T>, Filterable {
     private final SnowRestInterface restInterface;
     private final String tableName;
     @Setter
