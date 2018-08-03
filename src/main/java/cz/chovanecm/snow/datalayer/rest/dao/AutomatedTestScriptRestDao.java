@@ -42,8 +42,9 @@ public class AutomatedTestScriptRestDao implements AutomatedTestScriptDao, Filte
         JsonObject testStepRecord = getRestInterface().getRecord(
                 SingleRecordGetRequest.builder()
                         .showDisplayValues(true)
+                        .excludeReferenceLink(true)
                         .tableName("sys_atf_step")
-                        .sysId(object.getObject("document_key").getString("value"))
+                        .sysId(object.getString("document_key"))
                         .build());
         script.setScriptName(testStepRecord.getObject("test").getString("display_value") + "/" + testStepRecord.getString("order"));
         script.setActive("true".equals(testStepRecord.getString("active")));
