@@ -44,6 +44,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Main class
@@ -105,7 +106,8 @@ public class SnowScriptSynchronizer {
         }
     }
 
-    public void uploadFile(String filename) {
+    private void uploadFile(String filename) {
+        System.out.println("Uploading " + filename);
         Path file = Paths.get(filename);
         if (!file.isAbsolute()) {
             file = getDestination().resolve(file);
@@ -135,18 +137,24 @@ public class SnowScriptSynchronizer {
                     script.getActiveRecord(activeRecordFactory).save();
                     record.setAttributeValue("description", "Run server-side script");
                     new ChangeAwareRestActiveRecord(getSnowClient(), record).save();
-                    return; //End the program here
+                    return;
                 case "calculated_field":
                     script.setCategory("sys_dictionary");
                     activeRecordFactory = new RestActiveRecordFactory(getSnowClient(), "calculation");
                     break;
             }
             script.getActiveRecord(activeRecordFactory).save();
-
         } catch (IOException e) {
             //TODO
             e.printStackTrace();
         }
+    }
+
+    public void uploadFiles(List<String> filenames) {
+        System.out.println("Files to upload: " + filenames.size() + ": " + filenames.stream().collect(Collectors.joining(", ")));
+
+        filenames.stream().forEach(this::uploadFile);
+
     }
 
     private SnowVariable getVariable(String sysId) {

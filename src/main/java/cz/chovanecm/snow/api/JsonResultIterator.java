@@ -12,13 +12,12 @@ import java.util.logging.Logger;
 public class JsonResultIterator implements Iterator<JsonObject> {
 
     private SnowClient snowClient;
-    private SnowApiGetResponse response;
+
     private String nextUrl;
     private Iterator<JsonElement> iterator;
 
     public JsonResultIterator(SnowClient snowClient, SnowApiGetResponse response) throws IOException {
         this.snowClient = snowClient;
-        this.response = response;
         nextUrl = response.getNextRecordsUrl();
         JsonObject body = response.getBody();
         JsonArray results = body.getArray("result");
@@ -36,14 +35,15 @@ public class JsonResultIterator implements Iterator<JsonObject> {
             return null;
         }
         if (!iterator.hasNext()) {
-            try {
-                response = snowClient.get(nextUrl);
+            try (SnowApiGetResponse response = snowClient.get(nextUrl)) {
                 nextUrl = response.getNextRecordsUrl();
                 JsonObject body = response.getBody();
                 JsonArray results = body.getArray("result");
                 iterator = results.iterator();
             } catch (IOException ex) {
                 Logger.getLogger(SnowClient.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         JsonElement element = iterator.next();

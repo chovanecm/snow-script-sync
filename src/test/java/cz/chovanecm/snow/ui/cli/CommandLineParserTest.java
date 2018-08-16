@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
@@ -73,5 +75,20 @@ public class CommandLineParserTest {
 
         //THEN
         assertEquals(TaskVariables.Action.DOWNLOAD_BY_FILE, result.getAction());
+    }
+
+    @Test
+    public void parse_shouldReturnMultipleArgumentsForFileUpload_whenMultipleFilesArePassed() throws ParseException, UserInterfaceException {
+        // GIVEN
+        String commandLine = "-d dir -i tlx.com -u user1 -fu file1 file2";
+        CommandLineParser cli = spy(new CommandLineParser());
+        doReturn("password2").when(cli).getPassword();
+
+        //WHEN
+        TaskVariables result = cli.parse(commandLine.split(" "));
+
+        //THEN
+        assertEquals(TaskVariables.Action.UPLOAD_FILE, result.getAction());
+        assertEquals(Arrays.asList("file1", "file2"), result.getFilesToUpload());
     }
 }

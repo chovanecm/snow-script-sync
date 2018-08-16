@@ -49,7 +49,7 @@ public class CommandLineInterface {
 
             availableActions.put(TaskVariables.Action.DOWNLOAD_ALL, synchronizer::downloadAll);
             availableActions.put(TaskVariables.Action.DOWNLOAD_BY_FILE, synchronizer::downloadByFile);
-            availableActions.put(TaskVariables.Action.UPLOAD_FILE, () -> synchronizer.uploadFile(result.getFileToUpload()));
+            availableActions.put(TaskVariables.Action.UPLOAD_FILE, () -> synchronizer.uploadFiles(result.getFilesToUpload()));
 
         } catch (ParseException | UserInterfaceException e) {
             System.err.println(String.format("Error when parsing arguments %s. Cause: %s", Arrays.toString(args), e.getMessage()));

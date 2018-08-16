@@ -72,14 +72,13 @@ public class SnowClient implements SnowRestInterface {
     @Override
     public Iterable<JsonObject> getRecords(QueryGetRequest request) {
         return () -> {
-            try {
-                ArrayList<String> parameters = new ArrayList<>(request.getParameters());
-                parameters.add("sysparm_limit=" + readsPerRequest);
-                SnowApiGetResponse response = get(getApiUrl() + request.getResource()
-                        + "?" + String.join("&", parameters));
+
+            ArrayList<String> parameters = new ArrayList<>(request.getParameters());
+            parameters.add("sysparm_limit=" + readsPerRequest);
+            try (SnowApiGetResponse response = get(getApiUrl() + request.getResource()
+                    + "?" + String.join("&", parameters))) {
                 return createIterator(response);
-            } catch (IOException e) {
-                //FIXME
+            } catch (Exception e) {
                 e.printStackTrace();
                 return Collections.emptyIterator();
             }

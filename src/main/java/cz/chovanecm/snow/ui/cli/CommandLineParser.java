@@ -4,12 +4,11 @@ import cz.chovanecm.snow.SnowConnectorConfiguration;
 import cz.chovanecm.snow.ui.TaskVariables;
 import cz.chovanecm.snow.ui.UserInterfaceException;
 import lombok.Getter;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.PosixParser;
+import org.apache.commons.cli.*;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Not thread-safe
@@ -31,11 +30,16 @@ public class CommandLineParser {
         if (!mandatoryFieldsPresent()) {
             throw new UserInterfaceException("Missing mandatory arguments (" + Arrays.toString(MANDATORY_CLI_OPTIONS) + ")");
         }
-        return new TaskVariables(getDestinationFolder(), getConnectorConfiguration(), getAction(), getFileToUpload());
+        return new TaskVariables(getDestinationFolder(), getConnectorConfiguration(), getAction(), getFilesToUpload());
     }
 
-    private String getFileToUpload() {
-        return getLine().getOptionValue("fu");
+    private List<String> getFilesToUpload() {
+        String[] files = getLine().getOptionValues("fu");
+        if (files == null) {
+            return Collections.emptyList();
+        } else {
+            return Arrays.asList(files);
+        }
     }
 
 
@@ -94,7 +98,9 @@ public class CommandLineParser {
         options.addOption("u", "user", true, "Use this user to connect to ServiceNow");
         options.addOption("d", "dest", true, "Where to store scripts scripts");
         options.addOption("i", "instance", true, "Instance, e.g. demo019.service-now.com");
-        options.addOption("fu", "fileToUpload", true, "File to upload, e.g. src/hello.js");
+        Option fileToUpload = new Option("fu", "fileToUpload", true, "File to upload, e.g. src/hello.js");
+        fileToUpload.setArgs(Option.UNLIMITED_VALUES);
+        options.addOption(fileToUpload);
         options.addOption("rd", "redownload", false, "Re-download files specified in snow-files.txt");
     }
 }

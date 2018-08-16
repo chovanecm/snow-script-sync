@@ -79,7 +79,9 @@ public class RestClient {
         if (getAcceptHeader() != null) {
             request.addHeader("Accept", getAcceptHeader());
         }
-        return client.execute(request);
+        System.out.println("Executing " + request);
+        CloseableHttpResponse response = client.execute(request);
+        return response;
     }
 
 
@@ -93,6 +95,7 @@ public class RestClient {
         if (response.getStatusLine().getStatusCode() != HTTP_OK) {
             throw new RestClientException(response.getStatusLine().toString());
         }
+        response.close();
     }
 
     public static class RestClientException extends Exception {

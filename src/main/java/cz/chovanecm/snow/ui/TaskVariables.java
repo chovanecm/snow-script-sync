@@ -3,6 +3,8 @@ package cz.chovanecm.snow.ui;
 import cz.chovanecm.snow.SnowConnectorConfiguration;
 import lombok.Value;
 
+import java.util.List;
+
 /**
  * Task Variables define necessary information for performing a synchronisation task.
  */
@@ -11,7 +13,7 @@ public class TaskVariables {
     private String destinationFolder;
     private SnowConnectorConfiguration connectorConfiguration;
     private Action action;
-    private String fileToUpload;
+    private List<String> filesToUpload;
 
     public enum Action {
         DOWNLOAD_ALL,
