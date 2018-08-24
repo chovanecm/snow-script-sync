@@ -106,7 +106,11 @@ public class SnowScriptSynchronizer {
         }
     }
 
-    private void uploadFile(String filename) {
+    /**
+     * @param filename
+     * @return true or false based on the success
+     */
+    private boolean uploadFile(String filename) {
         System.out.println("Uploading " + filename);
         Path file = Paths.get(filename);
         if (!file.isAbsolute()) {
@@ -137,23 +141,30 @@ public class SnowScriptSynchronizer {
                     script.getActiveRecord(activeRecordFactory).save();
                     record.setAttributeValue("description", "Run server-side script");
                     new ChangeAwareRestActiveRecord(getSnowClient(), record).save();
-                    return;
+                    return true;
                 case "calculated_field":
                     script.setCategory("sys_dictionary");
                     activeRecordFactory = new RestActiveRecordFactory(getSnowClient(), "calculation");
                     break;
             }
             script.getActiveRecord(activeRecordFactory).save();
+            return true;
         } catch (IOException e) {
             //TODO
             e.printStackTrace();
+            return false;
         }
     }
 
     public void uploadFiles(List<String> filenames) {
         System.out.println("Files to upload: " + filenames.size() + ": " + filenames.stream().collect(Collectors.joining(", ")));
 
-        filenames.stream().forEach(this::uploadFile);
+        Flowable.fromIterable(filenames)
+                .parallel()
+                .runOn(Schedulers.io())
+                .map(this::uploadFile)
+                .sequential()
+                .blockingSubscribe();
 
     }
 
