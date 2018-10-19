@@ -121,7 +121,7 @@ public class SnowScriptSynchronizer {
             Path finalFile = file;
             SnowFilesRecord snowRecord = lines.stream().map(lineToSnowFilesRecord)
                     .filter(record -> getDestination().resolve(record.getFileName()).equals(finalFile))
-                    .findFirst().orElseThrow(IOException::new);
+                    .findFirst().orElseThrow(() -> new IOException("Could not resolve file " + finalFile));
 
             GenericDao<SnowScript> dao = new FileSystemDao(id -> getDestination().resolve(snowRecord.getFileName()), id -> snowRecord.getCategory());
 
