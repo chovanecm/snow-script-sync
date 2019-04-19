@@ -3,3 +3,6 @@ target/
 nb-configuration.xml
 nbactions.xml
 snow-scripts-sync.iml
+.gradle
+build
+out

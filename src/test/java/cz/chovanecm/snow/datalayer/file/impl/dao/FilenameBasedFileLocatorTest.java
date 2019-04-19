@@ -1,12 +1,15 @@
 package cz.chovanecm.snow.datalayer.file.impl.dao;
 
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,7 +27,25 @@ public class FilenameBasedFileLocatorTest {
 
     @BeforeAll
     public void setUp() throws IOException, URISyntaxException {
-        Path rootPath = Paths.get(getClass().getResource("/cz.chovanecm.snow.datalayer.file.impl.dao").toURI());
+        URL resource = getClass().getResource("/cz/chovanecm/snow/datalayer/file/impl/dao");
+        Assert.assertNotNull(resource);
+
+        URI uri = resource.toURI();
+        Assert.assertNotNull(uri);
+
+        Path rootPath = Paths.get(uri);
+        Assert.assertNotNull(rootPath);
+
+        Path subdirectory1 = rootPath.resolve("subdirectory1");
+        if(!Files.exists(subdirectory1)) {
+            Files.createDirectory(subdirectory1);
+        }
+
+        Path subdirectory2 = rootPath.resolve("subdirectory2");
+        if(!Files.exists(subdirectory2)) {
+            Files.createDirectory(subdirectory2);
+        }
+
         file1 = rootPath.resolve("subdirectory1/My script_SYSIDABC123.js");
         file2 = rootPath.resolve("subdirectory2/My script_SYSIDXYZ000.js");
         givenFileExists(file1);
