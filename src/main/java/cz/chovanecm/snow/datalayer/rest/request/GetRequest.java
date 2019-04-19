@@ -32,6 +32,6 @@ public abstract class GetRequest {
     public List<String> getParameters() {
         return Arrays.asList(
                 String.format("sysparm_display_value=%s", isShowDisplayValues()),
-                String.format("sysparm_exclude_reference_link=%s", isIncludeReferenceLink()));
+                String.format("sysparm_exclude_reference_link=%s", !isIncludeReferenceLink()));
     }
 }

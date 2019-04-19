@@ -5,10 +5,7 @@
       "sys_mod_count": "0",
       "sys_updated_on": "2017-06-29 15:43:26",
       "sys_tags": "",
-      "document_key": {
-        "link": "https://dev48250.service-now.com/api/now/v1/table/wf_activity/c179659b672332006e6eadab9485ef10",
-        "value": "c179659b672332006e6eadab9485ef10"
-      },
+      "document_key": "c179659b672332006e6eadab9485ef10",
       "sys_class_name": "sys_variable_value",
       "sys_id": "0179659b672332006e6eadab9485ef12",
       "sys_updated_by": "admin",

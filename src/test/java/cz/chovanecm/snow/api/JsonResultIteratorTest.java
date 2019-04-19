@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class JsonResultIteratorTest extends RestTest {
     @Test
@@ -19,10 +19,10 @@ public class JsonResultIteratorTest extends RestTest {
         SnowClient client = mock(SnowClient.class);
         SnowApiGetResponse response1 = mock(SnowApiGetResponse.class);
         SnowApiGetResponse response2 = mock(SnowApiGetResponse.class);
-        when(response1.getBody()).thenReturn(readJsonObject("sys_variable_value-list.json"));
-        when(response1.getNextRecordsUrl()).thenReturn("http://next-url");
-        when(response2.getBody()).thenReturn(readJsonObject("sys_variable_value-list2.json"));
-        when(client.get("http://next-url")).thenReturn(response2);
+        doReturn(readJsonObject("sys_variable_value-list.json")).when(response1).getBody();
+        doReturn("http://next-url").when(response1).getNextRecordsUrl();
+        doReturn(readJsonObject("sys_variable_value-list2.json")).when(response2).getBody();
+        doReturn(response2).when(client).get("http://next-url");
         JsonResultIterator instance = new JsonResultIterator(client, response1);
 
         // WHEN

@@ -1,6 +1,7 @@
 package cz.chovanecm.snow.datalayer.rest;
 
 import cz.chovanecm.snow.datalayer.rest.dao.TableAwareScriptRestDao;
+import cz.chovanecm.snow.datalayer.rest.request.QueryGetRequest;
 import cz.chovanecm.snow.records.TableAwareSnowScript;
 import org.junit.jupiter.api.Test;
 
@@ -18,18 +19,20 @@ public class TableAwareScriptRestDaoTest extends RestTest {
     public void getAll_shouldReturnIterableOfTableAwareSnowScript() throws IOException {
         // GIVEN
         TableAwareScriptRestDao instance = spy(new TableAwareScriptRestDao(null, "sys_script", "collection"));
-        doReturn(mock(SnowRestInterface.class)).when(instance).getRestInterface();
-        when(instance.getRestInterface().getRecords("sys_script")).thenReturn(
+
+        SnowRestInterface restInterface = mock(SnowRestInterface.class);
+        doReturn(restInterface).when(instance).getRestInterface();
+        doReturn(
                 Arrays.asList(
                         readJsonObject("sys_script_1.json"),
                         readJsonObject("sys_script_2.json")
                 )
-        );
+        ).when(restInterface).getRecords(any(QueryGetRequest.class));
 
         // WHEN
         Iterable<TableAwareSnowScript> iterable = instance.getAll();
         List<TableAwareSnowScript> scripts = new ArrayList<>();
-        iterable.iterator().forEachRemaining(scripts::add);
+        iterable.forEach(scripts::add);
 
         // THEN
         assertEquals(2, scripts.size());

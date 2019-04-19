@@ -19,7 +19,7 @@ public class SnowClientTest {
                 .username("admin").password("password").build();
         SnowClient instance = spy(new SnowClient(config));
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        doReturn("https://my-instance").when(instance).getInstanceUrl();
+        when(instance.getInstanceUrl()).thenReturn("https://my-instance");
         doReturn(mock(SnowApiGetResponse.class)).when(instance).get(anyString());
         doReturn(mock(JsonResultIterator.class)).when(instance).createIterator(any(SnowApiGetResponse.class));
 

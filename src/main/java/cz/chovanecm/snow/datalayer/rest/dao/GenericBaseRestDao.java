@@ -39,7 +39,7 @@ public abstract class GenericBaseRestDao<T extends SnowRecord> implements cz.cho
                         .tableName(getTableName())
                         .condition(getQuery()).build()))
                 .observeOn(Schedulers.io())
-                .map(it -> getJsonManipulator().readFromJson(it))
+                .map(getJsonManipulator()::readFromJson)
                 .doOnNext(it -> it.setCategory(getCategoryNameSupplier().get()))
                 .blockingIterable();
     }

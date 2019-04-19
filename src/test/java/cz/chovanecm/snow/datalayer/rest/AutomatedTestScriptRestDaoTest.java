@@ -20,17 +20,18 @@ public class AutomatedTestScriptRestDaoTest extends RestTest {
         String expectedName = "TestDate/1";
 
         //GIVEN
-        AutomatedTestScriptRestDao instance = spy(new AutomatedTestScriptRestDao(mock(SnowRestInterface.class)));
-        doReturn(mock(SnowRestInterface.class)).when(instance).getRestInterface();
-        when(instance.getRestInterface().getRecords(any(QueryGetRequest.class))).thenReturn(
+        SnowRestInterface restInterface = mock(SnowRestInterface.class);
+        AutomatedTestScriptRestDao instance = spy(new AutomatedTestScriptRestDao(restInterface));
+        doReturn(restInterface).when(instance).getRestInterface();
+        doReturn(
                 Arrays.asList(readJsonObject("sys_variable_value-test.json"))
-        );
-        when(instance.getRestInterface().getRecord(SingleRecordGetRequest.builder()
+        ).when(restInterface).getRecords(any(QueryGetRequest.class));
+        doReturn(readJsonObject("sys_aft_step.json")).when(restInterface).getRecord(SingleRecordGetRequest.builder()
                 .showDisplayValues(true)
+                .excludeReferenceLink(true)
                 .tableName("sys_atf_step")
                 .sysId("cfc6b8d20b10220050192f15d6673a40")
-                .build()))
-                .thenReturn(readJsonObject("sys_aft_step.json"));
+                .build());
 
         // WHEN
         Iterable<SnowScript> iterable = instance.getAll();
