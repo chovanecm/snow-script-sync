@@ -27,7 +27,11 @@ public class FileSystemDaoTest {
 
     @Test
     public void testGetById_shouldReturnSnowScriptWithAppropriateContent() throws URISyntaxException, IOException {
-        Path rootPath = Paths.get(getClass().getResource("/cz.chovanecm.snow.datalayer.file.impl.dao").toURI());
+        Path rootPath = Paths.get(getClass().getResource("/cz/chovanecm/snow/datalayer/file/impl/dao").toURI());
+        Path subdirectory2 = rootPath.resolve("subdirectory2");
+        if(!Files.exists(subdirectory2)) {
+            Files.createDirectory(subdirectory2);
+        }
         Path file2 = rootPath.resolve("subdirectory2/My script_SYSIDXYZ000.js");
         givenFileExists(file2);
         FileSystemDao dao = new FileSystemDao(new FilenameBasedFileLocator(rootPath), new FilenameBasedFileLocator(rootPath));
