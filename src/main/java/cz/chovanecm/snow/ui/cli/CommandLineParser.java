@@ -69,7 +69,12 @@ public class CommandLineParser {
     }
 
     String getPassword() {
-        return String.copyValueOf(System.console().readPassword("Password:"));
+        String p = getLine().getOptionValue("p");
+        if(p == null || p.isEmpty()) {
+            return String.copyValueOf(System.console().readPassword("Password:"));
+        } else {
+            return p;
+        }
     }
 
 
@@ -96,6 +101,7 @@ public class CommandLineParser {
     void setupCommandLineOptions() {
         options.addOption("x", "proxy", true, "Use proxy, e.g. 10.0.0.1:3128");
         options.addOption("u", "user", true, "Use this user to connect to ServiceNow");
+        options.addOption("p", "password", true, "Use this password to connect to ServiceNow");
         options.addOption("d", "dest", true, "Where to store scripts scripts");
         options.addOption("i", "instance", true, "Instance, e.g. demo019.service-now.com");
         Option fileToUpload = new Option("fu", "fileToUpload", true, "File to upload, e.g. src/hello.js");
