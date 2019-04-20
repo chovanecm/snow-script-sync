@@ -272,7 +272,7 @@ public class SnowScriptSynchronizer {
     }
 
     private void setQuery(Filterable in) {
-        in.setQuery("sys_updated_bySTARTSWITHsnc_operator");
+        // Nothing here in.setQuery("sys_updated_bySTARTSWITHsnc_operator");
     }
 
 }
