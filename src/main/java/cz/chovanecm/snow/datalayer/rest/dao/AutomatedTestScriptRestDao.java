@@ -27,7 +27,12 @@ public class AutomatedTestScriptRestDao implements AutomatedTestScriptDao, Filte
 
     @Override
     public SnowScript get(String id) {
-        return jsonObjectToSnowScript(getRestInterface().getRecord("sys_variable_value", id));
+        return jsonObjectToSnowScript(getRestInterface().getRecord(SingleRecordGetRequest.builder()
+                .tableName("sys_variable_value")
+                .sysId(id)
+                .showDisplayValues(false)
+                .excludeReferenceLink(true)
+                .build()));
     }
 
     @Override
@@ -46,7 +51,7 @@ public class AutomatedTestScriptRestDao implements AutomatedTestScriptDao, Filte
                         .tableName("sys_atf_step")
                         .sysId(object.getString("document_key"))
                         .build());
-        script.setScriptName(testStepRecord.getObject("test").getString("display_value") + "/" + testStepRecord.getString("order"));
+        script.setScriptName(testStepRecord.getString("test") + "/" + testStepRecord.getString("order"));
         script.setActive("true".equals(testStepRecord.getString("active")));
         script.setCategory("automated-test");
         return script;
@@ -56,6 +61,7 @@ public class AutomatedTestScriptRestDao implements AutomatedTestScriptDao, Filte
         return getRestInterface().getRecords(
                 QueryGetRequest.builder()
                         .tableName("sys_variable_value")
+                        .excludeReferenceLink(true)
                         .condition("document=sys_atf_step^variable.sys_name=Test script^" + getQuery())
                         .build());
     }

@@ -3,10 +3,7 @@
     "display_value": "Run Server Side Script",
     "link": "https://dev48250.service-now.com/api/now/v1/table/sys_atf_step_config/41de4a935332120028bc29cac2dc349a"
   },
-  "test": {
-    "display_value": "TestDate",
-    "link": "https://dev48250.service-now.com/api/now/v1/table/sys_atf_test/8a419ad14f221300885a8020a310c7e4"
-  },
+  "test": "TestDate",
   "inputs": "",
   "sys_mod_count": "1",
   "active": "true",

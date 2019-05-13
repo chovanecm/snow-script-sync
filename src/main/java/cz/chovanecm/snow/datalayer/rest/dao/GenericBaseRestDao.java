@@ -37,6 +37,7 @@ public abstract class GenericBaseRestDao<T extends SnowRecord> implements cz.cho
         return Flowable.fromIterable(getRestInterface()
                 .getRecords(QueryGetRequest.builder()
                         .tableName(getTableName())
+                        .excludeReferenceLink(true)
                         .condition(getQuery()).build()))
                 .observeOn(Schedulers.io())
                 .map(getJsonManipulator()::readFromJson)

@@ -8,8 +8,8 @@ import java.util.List;
 @Data
 public abstract class GetRequest {
     private String tableName;
-    private boolean showDisplayValues = false;
-    private boolean includeReferenceLink = true;
+    private boolean showDisplayValues;
+    private boolean includeReferenceLink;
 
     public GetRequest(String tableName, boolean showDisplayValues, boolean excludeReferenceLink) {
         this.tableName = tableName;
