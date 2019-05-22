@@ -3,6 +3,7 @@ package cz.chovanecm.snow.datalayer.rest.dao;
 import com.github.jsonj.JsonObject;
 import cz.chovanecm.snow.datalayer.rest.SnowRestInterface;
 import cz.chovanecm.snow.datalayer.rest.request.QueryGetRequest;
+import cz.chovanecm.snow.datalayer.rest.request.SingleRecordGetRequest;
 import cz.chovanecm.snow.json.JsonManipulator;
 import cz.chovanecm.snow.records.SnowRecord;
 import io.reactivex.Flowable;
@@ -28,7 +29,12 @@ public abstract class GenericBaseRestDao<T extends SnowRecord> implements cz.cho
 
     @Override
     public T get(String id) {
-        JsonObject record = getRestInterface().getRecord(getTableName(), id);
+        JsonObject record = getRestInterface().getRecord(SingleRecordGetRequest.builder()
+                .tableName(getTableName())
+                .sysId(id)
+                .showDisplayValues(false)
+                .excludeReferenceLink(true)
+                .build());
         return getJsonManipulator().readFromJson(record);
     }
 
