@@ -139,7 +139,11 @@ public class SnowScriptSynchronizer {
                     activeRecordFactory = new RestActiveRecordFactory(getSnowClient(), "value");
                     ChangeAwareSnowRecord record = new ChangeAwareSnowRecord(getVariable(script.getSysId()).getRelatedRecord());
                     script.getActiveRecord(activeRecordFactory).save();
-                    record.setAttributeValue("description", "Run server-side script");
+                    record.setAttributeValue("description", "Run server-side script [" + script.getScript().hashCode() + "]");
+                    var active = record.getAttributeValue("active");
+                    record.setAttributeValue("active", "0");
+                    new ChangeAwareRestActiveRecord(getSnowClient(), record).save();
+                    record.setAttributeValue("active", active);
                     new ChangeAwareRestActiveRecord(getSnowClient(), record).save();
                     return true;
                 case "calculated_field":
