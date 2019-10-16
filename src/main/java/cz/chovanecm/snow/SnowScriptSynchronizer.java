@@ -150,6 +150,18 @@ public class SnowScriptSynchronizer {
                     script.setCategory("sys_dictionary");
                     activeRecordFactory = new RestActiveRecordFactory(getSnowClient(), "calculation");
                     break;
+                case "ui_page_html":
+                    script.setCategory("sys_ui_page");
+                    activeRecordFactory = new RestActiveRecordFactory(getSnowClient(), "html");
+                    break;
+                case "ui_page_client":
+                    script.setCategory("sys_ui_page");
+                    activeRecordFactory = new RestActiveRecordFactory(getSnowClient(), "client_script");
+                    break;
+                case "ui_page_server":
+                    script.setCategory("sys_ui_page");
+                    activeRecordFactory = new RestActiveRecordFactory(getSnowClient(), "processing_script");
+                    break;
             }
             script.getActiveRecord(activeRecordFactory).save();
             return true;
@@ -268,6 +280,12 @@ public class SnowScriptSynchronizer {
                     return getAutomatedTestScriptDao();
                 case "calculated_field":
                     return getCalculatedFieldDao();
+                case "ui_page_html":
+                    return new SnowScriptRestDao(getSnowClient(), "sys_ui_page", "html", "name");
+                case "ui_page_client":
+                    return new SnowScriptRestDao(getSnowClient(), "sys_ui_page", "client_script", "name");
+                case "ui_page_server":
+                    return new SnowScriptRestDao(getSnowClient(), "sys_ui_page", "processing_script", "name");
                 default:
                     return getSnowScriptDao(getCategory());
             }
