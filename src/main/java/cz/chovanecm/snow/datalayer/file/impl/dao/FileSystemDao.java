@@ -43,7 +43,7 @@ public class FileSystemDao implements GenericDao<SnowScript> {
 
     private String getContentById(String id) throws IOException {
         Path path = getFileLocator().getFileById(id);
-        return String.join(System.lineSeparator(), Files.readAllLines(path));
+        return Files.readString(path);
     }
 
     private String getNameById(String id) {

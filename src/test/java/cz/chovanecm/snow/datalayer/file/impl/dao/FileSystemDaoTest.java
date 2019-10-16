@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 public class FileSystemDaoTest {
-    public static final String[] SCRIPT_CONTENT = {"First line", "Second line"};
+    public static final String SCRIPT_CONTENT = "First line\nSecond line";
 
     @Test
     public void testThatIUnderstoodReduceCorrectly() {
@@ -41,10 +41,10 @@ public class FileSystemDaoTest {
 
         //THEN
         assertEquals("SYSIDXYZ000", script.getSysId(), "SysID should be set");
-        assertEquals(String.join(System.lineSeparator(), SCRIPT_CONTENT), script.getScript(), "Script should match");
+        assertEquals(SCRIPT_CONTENT, script.getScript(), "Script should match");
     }
 
     private void givenFileExists(Path fileName) throws IOException {
-        Files.write(fileName, Arrays.asList(SCRIPT_CONTENT));
+        Files.writeString(fileName, SCRIPT_CONTENT);
     }
 }
