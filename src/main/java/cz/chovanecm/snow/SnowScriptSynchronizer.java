@@ -150,17 +150,12 @@ public class SnowScriptSynchronizer {
                     script.setCategory("sys_dictionary");
                     activeRecordFactory = new RestActiveRecordFactory(getSnowClient(), "calculation");
                     break;
-                case "ui_page_html":
-                    script.setCategory("sys_ui_page");
-                    activeRecordFactory = new RestActiveRecordFactory(getSnowClient(), "html");
-                    break;
-                case "ui_page_client":
-                    script.setCategory("sys_ui_page");
-                    activeRecordFactory = new RestActiveRecordFactory(getSnowClient(), "client_script");
-                    break;
-                case "ui_page_server":
-                    script.setCategory("sys_ui_page");
-                    activeRecordFactory = new RestActiveRecordFactory(getSnowClient(), "processing_script");
+                default:
+                    if (script.getCategory().contains(".")) {
+                        var tableAndField = script.getCategory().split("\\.");
+                        script.setCategory(tableAndField[0]);
+                        activeRecordFactory = new RestActiveRecordFactory(getSnowClient(), tableAndField[1]);
+                    }
                     break;
             }
             script.getActiveRecord(activeRecordFactory).save();
@@ -287,7 +282,12 @@ public class SnowScriptSynchronizer {
                 case "ui_page_server":
                     return new SnowScriptRestDao(getSnowClient(), "sys_ui_page", "processing_script", "name");
                 default:
-                    return getSnowScriptDao(getCategory());
+                    if (getCategory().contains(".")) {
+                        var tableAndField = getCategory().split("\\.");
+                        return new SnowScriptRestDao(getSnowClient(), tableAndField[0], tableAndField[1], "name");
+                    } else {
+                        return getSnowScriptDao(getCategory());
+                    }
             }
         }
 
