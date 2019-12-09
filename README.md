@@ -1,11 +1,13 @@
 # Snow-scripts-sync
 
 Snow Script Synchronizer is a tool helping developers to write code for the [ServiceNow](http://www.servicenow.com) platform.
+It was created to accommodate the author's current needs, it is not well documented and can generally be described as a code hell.
 
 Current version: 0.2.1 (alpha)
 
 This tool downloads scripts from a ServiceNow instance to a local directory, allowing using IDE of own choice
 to take advantage of code autocompletion, code navigation and documentation etc.
+It can also upload a list of files back to the instance.
 
 ## Installation
 Download the latest version from
