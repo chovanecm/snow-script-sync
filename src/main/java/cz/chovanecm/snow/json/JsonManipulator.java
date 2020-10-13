@@ -39,6 +39,7 @@ public abstract class JsonManipulator<T extends SnowRecord> {
         record.setUpdatedOn(sysUpdatedOn);
         record.setCreatedOn(sysCreatedOn);
         record.setCategory(json.getString("sys_class_name"));
+        record.setUpdatedBy(json.getString("sys_updated_by"));
         return record;
     }
 

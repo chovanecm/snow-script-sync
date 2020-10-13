@@ -10,6 +10,10 @@ public interface SnowRecord {
 
     java.time.ZonedDateTime getUpdatedOn();
 
+    String getUpdatedBy();
+
+    void setUpdatedBy(String updatedBy);
+
     java.time.ZonedDateTime getCreatedOn();
 
     default ActiveRecord getActiveRecord(ActiveRecordFactory factory) {
@@ -31,4 +35,5 @@ public interface SnowRecord {
     void setUpdatedOn(java.time.ZonedDateTime updatedOn);
 
     void setCreatedOn(java.time.ZonedDateTime createdOn);
+
 }

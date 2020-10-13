@@ -41,8 +41,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -107,70 +109,99 @@ public class SnowScriptSynchronizer {
     }
 
     /**
-     * @param filename
+     * @param snowRecord
      * @return true or false based on the success
      */
-    private boolean uploadFile(String filename) {
-        System.out.println("Uploading " + filename);
+    private boolean uploadFile(SnowFilesRecord snowRecord) {
+        System.out.println("Uploading " + snowRecord.getFileName());
+
+        GenericDao<SnowScript> dao = new FileSystemDao(id -> getDestination().resolve(snowRecord.getFileName()), id -> snowRecord.getCategory());
+
+        SnowScript script = dao.get(snowRecord.getSysId());
+
+        RestActiveRecordFactory activeRecordFactory = new RestActiveRecordFactory(getSnowClient());
+
+        //TODO oh no, another ugly hack
+        switch (script.getCategory()) {
+            case "script_include":
+                script.setCategory("sys_script_include");
+                break;
+            case "automated-test":
+                script.setCategory("sys_variable_value");
+                activeRecordFactory = new RestActiveRecordFactory(getSnowClient(), "value");
+                ChangeAwareSnowRecord record = new ChangeAwareSnowRecord(getVariable(script.getSysId()).getRelatedRecord());
+                script.getActiveRecord(activeRecordFactory).save();
+                record.setAttributeValue("description", "Run server-side script [" + script.getScript().hashCode() + "]");
+                var active = record.getAttributeValue("active");
+                record.setAttributeValue("active", "0");
+                new ChangeAwareRestActiveRecord(getSnowClient(), record).save();
+                record.setAttributeValue("active", active);
+                new ChangeAwareRestActiveRecord(getSnowClient(), record).save();
+                return true;
+            case "calculated_field":
+                script.setCategory("sys_dictionary");
+                activeRecordFactory = new RestActiveRecordFactory(getSnowClient(), "calculation");
+                break;
+            default:
+                if (script.getCategory().contains(".")) {
+                    var tableAndField = script.getCategory().split("\\.");
+                    script.setCategory(tableAndField[0]);
+                    activeRecordFactory = new RestActiveRecordFactory(getSnowClient(), tableAndField[1]);
+                }
+                break;
+        }
+        script.getActiveRecord(activeRecordFactory).save();
+        return true;
+    }
+
+    private Path resolvePath(String filename) {
         Path file = Paths.get(filename);
         if (!file.isAbsolute()) {
             file = getDestination().resolve(file);
         }
-        try {
-            List<String> lines = Files.readAllLines(getDestination().resolve(mappingFile));
-            Path finalFile = file;
-            SnowFilesRecord snowRecord = lines.stream().map(lineToSnowFilesRecord)
-                    .filter(record -> getDestination().resolve(record.getFileName()).equals(finalFile))
-                    .findFirst().orElseThrow(() -> new IOException("Could not resolve file " + finalFile));
+        return file;
+    }
 
-            GenericDao<SnowScript> dao = new FileSystemDao(id -> getDestination().resolve(snowRecord.getFileName()), id -> snowRecord.getCategory());
+    private SnowFilesRecord getSnowRecord(Path file) throws IOException {
+        List<String> lines = Files.readAllLines(getDestination().resolve(mappingFile));
+        Path finalFile = file;
+        SnowFilesRecord snowRecord = lines.stream().map(lineToSnowFilesRecord)
+                .filter(record -> getDestination().resolve(record.getFileName()).equals(finalFile))
+                .findFirst().orElseThrow(() -> new IOException("Could not resolve file " + finalFile));
+        return snowRecord;
+    }
 
-            SnowScript script = dao.get(snowRecord.getSysId());
 
-            RestActiveRecordFactory activeRecordFactory = new RestActiveRecordFactory(getSnowClient());
-
-            //TODO oh no, another ugly hack
-            switch (script.getCategory()) {
-                case "script_include":
-                    script.setCategory("sys_script_include");
-                    break;
-                case "automated-test":
-                    script.setCategory("sys_variable_value");
-                    activeRecordFactory = new RestActiveRecordFactory(getSnowClient(), "value");
-                    ChangeAwareSnowRecord record = new ChangeAwareSnowRecord(getVariable(script.getSysId()).getRelatedRecord());
-                    script.getActiveRecord(activeRecordFactory).save();
-                    record.setAttributeValue("description", "Run server-side script [" + script.getScript().hashCode() + "]");
-                    var active = record.getAttributeValue("active");
-                    record.setAttributeValue("active", "0");
-                    new ChangeAwareRestActiveRecord(getSnowClient(), record).save();
-                    record.setAttributeValue("active", active);
-                    new ChangeAwareRestActiveRecord(getSnowClient(), record).save();
-                    return true;
-                case "calculated_field":
-                    script.setCategory("sys_dictionary");
-                    activeRecordFactory = new RestActiveRecordFactory(getSnowClient(), "calculation");
-                    break;
-                default:
-                    if (script.getCategory().contains(".")) {
-                        var tableAndField = script.getCategory().split("\\.");
-                        script.setCategory(tableAndField[0]);
-                        activeRecordFactory = new RestActiveRecordFactory(getSnowClient(), tableAndField[1]);
-                    }
-                    break;
+    private List<SnowFilesRecord> getRecordsModifiedBySomeoneElse(List<SnowFilesRecord> records) {
+        return records.stream().filter(record -> {
+            var dao = record.getServiceNowDao();
+            var response = dao.get(record.getSysId());
+            if (!response.getUpdatedBy().equals(this.connectorConfiguration.getUsername())) {
+                System.out.println("File " + record.getFileName() + " has been modified by " + response.getUpdatedBy() + " on " + response.getUpdatedOn());
+                System.out.println("Overwrite? (Y/N)");
+                var scanner = new Scanner(System.in);
+                var userResponse = scanner.nextLine();
+                return !userResponse.toUpperCase().equals("Y");
             }
-            script.getActiveRecord(activeRecordFactory).save();
-            return true;
-        } catch (IOException e) {
-            //TODO
-            e.printStackTrace();
             return false;
-        }
+        }).collect(Collectors.toList());
     }
 
     public void uploadFiles(List<String> filenames) {
-        System.out.println("Files to upload: " + filenames.size() + ": " + filenames.stream().collect(Collectors.joining(", ")));
+        var snowRecords = Flowable.fromIterable(filenames)
+                .map(this::resolvePath)
+                .map(this::getSnowRecord)
+                .toList()
+                .blockingGet();
+        var cannotModify = getRecordsModifiedBySomeoneElse(snowRecords);
+        if (cannotModify.size() > 0) {
+            System.err.println("The following files have been modified by someone else. Not uploading them! " + System.lineSeparator() +
+                    cannotModify.stream().map(SnowFilesRecord::getFileName).collect(Collectors.joining(System.lineSeparator())));
+        }
+        var canModify = new ArrayList<>(snowRecords);
+        canModify.removeAll(cannotModify);
 
-        Flowable.fromIterable(filenames)
+        Flowable.fromIterable(canModify)
                 .parallel()
                 .runOn(Schedulers.io())
                 .map(this::uploadFile)

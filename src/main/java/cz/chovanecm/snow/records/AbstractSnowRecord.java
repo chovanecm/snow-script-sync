@@ -31,6 +31,7 @@ import java.util.Set;
 public class AbstractSnowRecord implements SnowRecord {
     private final Map<String, String> attributes = new HashMap<>();
     private String sysId;
+    private String updatedBy;
     private ZonedDateTime updatedOn;
     private ZonedDateTime createdOn;
     private String category = "";

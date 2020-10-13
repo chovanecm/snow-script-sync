@@ -14,7 +14,7 @@ public class ChangeAwareSnowRecord implements SnowRecord {
     @Getter
     private SnowRecord monitoredRecord;
     @Getter
-    private Set<String> modifiedAttributes = new HashSet<>();
+    private final Set<String> modifiedAttributes = new HashSet<>();
 
     public ChangeAwareSnowRecord(SnowRecord monitoredRecord) {
         this.setMonitoredRecord(monitoredRecord);
@@ -56,6 +56,16 @@ public class ChangeAwareSnowRecord implements SnowRecord {
     @Override
     public ZonedDateTime getUpdatedOn() {
         return getMonitoredRecord().getUpdatedOn();
+    }
+
+    @Override
+    public String getUpdatedBy() {
+        return getMonitoredRecord().getUpdatedBy();
+    }
+
+    @Override
+    public void setUpdatedBy(String updatedBy) {
+        getMonitoredRecord().setUpdatedBy(updatedBy);
     }
 
     @Override
