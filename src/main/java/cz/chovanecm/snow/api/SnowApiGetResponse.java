@@ -20,12 +20,9 @@ package cz.chovanecm.snow.api;
 
 import com.github.jsonj.JsonObject;
 import com.github.jsonj.tools.JsonParser;
-import org.apache.http.client.methods.CloseableHttpResponse;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.net.http.HttpResponse;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,17 +30,17 @@ import static java.net.HttpURLConnection.HTTP_OK;
 
 public class SnowApiGetResponse implements AutoCloseable {
 
-    private CloseableHttpResponse response;
+    private final HttpResponse<String> response;
 
-    public SnowApiGetResponse(CloseableHttpResponse response) throws IOException {
-        if (response.getStatusLine().getStatusCode() != HTTP_OK) {
-            throw new IOException("Unexpected response from ServiceNow: " + response.getStatusLine());
+    public SnowApiGetResponse(HttpResponse<String> response) throws IOException {
+        if (response.statusCode() != HTTP_OK) {
+            throw new IOException("Unexpected response from ServiceNow: " + response.statusCode());
         }
         this.response = response;
     }
 
     public int getRowCount() {
-        return Integer.parseInt(response.getFirstHeader("X-Total-Count").getValue());
+        return Integer.parseInt(response.headers().firstValue("X-Total-Count").get());
     }
 
     /**
@@ -55,7 +52,7 @@ public class SnowApiGetResponse implements AutoCloseable {
     public String getNextRecordsUrl() {
         String links;
         try {
-            links = response.getFirstHeader("Link").getValue();
+            links = response.headers().firstValue("Link").get();
         } catch (NullPointerException ex) {
             return null;
         }
@@ -71,26 +68,13 @@ public class SnowApiGetResponse implements AutoCloseable {
 
     public JsonObject getBody() throws IOException {
         JsonObject object;
-        try (InputStream is = response.getEntity().getContent();
-             BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"))) {
-            StringBuilder builder = new StringBuilder();
-            while (reader.ready()) {
-                String inputLine = reader.readLine();
-                if (inputLine == null) {
-                    break;
-                } else {
-                    String line = inputLine.replaceAll("\\\\\\\\", "\\\\\\\\\\\\\\\\");
-                    //@line correctly escaped backslash
-                    builder.append(line);
-                }
-            }
-            object = new JsonParser().parse(builder.toString()).asObject();
-        }
+        var content = response.body().replaceAll("\\\\\\\\", "\\\\\\\\\\\\\\\\");
+        object = new JsonParser().parse(content).asObject();
         return object;
     }
 
     @Override
     public void close() throws Exception {
-        response.close();
+
     }
 }

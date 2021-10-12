@@ -37,7 +37,7 @@ import java.util.Map;
 public class CommandLineInterface {
     private final CommandLineParser commandLineParser;
     private final TaskVariables result;
-    private Map<TaskVariables.Action, Runnable> availableActions = new HashMap<>();
+    private final Map<TaskVariables.Action, Runnable> availableActions = new HashMap<>();
 
 
     public CommandLineInterface(String[] args) throws UserInterfaceException {
@@ -52,15 +52,16 @@ public class CommandLineInterface {
             availableActions.put(TaskVariables.Action.UPLOAD_FILE, () -> synchronizer.uploadFiles(result.getFilesToUpload()));
 
         } catch (ParseException | UserInterfaceException e) {
-            System.err.println(String.format("Error when parsing arguments %s. Cause: %s", Arrays.toString(args), e.getMessage()));
+            System.err.printf("Error when parsing arguments %s. Cause: %s%n", Arrays.toString(args), e.getMessage());
             printHelp();
             throw new UserInterfaceException(e);
         }
     }
 
     public static void main(String[] args) {
+        System.out.println("Hu");
         try {
-            CommandLineInterface userInterface = null;
+            CommandLineInterface userInterface;
             userInterface = new CommandLineInterface(args);
             userInterface.runTask();
         } catch (UserInterfaceException e) {

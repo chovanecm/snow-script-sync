@@ -26,8 +26,7 @@ public class FileSystemDao implements GenericDao<SnowScript> {
         try {
             String name = getNameById(id);
             String category = getCategoryIdentifier().getCategoryById(id);
-            String content = null;
-            content = getContentById(id);
+            String content = getContentById(id);
             return createSnowScript(id, category, name, content);
         } catch (IOException e) {
             //TODO FIXME

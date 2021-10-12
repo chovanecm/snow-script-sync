@@ -18,38 +18,36 @@
 
 package cz.chovanecm.rest;
 
-import org.apache.http.HttpHost;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPatch;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-
 import java.io.IOException;
+import java.net.*;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 import static java.net.HttpURLConnection.HTTP_OK;
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class RestClient {
 
-    private CloseableHttpClient client;
 
+    private final HttpClient client;
     private String acceptHeader;
 
     public RestClient(String proxyHost, Integer proxyPort, String basicAuthUserName, String basicAuthPassword) {
-        HttpClientBuilder builder = HttpClientBuilder.create();
+        var builder = HttpClient.newBuilder()
+                .version(HttpClient.Version.HTTP_1_1)
+                .followRedirects(HttpClient.Redirect.NORMAL);
+
         if (proxyHost != null && proxyPort != null) {
-            builder.setProxy(new HttpHost(proxyHost, proxyPort));
-            System.out.println("Using proxy: " + new HttpHost(proxyHost, proxyPort));
+            builder = builder.proxy(ProxySelector.of(new InetSocketAddress(proxyHost, proxyPort)));
+            System.out.printf("Using proxy: %s:%d%n", proxyHost, proxyPort);
         }
         if (basicAuthPassword != null && basicAuthUserName != null) {
-            BasicCredentialsProvider credProvider = new BasicCredentialsProvider();
-            credProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(basicAuthUserName, basicAuthPassword));
-            builder.setDefaultCredentialsProvider(credProvider);
+            builder = builder.authenticator(new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(basicAuthUserName, basicAuthPassword.toCharArray());
+                }
+            });
         }
         client = builder.build();
     }
@@ -74,28 +72,34 @@ public class RestClient {
         this.acceptHeader = acceptHeader;
     }
 
-    public CloseableHttpResponse get(String url) throws IOException {
-        HttpGet request = new HttpGet(url);
-        if (getAcceptHeader() != null) {
-            request.addHeader("Accept", getAcceptHeader());
+    public HttpResponse<String> get(String url) throws IOException {
+        try {
+            System.out.printf("GET %s%n", url);
+            return client.send(HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("Accept", this.getAcceptHeader())
+                    .GET().build(), HttpResponse.BodyHandlers.ofString());
+        } catch (InterruptedException e) {
+            throw new IOException(e);
         }
-        System.out.println("Executing " + request);
-        CloseableHttpResponse response = client.execute(request);
-        return response;
     }
 
 
     public void patch(String url, String content) throws IOException, RestClientException {
-        HttpPatch request = new HttpPatch(url);
-        request.addHeader("Content-Type", getAcceptHeader());
-        request.setEntity(new StringEntity(content, UTF_8));
-        System.out.println(request);
-        System.out.println(request.getEntity());
-        CloseableHttpResponse response = client.execute(request);
-        if (response.getStatusLine().getStatusCode() != HTTP_OK) {
-            throw new RestClientException(response.getStatusLine().toString());
+        try {
+            var response = client.send(HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("Content-Type", this.getAcceptHeader())
+                    .method("PATCH", HttpRequest.BodyPublishers.ofString(content)).build(), HttpResponse.BodyHandlers.ofString());
+            System.out.printf("PATCH %s%n", url);
+            if (response.statusCode() != HTTP_OK) {
+                throw new RestClientException(String.valueOf(response.statusCode()));
+            }
+        } catch (InterruptedException e) {
+            throw new IOException(e);
         }
-        response.close();
+
+
     }
 
     public static class RestClientException extends Exception {

@@ -24,7 +24,6 @@ repositories {
     jcenter()
 }
 dependencies {
-    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.4'
     implementation group: 'com.github.jsonj', name: 'jsonj', version: '0.8'
     implementation 'com.google.code.gson:gson:2.8.5'
 

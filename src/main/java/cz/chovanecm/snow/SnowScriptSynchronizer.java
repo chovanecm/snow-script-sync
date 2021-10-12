@@ -67,8 +67,8 @@ public class SnowScriptSynchronizer {
 
     Function<String, Function<String, List<String>>> split = pattern -> str -> Arrays.asList(str.split(pattern));
     Function<String, List<String>> splitByColons = split.apply(":");
-    Function<List<String>, SnowFilesRecord> listToSnowFilesRecord = list -> new SnowFilesRecord(list.get(0), list.get(1), list.get(2));
-    Function<String, SnowFilesRecord> lineToSnowFilesRecord = splitByColons.andThen(listToSnowFilesRecord);
+    Function<List<String>, RecordMetadata> listToSnowFilesRecord = list -> new RecordMetadata(list.get(0), list.get(1), list.get(2));
+    Function<String, RecordMetadata> lineToSnowFilesRecord = splitByColons.andThen(listToSnowFilesRecord);
 
     public SnowScriptSynchronizer(SnowConnectorConfiguration connectorConfiguration, String destination) {
         this.connectorConfiguration = connectorConfiguration;
@@ -109,15 +109,15 @@ public class SnowScriptSynchronizer {
     }
 
     /**
-     * @param snowRecord
+     * @param metadata
      * @return true or false based on the success
      */
-    private boolean uploadFile(SnowFilesRecord snowRecord) {
-        System.out.println("Uploading " + snowRecord.getFileName());
+    private boolean uploadFile(RecordMetadata metadata) {
+        System.out.println("Uploading " + metadata.getFileName());
 
-        GenericDao<SnowScript> dao = new FileSystemDao(id -> getDestination().resolve(snowRecord.getFileName()), id -> snowRecord.getCategory());
+        GenericDao<SnowScript> dao = new FileSystemDao(id -> getDestination().resolve(metadata.getFileName()), id -> metadata.getCategory());
 
-        SnowScript script = dao.get(snowRecord.getSysId());
+        SnowScript script = dao.get(metadata.getSysId());
 
         RestActiveRecordFactory activeRecordFactory = new RestActiveRecordFactory(getSnowClient());
 
@@ -162,17 +162,17 @@ public class SnowScriptSynchronizer {
         return file;
     }
 
-    private SnowFilesRecord getSnowRecord(Path file) throws IOException {
+    private RecordMetadata getSnowRecord(Path file) throws IOException {
         List<String> lines = Files.readAllLines(getDestination().resolve(mappingFile));
         Path finalFile = file;
-        SnowFilesRecord snowRecord = lines.stream().map(lineToSnowFilesRecord)
+        RecordMetadata snowRecord = lines.stream().map(lineToSnowFilesRecord)
                 .filter(record -> getDestination().resolve(record.getFileName()).equals(finalFile))
                 .findFirst().orElseThrow(() -> new IOException("Could not resolve file " + finalFile));
         return snowRecord;
     }
 
 
-    private List<SnowFilesRecord> getRecordsModifiedBySomeoneElse(List<SnowFilesRecord> records) {
+    private List<RecordMetadata> getRecordsModifiedBySomeoneElse(List<RecordMetadata> records) {
         return records.stream().filter(record -> {
             var dao = record.getServiceNowDao();
             var response = dao.get(record.getSysId());
@@ -181,7 +181,7 @@ public class SnowScriptSynchronizer {
                 System.out.println("Overwrite? (Y/N)");
                 var scanner = new Scanner(System.in);
                 var userResponse = scanner.nextLine();
-                return !userResponse.toUpperCase().equals("Y");
+                return !userResponse.equalsIgnoreCase("Y");
             }
             return false;
         }).collect(Collectors.toList());
@@ -196,7 +196,7 @@ public class SnowScriptSynchronizer {
         var cannotModify = getRecordsModifiedBySomeoneElse(snowRecords);
         if (cannotModify.size() > 0) {
             System.err.println("The following files have been modified by someone else. Not uploading them! " + System.lineSeparator() +
-                    cannotModify.stream().map(SnowFilesRecord::getFileName).collect(Collectors.joining(System.lineSeparator())));
+                    cannotModify.stream().map(RecordMetadata::getFileName).collect(Collectors.joining(System.lineSeparator())));
         }
         var canModify = new ArrayList<>(snowRecords);
         canModify.removeAll(cannotModify);
@@ -293,10 +293,10 @@ public class SnowScriptSynchronizer {
     }
 
     @Value
-    private class SnowFilesRecord {
-        private String fileName;
-        private String category;
-        private String sysId;
+    private class RecordMetadata {
+        String fileName;
+        String category;
+        String sysId;
 
         public GenericDao<? extends SnowScript> getServiceNowDao() {
             switch (getCategory()) {
