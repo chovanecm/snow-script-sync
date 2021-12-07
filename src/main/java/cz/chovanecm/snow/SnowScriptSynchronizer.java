@@ -32,8 +32,8 @@ import cz.chovanecm.snow.records.SnowScript;
 import cz.chovanecm.snow.records.TableAwareSnowScript;
 import cz.chovanecm.snow.tables.DbObjectRegistry;
 import cz.chovanecm.snow.tables.PrefetchDbObjectRegistry;
-import io.reactivex.Flowable;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import lombok.Getter;
 import lombok.Value;
 
@@ -112,7 +112,7 @@ public class SnowScriptSynchronizer {
      * @param metadata
      * @return true or false based on the success
      */
-    private boolean uploadFile(RecordMetadata metadata) {
+    private boolean uploadFile(RecordMetadata metadata) throws IOException {
         System.out.println("Uploading " + metadata.getFileName());
 
         GenericDao<SnowScript> dao = new FileSystemDao(id -> getDestination().resolve(metadata.getFileName()), id -> metadata.getCategory());
@@ -175,15 +175,21 @@ public class SnowScriptSynchronizer {
     private List<RecordMetadata> getRecordsModifiedBySomeoneElse(List<RecordMetadata> records) {
         return records.stream().filter(record -> {
             var dao = record.getServiceNowDao();
-            var response = dao.get(record.getSysId());
-            if (!response.getUpdatedBy().equals(this.connectorConfiguration.getUsername())) {
-                System.out.println("File " + record.getFileName() + " has been modified by " + response.getUpdatedBy() + " on " + response.getUpdatedOn());
-                System.out.println("Overwrite? (Y/N)");
-                var scanner = new Scanner(System.in);
-                var userResponse = scanner.nextLine();
-                return !userResponse.equalsIgnoreCase("Y");
+            SnowScript response = null;
+            try {
+                response = dao.get(record.getSysId());
+                if (!response.getUpdatedBy().equals(this.connectorConfiguration.getUsername())) {
+                    System.out.println("File " + record.getFileName() + " has been modified by " + response.getUpdatedBy() + " on " + response.getUpdatedOn());
+                    System.out.println("Overwrite? (Y/N)");
+                    var scanner = new Scanner(System.in);
+                    var userResponse = scanner.nextLine();
+                    return !userResponse.equalsIgnoreCase("Y");
+                }
+                return false;
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
+                return false;
             }
-            return false;
         }).collect(Collectors.toList());
     }
 
@@ -252,8 +258,9 @@ public class SnowScriptSynchronizer {
                 .flatMap(dao -> Flowable.fromIterable(dao.getAll()))
                 .map(script -> script.getActiveRecord(fileFactory))
                 .doOnNext(ActiveRecord::save)
-                .sequential()
-                .blockingSubscribe();
+                .sequentialDelayError()
+                .blockingSubscribe(t -> {
+                }, e -> System.err.println("There was some error: " + e.getMessage()));
 
         System.out.println("FINISHED.");
     }

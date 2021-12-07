@@ -2,18 +2,19 @@ package cz.chovanecm.snow.tables;
 
 import cz.chovanecm.snow.datalayer.rest.dao.DbObjectDao;
 import cz.chovanecm.snow.records.DbObject;
-import io.reactivex.Flowable;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import lombok.Getter;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PrefetchDbObjectRegistry implements DbObjectRegistry {
     @Getter
-    private DbObjectDao dao;
-    private Map<String, DbObject> nameToObject = new ConcurrentHashMap<>();
-    private Map<String, DbObject> sysIdToObject = new ConcurrentHashMap<>();
+    private final DbObjectDao dao;
+    private final Map<String, DbObject> nameToObject = new ConcurrentHashMap<>();
+    private final Map<String, DbObject> sysIdToObject = new ConcurrentHashMap<>();
 
     public PrefetchDbObjectRegistry(DbObjectDao dao) {
         this.dao = dao;
@@ -33,7 +34,7 @@ public class PrefetchDbObjectRegistry implements DbObjectRegistry {
         return nameToObject.get(name);
     }
 
-    public DbObject getObjectById(String sysId) {
+    public DbObject getObjectById(String sysId) throws IOException {
         if (!sysIdToObject.containsKey(sysId)) {
             DbObject table = getDao().get(sysId);
             insertTableToRegistry(table);
@@ -49,9 +50,13 @@ public class PrefetchDbObjectRegistry implements DbObjectRegistry {
         sysIdToObject.put(table.getSysId(), table);
 
         if (table.hasSuperClass()) {
-            DbObject parentTable = getObjectById(table.getSuperClassId());
-            table.setSuperClass(parentTable);
-            insertTableToRegistry(parentTable);
+            try {
+                DbObject parentTable = getObjectById(table.getSuperClassId());
+                table.setSuperClass(parentTable);
+                insertTableToRegistry(parentTable);
+            } catch (IOException e) {
+                System.err.println("Could not find parent table for table " + table.getName());
+            }
         }
     }
 

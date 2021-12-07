@@ -5,8 +5,8 @@ import cz.chovanecm.snow.datalayer.rest.request.QueryGetRequest;
 import cz.chovanecm.snow.json.DbObjectJsonManipulator;
 import cz.chovanecm.snow.json.JsonManipulator;
 import cz.chovanecm.snow.records.DbObject;
-import io.reactivex.Flowable;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 import java.util.NoSuchElementException;
 

@@ -13,7 +13,7 @@ public class SnowRecordScriptRestDao extends GenericBaseRestDao<SnowRecord> {
 
     @Override
     protected JsonManipulator<SnowRecord> getJsonManipulator() {
-        return new JsonManipulator<SnowRecord>() {
+        return new JsonManipulator<>() {
             @Override
             protected SnowRecord initializeEmptyRecord() {
                 return new AbstractSnowRecord();

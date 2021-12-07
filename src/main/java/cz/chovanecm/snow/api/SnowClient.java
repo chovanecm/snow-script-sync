@@ -91,15 +91,10 @@ public class SnowClient implements SnowRestInterface {
     }
 
     @Override
-    public JsonObject getRecord(SingleRecordGetRequest request) {
-        try {
-            SnowApiGetResponse response = get(getApiUrl() + request.getResource() + "?" + String.join("&", request.getParameters()));
-            return response.getBody().getObject("result");
-        } catch (IOException e) {
-            //FIXME
-            e.printStackTrace();
-            return null;
-        }
+    public JsonObject getRecord(SingleRecordGetRequest request) throws IOException {
+
+        SnowApiGetResponse response = get(getApiUrl() + request.getResource() + "?" + String.join("&", request.getParameters()));
+        return response.getBody().getObject("result");
     }
 
     @Override

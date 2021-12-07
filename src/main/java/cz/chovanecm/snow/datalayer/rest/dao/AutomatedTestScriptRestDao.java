@@ -8,9 +8,11 @@ import cz.chovanecm.snow.datalayer.rest.request.SingleRecordGetRequest;
 import cz.chovanecm.snow.json.JsonManipulator;
 import cz.chovanecm.snow.json.SnowScriptJsonManipulator;
 import cz.chovanecm.snow.records.SnowScript;
-import io.reactivex.Flowable;
+import io.reactivex.rxjava3.core.Flowable;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.io.IOException;
 
 public class AutomatedTestScriptRestDao implements AutomatedTestScriptDao, Filterable {
     private final SnowScriptJsonManipulator jsonManipulator = new SnowScriptJsonManipulator("value", "sys_id");
@@ -26,7 +28,7 @@ public class AutomatedTestScriptRestDao implements AutomatedTestScriptDao, Filte
     SnowRestInterface restInterface;
 
     @Override
-    public SnowScript get(String id) {
+    public SnowScript get(String id) throws IOException {
         return jsonObjectToSnowScript(getRestInterface().getRecord(SingleRecordGetRequest.builder()
                 .tableName("sys_variable_value")
                 .sysId(id)
@@ -42,9 +44,9 @@ public class AutomatedTestScriptRestDao implements AutomatedTestScriptDao, Filte
                 .blockingIterable();
     }
 
-    public SnowScript jsonObjectToSnowScript(JsonObject object) {
+    public SnowScript jsonObjectToSnowScript(JsonObject object) throws IOException {
         SnowScript script = getJsonManipulator().readFromJson(object);
-        JsonObject testStepRecord = getRestInterface().getRecord(
+        var testStepRecord = getRestInterface().getRecord(
                 SingleRecordGetRequest.builder()
                         .showDisplayValues(true)
                         .excludeReferenceLink(true)

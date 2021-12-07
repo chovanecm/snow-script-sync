@@ -6,8 +6,8 @@ import cz.chovanecm.snow.datalayer.rest.request.QueryGetRequest;
 import cz.chovanecm.snow.datalayer.rest.request.SingleRecordGetRequest;
 import cz.chovanecm.snow.json.JsonManipulator;
 import cz.chovanecm.snow.records.SnowRecord;
-import io.reactivex.Flowable;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,12 +29,17 @@ public abstract class GenericBaseRestDao<T extends SnowRecord> implements cz.cho
 
     @Override
     public T get(String id) {
-        JsonObject record = getRestInterface().getRecord(SingleRecordGetRequest.builder()
-                .tableName(getTableName())
-                .sysId(id)
-                .showDisplayValues(false)
-                .excludeReferenceLink(true)
-                .build());
+        JsonObject record = null;
+        try {
+            record = getRestInterface().getRecord(SingleRecordGetRequest.builder()
+                    .tableName(getTableName())
+                    .sysId(id)
+                    .showDisplayValues(false)
+                    .excludeReferenceLink(true)
+                    .build());
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
         return getJsonManipulator().readFromJson(record);
     }
 

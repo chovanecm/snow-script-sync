@@ -6,6 +6,7 @@ import lombok.Value;
 
 import java.nio.file.Path;
 import java.time.ZonedDateTime;
+import java.util.Objects;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -20,10 +21,6 @@ public class File {
     private Path filePath;
 
     public byte[] getByteContent() {
-        if (byteContent == null) {
-            return textContent.getBytes(UTF_8);
-        } else {
-            return byteContent;
-        }
+        return Objects.requireNonNullElseGet(byteContent, () -> textContent.getBytes(UTF_8));
     }
 }

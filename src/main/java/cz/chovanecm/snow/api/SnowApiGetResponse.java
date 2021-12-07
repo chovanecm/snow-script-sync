@@ -23,6 +23,7 @@ import com.github.jsonj.tools.JsonParser;
 
 import java.io.IOException;
 import java.net.http.HttpResponse;
+import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,7 +35,7 @@ public class SnowApiGetResponse implements AutoCloseable {
 
     public SnowApiGetResponse(HttpResponse<String> response) throws IOException {
         if (response.statusCode() != HTTP_OK) {
-            throw new IOException("Unexpected response from ServiceNow: " + response.statusCode());
+            throw new IOException(String.format("Unexpected response from ServiceNow: %d when downloading %s", response.statusCode(), response.uri()));
         }
         this.response = response;
     }
@@ -52,8 +53,8 @@ public class SnowApiGetResponse implements AutoCloseable {
     public String getNextRecordsUrl() {
         String links;
         try {
-            links = response.headers().firstValue("Link").get();
-        } catch (NullPointerException ex) {
+            links = response.headers().firstValue("Link").orElseThrow();
+        } catch (NullPointerException | NoSuchElementException ex) {
             return null;
         }
         //https://demo018.service-now.com/api/now/v1/table/sys_script?sysparm_limit=1&sysparm_offset=0>;rel="first",<https://demo018.service-now.com/api/now/v1/table/sys_script?sysparm_limit=1&sysparm_offset=-1>;rel="prev",<https://demo018.service-now.com/api/now/v1/table/sys_script?sysparm_limit=1&sysparm_offset=1>;rel="next",<https://demo018.service-now.com/api/now/v1/table/sys_script?sysparm_limit=1&sysparm_offset=1353>;rel="last"
