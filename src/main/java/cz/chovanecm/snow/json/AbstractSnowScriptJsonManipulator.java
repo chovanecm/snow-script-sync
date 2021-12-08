@@ -49,7 +49,7 @@ public abstract class AbstractSnowScriptJsonManipulator<T extends SnowScript> ex
         record.setScript(script == null ? "" : script);
         String scriptName = json.getString(getNameFieldName());
         record.setScriptName(scriptName);
-        record.setActive("true".equals(json.getString("active")));
+        record.setActive(!"false".equals(json.getString("active")));
         Set<String> attributes = json.keySet();
         attributes.forEach((String attribute) -> {
             //Skip script field - we already have it.

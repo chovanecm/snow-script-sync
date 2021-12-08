@@ -246,6 +246,7 @@ public class SnowScriptSynchronizer {
                 getSnowScriptDao("sys_script_include"),
                 getSnowScriptDao("sysevent_in_email_action"),
                 getSnowScriptDao("sys_script_fix"),
+                getSnowScriptDao("sys_script_email"),
                 getUiActionDao(),
                 getClientScriptDao(),
                 getCalculatedFieldDao()
