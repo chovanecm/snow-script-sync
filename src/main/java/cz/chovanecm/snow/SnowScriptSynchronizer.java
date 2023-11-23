@@ -173,14 +173,26 @@ public class SnowScriptSynchronizer {
 
 
     private List<RecordMetadata> getRecordsModifiedBySomeoneElse(List<RecordMetadata> records) {
-        return records.stream().filter(record -> {
-            var dao = record.getServiceNowDao();
+        return records.stream().filter(recordMetadata -> {
+            var dao = recordMetadata.getServiceNowDao();
             SnowScript response = null;
             try {
-                response = dao.get(record.getSysId());
+                response = dao.get(recordMetadata.getSysId());
                 if (!response.getUpdatedBy().equals(this.connectorConfiguration.getUsername())) {
-                    System.out.println("File " + record.getFileName() + " has been modified by " + response.getUpdatedBy() + " on " + response.getUpdatedOn());
-                    System.out.println("Overwrite? (Y/N)");
+                    var collidingRecord = dao.get(recordMetadata.getSysId());
+                    collidingRecord.getActiveRecord(snowScript -> new AbstractScriptFileActiveRecord() {
+                        @Override
+                        public Path getFilePath() {
+                            return getDestination().resolve(recordMetadata.getFileName() + ".collision");
+                        }
+
+                        @Override
+                        public SnowScript getRecord() {
+                            return collidingRecord;
+                        }
+                    }).save();
+                    System.out.println("File " + recordMetadata.getFileName() + " has been modified by " + response.getUpdatedBy() + " on " + response.getUpdatedOn());
+                    System.out.println("Overwrite? See file name.collision to see the server version. (Y/N)");
                     var scanner = new Scanner(System.in);
                     var userResponse = scanner.nextLine();
                     return !userResponse.equalsIgnoreCase("Y");

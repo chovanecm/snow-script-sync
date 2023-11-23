@@ -59,7 +59,7 @@ public class CommandLineInterface {
     }
 
     public static void main(String[] args) {
-        System.out.println("Hu");
+        System.out.println("Snow script sync");
         try {
             CommandLineInterface userInterface;
             userInterface = new CommandLineInterface(args);
